@@ -1,0 +1,19 @@
+name: file_picker_cross
+description: Select files on Android, iOS, the desktop and the web.
+version: 1.0.0
+author: TestApp Contributors
+homepage: https://gitlab.com/testapp-system/file_picker_cross
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  file_picker: ^1.5.0
+  http: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
