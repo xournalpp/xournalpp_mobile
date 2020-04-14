@@ -9,7 +9,8 @@ import 'file_picker_cross.dart';
 Future<Uint8List> selectSingleFileAsBytes(
     {FileTypeCross type, String fileExtension}) async {
   File file = await FilePicker.getFile(
-      type: _fileTypeCrossParse(type), fileExtension: fileExtension);
+      type: _fileTypeCrossParse(type),
+      allowedExtensions: fileExtension.split(',').map((e) => e.trim()));
   return file.readAsBytesSync();
 }
 
