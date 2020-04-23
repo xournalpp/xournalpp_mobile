@@ -10,7 +10,10 @@ Future<Uint8List> selectSingleFileAsBytes(
     {FileTypeCross type, String fileExtension}) async {
   File file = await FilePicker.getFile(
       type: _fileTypeCrossParse(type),
-      allowedExtensions: fileExtension.split(',').map((e) => e.trim()));
+      allowedExtensions: (fileExtension != null &&
+              fileExtension.replaceAll(',', '').trim().isNotEmpty)
+          ? fileExtension.split(',').map<String>((e) => e.trim()).toList()
+          : null);
   return file.readAsBytesSync();
 }
 
