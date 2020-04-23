@@ -1,6 +1,6 @@
 name: file_picker_cross
 description: Select files on Android, iOS, the desktop and the web.
-version: 1.1.0
+version: 1.2.0
 homepage: https://gitlab.com/testapp-system/file_picker_cross
 respsitory: https://gitlab.com/testapp-system/file_picker_cross.git
 issue_tracker: https://gitlab.com/testapp-system/file_picker_cross/issues
