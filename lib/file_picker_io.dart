@@ -36,8 +36,7 @@ Future<Uint8List> _readFileByte(String filePath) async {
   await audioFile.readAsBytes().then((value) {
     bytes = Uint8List.fromList(value);
   }).catchError((onError) {
-    print(
-        'Exception Error while reading audio from path:' + onError.toString());
+    print('Exception Error while reading file from path:' + onError.toString());
   });
   return bytes;
 }

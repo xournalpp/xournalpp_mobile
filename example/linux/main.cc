@@ -7,6 +7,10 @@
 #include <memory>
 #include <vector>
 
+// For plugin-compatible event handling (e.g., modal windows).
+#include <X11/Xlib.h>
+#include <gtk/gtk.h>
+
 #include "flutter/generated_plugin_registrant.h"
 #include "window_configuration.h"
 
@@ -45,6 +49,9 @@ int main(int argc, char **argv) {
 
   // Arguments for the Flutter Engine.
   std::vector<std::string> arguments;
+#ifdef NDEBUG
+  arguments.push_back("--disable-dart-asserts");
+#endif
 
   flutter::FlutterWindowController flutter_controller(icu_data_path);
   flutter::WindowProperties window_properties = {};
@@ -59,9 +66,17 @@ int main(int argc, char **argv) {
   }
   RegisterPlugins(&flutter_controller);
 
-  // Run until the window is closed.
+  // Set up for GTK event handling, needed by the GTK-based plugins.
+  gtk_init(0, nullptr);
+  XInitThreads();
+
+  // Run until the window is closed, processing GTK events in parallel for
+  // plugin handling.
   while (flutter_controller.RunEventLoopWithTimeout(
-      std::chrono::milliseconds::max())) {
+      std::chrono::milliseconds(10))) {
+    if (gtk_events_pending()) {
+      gtk_main_iteration();
+    }
   }
   return EXIT_SUCCESS;
 }

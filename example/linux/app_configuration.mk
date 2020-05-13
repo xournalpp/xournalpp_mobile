@@ -10,7 +10,7 @@ EXTRA_SOURCES=
 # Paths of any additional libraries to be bundled in the output directory.
 EXTRA_BUNDLED_LIBRARIES=
 # Extra flags (e.g., for library dependencies).
-SYSTEM_LIBRARIES=
+SYSTEM_LIBRARIES=gtk+-3.0 x11
 EXTRA_CXXFLAGS=
 EXTRA_CPPFLAGS=
 EXTRA_LDFLAGS=

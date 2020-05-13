@@ -1,3 +1,7 @@
+## 2.0.0
+
+* Added support for Flutter's official Desktop runtime (FDE)
+
 ## 1.2.0
 
 * Fixed crashes on io-Devices (Desktop, Android, iOS) if the fileExtension is empty
