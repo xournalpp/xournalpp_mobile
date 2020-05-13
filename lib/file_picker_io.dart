@@ -2,19 +2,59 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:file_chooser/file_chooser.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'file_picker_cross.dart';
 
 Future<Uint8List> selectSingleFileAsBytes(
     {FileTypeCross type, String fileExtension}) async {
+  if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
+    return await selectFilesMobile(type: type, fileExtension: fileExtension);
+  } else {
+    return await selectFilesDesktop(type: type, fileExtension: fileExtension);
+  }
+}
+
+Future<Uint8List> selectFilesDesktop(
+    {FileTypeCross type, String fileExtension}) async {
+  FileChooserResult file = await showOpenPanel(
+      allowedFileTypes: (parseExtension(fileExtension) == null)
+          ? null
+          : [
+              FileTypeFilterGroup(
+                  label: 'files', fileExtensions: parseExtension(fileExtension))
+            ]);
+  String path = file.paths[0];
+  return await _readFileByte(path);
+}
+
+Future<Uint8List> _readFileByte(String filePath) async {
+  Uri myUri = Uri.parse(filePath);
+  File audioFile = new File.fromUri(myUri);
+  Uint8List bytes;
+  await audioFile.readAsBytes().then((value) {
+    bytes = Uint8List.fromList(value);
+  }).catchError((onError) {
+    print(
+        'Exception Error while reading audio from path:' + onError.toString());
+  });
+  return bytes;
+}
+
+Future<Uint8List> selectFilesMobile(
+    {FileTypeCross type, String fileExtension}) async {
   File file = await FilePicker.getFile(
       type: _fileTypeCrossParse(type),
-      allowedExtensions: (fileExtension != null &&
-              fileExtension.replaceAll(',', '').trim().isNotEmpty)
-          ? fileExtension.split(',').map<String>((e) => e.trim()).toList()
-          : null);
+      allowedExtensions: parseExtension(fileExtension));
   return file.readAsBytesSync();
+}
+
+dynamic parseExtension(String fileExtension) {
+  return (fileExtension != null &&
+          fileExtension.replaceAll(',', '').trim().isNotEmpty)
+      ? fileExtension.split(',').map<String>((e) => e.trim()).toList()
+      : null;
 }
 
 FileType _fileTypeCrossParse(FileTypeCross type) {
