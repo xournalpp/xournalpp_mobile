@@ -15,6 +15,7 @@ class _MyAppState extends State<MyApp> {
 
   String _fileString;
   int _fileLength = 0;
+  String _filePath;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> {
               onPressed: _selectFile,
               child: Text('Select File'),
             ),
+            Text('File path: $_filePath (Might cause issues on web)\n'),
             Text('File length: $_fileLength\n'),
             Text('File as String: $_fileString\n'),
           ],
@@ -40,6 +42,7 @@ class _MyAppState extends State<MyApp> {
 
   void _selectFile() {
     filePicker.pick().then((value) => setState(() {
+        _filePath = filePicker.path;
           _fileLength = filePicker.toUint8List().lengthInBytes;
           try {
             _fileString = filePicker.toString();

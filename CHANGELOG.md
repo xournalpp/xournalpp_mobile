@@ -1,3 +1,7 @@
+## 2.1.0
+
+* Implemented `String get path` (#1, #5, #6)
+
 ## 2.0.0
 
 * Added support for Flutter's official Desktop runtime (FDE)

@@ -16,13 +16,18 @@ class FilePickerCross {
   final String fileExtension;
 
   Uint8List _bytes;
+  String _path;
 
   FilePickerCross({this.type = FileTypeCross.any, this.fileExtension = ''});
 
   /// Shows a dialog for selecting a file.
   Future<bool> pick() async {
-    _bytes =
+    final Map<String,Uint8List> file =
         await selectSingleFileAsBytes(type: type, fileExtension: fileExtension);
+
+    _path = file.keys.toList()[0];
+    _bytes = file[_path];
+
     return (_bytes != null);
   }
 
@@ -44,6 +49,9 @@ class FilePickerCross {
 
   /// Returns the file's length in bytes
   int get length => _bytes.lengthInBytes;
+  
+  /// Returns the file's path in the filesystem
+  String get path => _path;
 }
 
 /// Supported file types

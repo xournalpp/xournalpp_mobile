@@ -12,9 +12,9 @@ import 'file_picker_cross.dart';
 //    The string video/* meaning "any video file".
 //    The string image/* meaning "any image file".
 
-Future<Uint8List> selectSingleFileAsBytes(
+Future<Map<String,Uint8List>> selectSingleFileAsBytes(
     {FileTypeCross type, String fileExtension}) {
-  Completer<Uint8List> loadEnded = Completer();
+  Completer<Map<String,Uint8List>> loadEnded = Completer();
 
   String accept = _fileTypeToAcceptString(type, fileExtension);
   html.InputElement uploadInput = html.FileUploadInputElement();
@@ -28,8 +28,8 @@ Future<Uint8List> selectSingleFileAsBytes(
     final reader = new html.FileReader();
 
     reader.onLoadEnd.listen((e) {
-      loadEnded.complete(
-          Base64Decoder().convert(reader.result.toString().split(",").last));
+      loadEnded.complete({file.relativePath:
+          Base64Decoder().convert(reader.result.toString().split(",").last)});
     });
     reader.readAsDataUrl(file);
   });

@@ -7,7 +7,7 @@ import 'package:file_picker/file_picker.dart';
 
 import 'file_picker_cross.dart';
 
-Future<Uint8List> selectSingleFileAsBytes(
+Future<Map<String,Uint8List>> selectSingleFileAsBytes(
     {FileTypeCross type, String fileExtension}) async {
   if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
     return await selectFilesMobile(type: type, fileExtension: fileExtension);
@@ -16,7 +16,7 @@ Future<Uint8List> selectSingleFileAsBytes(
   }
 }
 
-Future<Uint8List> selectFilesDesktop(
+Future<Map<String,Uint8List>> selectFilesDesktop(
     {FileTypeCross type, String fileExtension}) async {
   FileChooserResult file = await showOpenPanel(
       allowedFileTypes: (parseExtension(fileExtension) == null)
@@ -26,7 +26,7 @@ Future<Uint8List> selectFilesDesktop(
                   label: 'files', fileExtensions: parseExtension(fileExtension))
             ]);
   String path = file.paths[0];
-  return await _readFileByte(path);
+  return {path: await _readFileByte(path)};
 }
 
 Future<Uint8List> _readFileByte(String filePath) async {
@@ -41,12 +41,12 @@ Future<Uint8List> _readFileByte(String filePath) async {
   return bytes;
 }
 
-Future<Uint8List> selectFilesMobile(
+Future<Map<String,Uint8List>> selectFilesMobile(
     {FileTypeCross type, String fileExtension}) async {
   File file = await FilePicker.getFile(
       type: _fileTypeCrossParse(type),
       allowedExtensions: parseExtension(fileExtension));
-  return file.readAsBytesSync();
+  return {file.path:file.readAsBytesSync()};
 }
 
 dynamic parseExtension(String fileExtension) {
