@@ -25,12 +25,15 @@ String toBase64()
 MultipartFile toMultipartFile({String filename})
 
 int get length
+
+String get path // BETA: not working properly on Web and unoccasionally using go-flutter
 ```
 
 Example:
 ```dart
     FilePickerCross filePicker = FilePickerCross();
     filePicker.pick().then((value) => setState(() {
+          _filePath = filePicker.path;
           _fileLength = filePicker.toUint8List().lengthInBytes;
           try {
             // Only works for text files.
