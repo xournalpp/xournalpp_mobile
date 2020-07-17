@@ -6,15 +6,14 @@ Select files on Android, iOS, the desktop and the web.
 
 `file_picker_cross` allows you to select files from your device and is compatible with Android, iOS, Desktops (using both go-flutter or FDE) and the web.
 
-This package was realized using `file_picker` (Mobile platforms and go-flutter) and 'file_chooser' (Desktops). We only added compatibility to the web.
+This package was realized using `file_picker` (Mobile platforms and go-flutter) and 'file_chooser' (Desktops). We only added compatibility to the web and mixed everything.
 
+**Note:** *we recently had API changes. Please update your code accordingly.*
 ```dart
-FilePickerCross FilePickerCross(
+FilePickerCross FilePickerCross.pick(
     type: FileTypeCross.any,                        // Available: `any`, `audio`, `image`, `video`, `custom`. Note: not available using FDE
     fileExtension: ''                               // Only if FileTypeCross.custom . May be any file extension like `.dot`, `.ppt,.pptx,.odp`
     );
-
-Future<bool> pick()
 
 String toString()
 
@@ -26,24 +25,21 @@ MultipartFile toMultipartFile({String filename})
 
 int get length
 
-String get path // BETA: not working properly on Web and unoccasionally using go-flutter
+String get path // BETA: not working properly using go-flutter
 ```
 
 Example:
 ```dart
-    FilePickerCross filePicker = FilePickerCross();
-    filePicker.pick().then((value) => setState(() {
+    FilePickerCross.pick().then((filePicker) => setState(() {
           _filePath = filePicker.path;
           _fileLength = filePicker.toUint8List().lengthInBytes;
           try {
-            // Only works for text files.
             _fileString = filePicker.toString();
           } catch (e) {
             _fileString =
                 'Not a text file. Showing base64.\n\n' + filePicker.toBase64();
           }
         }));
-  }
 ```
 
 ### What do go-flutter and FDE mean?

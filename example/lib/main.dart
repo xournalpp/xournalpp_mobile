@@ -11,8 +11,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FilePickerCross filePicker = FilePickerCross();
-
   String _fileString;
   int _fileLength = 0;
   String _filePath;
@@ -41,8 +39,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _selectFile() {
-    filePicker.pick().then((value) => setState(() {
-        _filePath = filePicker.path;
+    FilePickerCross.pick().then((filePicker) => setState(() {
+          _filePath = filePicker.path;
           _fileLength = filePicker.toUint8List().lengthInBytes;
           try {
             _fileString = filePicker.toString();

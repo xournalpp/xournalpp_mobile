@@ -7,7 +7,8 @@ import 'package:file_picker/file_picker.dart';
 
 import 'file_picker_cross.dart';
 
-Future<Map<String,Uint8List>> selectSingleFileAsBytes(
+/// Implementation of file selection dialog delegating to platform-specific implementations
+Future<Map<String, Uint8List>> selectSingleFileAsBytes(
     {FileTypeCross type, String fileExtension}) async {
   if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
     return await selectFilesMobile(type: type, fileExtension: fileExtension);
@@ -16,7 +17,8 @@ Future<Map<String,Uint8List>> selectSingleFileAsBytes(
   }
 }
 
-Future<Map<String,Uint8List>> selectFilesDesktop(
+/// Implementation of file selection dialog using file_chooser for desktop platforms
+Future<Map<String, Uint8List>> selectFilesDesktop(
     {FileTypeCross type, String fileExtension}) async {
   FileChooserResult file = await showOpenPanel(
       allowedFileTypes: (parseExtension(fileExtension) == null)
@@ -41,14 +43,16 @@ Future<Uint8List> _readFileByte(String filePath) async {
   return bytes;
 }
 
-Future<Map<String,Uint8List>> selectFilesMobile(
+/// Implementation of file selection dialog using file_picker for mobile platforms
+Future<Map<String, Uint8List>> selectFilesMobile(
     {FileTypeCross type, String fileExtension}) async {
   File file = await FilePicker.getFile(
       type: _fileTypeCrossParse(type),
       allowedExtensions: parseExtension(fileExtension));
-  return {file.path:file.readAsBytesSync()};
+  return {file.path: file.readAsBytesSync()};
 }
 
+/// Parsing various valid HTML/JS file type declarations into valid ones for file_picker
 dynamic parseExtension(String fileExtension) {
   return (fileExtension != null &&
           fileExtension.replaceAll(',', '').trim().isNotEmpty)

@@ -12,23 +12,33 @@ import 'file_picker_stub.dart'
 
 /// FilePickerCross allows you to select files on any of Flutters platforms.
 class FilePickerCross {
+  /// The allowed [FileTypeCross] of the file to be selected
   final FileTypeCross type;
+
+  /// The allowed file extension of the file to be selected
   final String fileExtension;
 
-  Uint8List _bytes;
-  String _path;
+  /// Returns the path the file is located at
+  final String path;
 
-  FilePickerCross({this.type = FileTypeCross.any, this.fileExtension = ''});
+  final Uint8List _bytes;
+
+  FilePickerCross(this._bytes,
+      {this.path, this.type = FileTypeCross.any, this.fileExtension = ''});
 
   /// Shows a dialog for selecting a file.
-  Future<bool> pick() async {
-    final Map<String,Uint8List> file =
+  static Future<FilePickerCross> pick(
+      {FileTypeCross type = FileTypeCross.any,
+      String fileExtension = ''}) async {
+    final Map<String, Uint8List> file =
         await selectSingleFileAsBytes(type: type, fileExtension: fileExtension);
 
-    _path = file.keys.toList()[0];
-    _bytes = file[_path];
+    String _path = file.keys.toList()[0];
+    Uint8List _bytes = file[_path];
 
-    return (_bytes != null);
+    if (_bytes == null) throw (NullThrownError());
+    return FilePickerCross(_bytes,
+        path: _path, fileExtension: fileExtension, type: type);
   }
 
   /// Returns a sting containing the file contents of plain text files. Please use it in a try {} catch (e) {} block if you are unsure if the opened file is plain text.
@@ -49,9 +59,6 @@ class FilePickerCross {
 
   /// Returns the file's length in bytes
   int get length => _bytes.lengthInBytes;
-  
-  /// Returns the file's path in the filesystem
-  String get path => _path;
 }
 
 /// Supported file types

@@ -1,3 +1,8 @@
+## 3.0.3
+
+* Breaking API changes. Please update your code.
+* Support for getting file path on web
+
 ## 2.1.0
 
 * Implemented `String get path` (#1, #5, #6)
