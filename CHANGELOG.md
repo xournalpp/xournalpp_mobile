@@ -1,4 +1,4 @@
-## 3.0.3
+## 3.0.0
 
 * Breaking API changes. Please update your code.
 * Support for getting file path on web
