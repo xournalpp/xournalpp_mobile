@@ -1,6 +1,6 @@
 # file_picker_cross
 
-The only Flutter plugin to select, open, choose or pick files on Android, iOS, the desktop and the web. Files can be later read, written, used as Strin, byte list or be used for HTTP uploads.
+> The only Flutter plugin to select, open, choose or pick documents, images videos or other files on Android, iOS, the desktop and the web for reading, writing, use as String, byte list or HTTP uploads.
 
 ## Getting Started
 
