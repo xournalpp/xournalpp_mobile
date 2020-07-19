@@ -1,6 +1,6 @@
 # file_picker_cross
 
-Select files on Android, iOS, the desktop and the web.
+The only Flutter plugin to select, open, choose or pick files on Android, iOS, the desktop and the web. Files can be later read, written, used as Strin, byte list or be used for HTTP uploads.
 
 ## Getting Started
 
@@ -112,4 +112,4 @@ shown in the `testbed`
 example](https://github.com/google/flutter-desktop-embedding/blob/master/testbed/linux/main.cc#L81-L91).
 
 1. Delete your existing `linux` directory (make sure you know any manual modification you did): `rm -rf linux`
-2. Copy the `testbed/linux` subdirectory of this projects's `example/` into your project.
+2. Copy the `linux` subdirectory of this projects's `example/` into your project.
