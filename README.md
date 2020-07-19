@@ -60,6 +60,18 @@ Of cause, it requires Flutter to be set up for web development.
 
 Of cause, it requires Flutter to be set up for your platform.
 
+Please note, Windows is not officially supported by Google. Linux and macOS support is in alpha state. Expect issues and sometimes incompatible versions requiring manual hand work.
+
+```
+flutter channel dev # or master
+flutter upgrade
+flutter config --enable-linux-desktop
+flutter config --enable-macos-desktop
+flutter config --enable-windows-desktop
+```
+
+#### More information
+
 [Set up go-flutter](https://hover.build/) [Set up FDE](https://flutter.dev/desktop)
 
 ### Mobile platforms
@@ -89,7 +101,7 @@ This plugin requires the following libraries:
 * GTK 3
 * pkg-config
 
-Installation example for debian-based systems:
+Installation example for Debian-based systems:
 
 ```shell
 sudo apt-get install libgtk-3-dev pkg-config
@@ -100,4 +112,4 @@ shown in the `testbed`
 example](https://github.com/google/flutter-desktop-embedding/blob/master/testbed/linux/main.cc#L81-L91).
 
 1. Delete your existing `linux` directory (make sure you know any manual modification you did): `rm -rf linux`
-2. Copy the `testbed/{gtk,linux}` subdirectory of this projects's `example/` into your project.
+2. Copy the `testbed/linux` subdirectory of this projects's `example/` into your project.

@@ -4,9 +4,10 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <file_chooser_plugin.h>
+#include <file_chooser/file_chooser_plugin.h>
 
-void RegisterPlugins(flutter::PluginRegistry* registry) {
-  FileChooserPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("FileChooserPlugin"));
+void fl_register_plugins(FlPluginRegistry* registry) {
+  g_autoptr(FlPluginRegistrar) file_chooser_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "FileChooserPlugin");
+  file_chooser_plugin_register_with_registrar(file_chooser_registrar);
 }
