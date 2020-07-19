@@ -1,5 +1,5 @@
 name: file_picker_cross
-description: Select, open or choose documents, images videos or other files on Android, iOS, the desktop and the web.
+description: Select, open, choose or pick documents, images videos or other files on Android, iOS, the desktop and the web for reading, writing, use as String, byte list or HTTP uploads.
 version: 3.0.0
 homepage: https://gitlab.com/testapp-system/file_picker_cross
 respsitory: https://gitlab.com/testapp-system/file_picker_cross.git
