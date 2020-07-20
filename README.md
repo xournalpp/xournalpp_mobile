@@ -2,7 +2,10 @@
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
-# (Don't) Try it out
+# Try it out
+
+***Update:** We can now render images! Just open any file containing an image. You **won't see any
+strokes, texts** etc. but you **will see your image**.* :tada:
 
 This project is not yet ready for use. We are still implementing backend stuff like the handling of
 the file format. As there is unfortunately [no full documentation](https://github.com/xournalpp/xournalpp/issues/2124)
@@ -17,6 +20,7 @@ Alternatively, you can download pre-build binaries for **Linux** and **Android**
 - [x] Read the document title
 - [x] Read and display the number of pages
 - [x] Load dummy pages in the correct aspect ratio
+- [x] Render images on the canvas
 
 ## Getting started
 
