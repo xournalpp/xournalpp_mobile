@@ -19,11 +19,21 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter
+    sdk:
+      flutter
+  flutter_launcher_icons: "^0.7.3"
+
+flutter_icons:
+   android: true
+   ios: true
+   image_path: "assets/xournalpp.png"
+   adaptive_icon_background: "#673ab7"
+   adaptive_icon_foreground: "assets/xournalpp.png"
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
+
 flutter_intl:
   enabled: true

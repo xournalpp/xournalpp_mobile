@@ -60,12 +60,13 @@ class _MainDrawerState extends State<MainDrawer> {
                 builder: (context) => AlertDialog(
                       title: Text(S.of(context).aboutXournalMobileEdition),
                       content: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset('assets/xournalpp.png', scale: 2),
+                          Image.asset('assets/xournalpp.png', scale: 4),
                           Text(S
                               .of(context)
-                              .xournalMobileEditionInAnUnofficialProjectTryingToMake),
-                          Wrap(children: [
+                              .xournalMobileEditionIsAnUnofficialProjectTryingToMake),
+                          Wrap(spacing: 4, runSpacing: 4, children: [
                             OutlinedButton(
                                 onPressed: () => launch(Uri.encodeFull(
                                     'https://github.com/xournalpp/xournalpp')),

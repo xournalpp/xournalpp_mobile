@@ -38,6 +38,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "sourceCode" : MessageLookupByLibrary.simpleMessage("Source Code"),
     "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Toolbox not implemented yet."),
     "tools" : MessageLookupByLibrary.simpleMessage("Tools"),
-    "xournalMobileEditionInAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile edition in an unofficial project trying to make Xournal++ files and features available on different devices.")
+    "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.")
   };
 }

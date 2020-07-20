@@ -52,6 +52,12 @@ flutter config --enable-linux-desktop # or --enable-macos-desktop
 flutter run -d linux # or macos
 ```
 
+## Colors
+
+Our primary color is the Material DeepPurple. I simply prefer a colorful application over an old-fashioned gray GTK+ application.
+
+`#673ab7` / `rgb(103, 58, 183)` / `CMYK(44%, 68%, 0%, 28%)`, / `hsl(261°, 51%, 48%)`
+
 ## Legal notes
 
 This project is licensed under the terms and conditions of the EUPL-1.2 found in [LICENSE](LICENSE).

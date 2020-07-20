@@ -153,10 +153,10 @@ class S {
     );
   }
 
-  String get xournalMobileEditionInAnUnofficialProjectTryingToMake {
+  String get xournalMobileEditionIsAnUnofficialProjectTryingToMake {
     return Intl.message(
-      'Xournal++ - Mobile edition in an unofficial project trying to make Xournal++ files and features available on different devices.',
-      name: 'xournalMobileEditionInAnUnofficialProjectTryingToMake',
+      'Xournal++ - Mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.',
+      name: 'xournalMobileEditionIsAnUnofficialProjectTryingToMake',
       desc: '',
       args: [],
     );
