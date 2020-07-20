@@ -1,4 +1,4 @@
-# <img scr="assets/xournalpp.svg" width="64" style="height: auto;"/> Xournal++ - mobile edition (unofficial)
+# <img src="assets/xournalpp-adaptive.svg" width="64" style="height: auto;"/> Xournal++ - mobile edition (unofficial)
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
