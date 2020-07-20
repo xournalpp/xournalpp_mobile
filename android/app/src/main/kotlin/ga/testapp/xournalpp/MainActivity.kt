@@ -1,4 +1,4 @@
-package com.example.xournalpp
+package ga.testapp.xournalpp
 
 import io.flutter.embedding.android.FlutterActivity
 
