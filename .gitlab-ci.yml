@@ -60,8 +60,6 @@ build:web:
     - flutter pub get
     - set +o pipefail
     - flutter build web
-    - mkdir public
-    - cp -r build/web/* public/
   artifacts:
     paths:
       - build/web/
@@ -76,4 +74,18 @@ build:linux:
     - flutter build linux
   artifacts:
     paths:
-      - build/linux/release/bundle//
+      - build/linux/release/bundle/
+
+pages:
+  script:
+    - flutter config --enable-web
+    - flutter pub get
+    - set +o pipefail
+    - flutter build web
+    - mkdir public
+    - cp -r build/web/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
