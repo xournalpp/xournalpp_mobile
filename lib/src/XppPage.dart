@@ -1,10 +1,14 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
+import 'package:xournalpp/src/XppLayer.dart';
+
 class XppPage {
-  XppPage({this.pageSize, this.background, this.content});
+  XppPage({this.pageSize, this.background, this.layers});
   XppPageSize pageSize;
   XppBackground background;
-  List content;
+  @required
+  List<XppLayer> layers;
 }
 
 class XppPageSize {

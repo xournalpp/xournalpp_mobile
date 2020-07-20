@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/src/XppFile.dart';
+import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/XppPage.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 import 'generated/l10n.dart';
@@ -41,13 +43,7 @@ class _CanvasPageState extends State<CanvasPage> {
   XppFile _file;
   double padding = 16;
 
-  int currentPage = 0;
-
-  void _openFile() {
-    XppFile.open().then((file) => setState(() {
-          _file = file;
-        }));
-  }
+  XppPage currentPage;
 
   @override
   void initState() {
@@ -70,33 +66,43 @@ class _CanvasPageState extends State<CanvasPage> {
       height += element.pageSize.height + padding;
     });
 
-    final page = _file.pages[currentPage];
     return Scaffold(
       appBar: AppBar(
         title: Tooltip(
           message: S.of(context).doubleTapToChange,
           child: GestureDetector(
             onDoubleTap: _showTitleDialog,
-            onLongPress: _showTitleDialog,
             child: Text(widget.file?.title ?? S.of(context).newDocument),
           ),
         ),
       ),
       drawer: MainDrawer(),
       body: Zoom(
-        width: page.pageSize.width * 5,
-        height: page.pageSize.height * 5,
+        width: currentPage.pageSize.width * 5,
+        height: currentPage.pageSize.height * 5,
         initZoom: 1,
         child: Center(
           child: SizedBox(
-            width: page.pageSize.width,
-            height: page.pageSize.height,
+            width: currentPage.pageSize.width,
+            height: currentPage.pageSize.height,
             child: Transform.scale(
               scale: 5,
-              child: Container(
-                child: Text('Test'),
-                color: Colors.green,
-              ),
+              child: Stack(
+                  children: List.generate(currentPage.layers.length, (index) {
+                XppLayer currentLayer = currentPage.layers[index];
+                return Stack(
+                  children: List.generate(currentLayer.content.length, (n) {
+                    print('Content');
+                    XppContent currentContent = currentLayer.content[n];
+                    if (currentContent == null) return (Container());
+                    return Positioned(
+                      child: currentContent.render(),
+                      top: currentContent?.getOffset()?.dy,
+                      left: currentContent?.getOffset()?.dx,
+                    );
+                  }),
+                );
+              })),
             ),
           ),
         ),
@@ -109,17 +115,22 @@ class _CanvasPageState extends State<CanvasPage> {
           child: ListView.builder(
             itemBuilder: (c, i) {
               final page = _file.pages[i];
+              page.layers.forEach((layer) {
+                layer.content.forEach((element) {
+                  print(element);
+                });
+              });
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                   child: GestureDetector(
-                    onTap: () => setState(() => currentPage = i),
+                    onTap: () => setState(() => currentPage = page),
                     child: AspectRatio(
                       aspectRatio: page.pageSize.width / page.pageSize.height,
                       child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
-                            border: (currentPage == i)
+                            border: (currentPage == page)
                                 ? Border.all(color: Colors.red)
                                 : null,
                             borderRadius: BorderRadius.circular(2)),
@@ -151,6 +162,7 @@ class _CanvasPageState extends State<CanvasPage> {
 
   void _setMetadata() {
     _file = widget.file ?? XppFile.empty();
+    currentPage = _file?.pages[0];
   }
 
   void _showTitleDialog() {

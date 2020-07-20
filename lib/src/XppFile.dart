@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:archive/archive.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:xml/xml.dart';
 
+import 'XppLayer.dart';
 import 'XppPage.dart';
 
 class XppFile {
@@ -12,8 +15,10 @@ class XppFile {
 
   /// create an empty [XppFile]
   static XppFile empty({String title, XppPageSize pageSize}) {
-    return XppFile(
-        title: title, pages: [XppPage(pageSize: pageSize ?? XppPageSize.a4)]);
+    return XppFile(title: title, pages: [
+      XppPage(
+          pageSize: pageSize ?? XppPageSize.a4, layers: [XppLayer(content: [])])
+    ]);
   }
 
   /// showing a file picker, decoding and parsing to [XppFile]
@@ -31,7 +36,8 @@ class XppFile {
 
     /// decoding the [Uint8List] to a [String]
     String fileText = utf8.decode(bytes);
-    // Clipboard.setData(ClipboardData(text: fileText));
+    //Clipboard.setData(ClipboardData(text: fileText));
+
     /// parsing the [String] to a [XmlDocument]
     XmlElement documentTree =
         XmlDocument.parse(fileText).findElements('xournal').toList()[0];
@@ -41,11 +47,11 @@ class XppFile {
         documentTree.findElements('preview').toList()[0].innerText);
 
     List<XppPage> pages = [];
-    documentTree.findElements('page').forEach((XmlElement element) {
+    documentTree.findElements('page').forEach((XmlElement pageElement) {
       XppBackground background;
-      if (element.findElements('background').isNotEmpty) {
+      if (pageElement.findElements('background').isNotEmpty) {
         XmlElement backgroundElement =
-            element.findElements('background').toList()[0];
+            pageElement.findElements('background').toList()[0];
         switch (backgroundElement.getAttribute('type')) {
           case "pixmap":
             background = XppBackgroundImage(
@@ -60,10 +66,53 @@ class XppFile {
             break;
         }
       }
+      List<XppLayer> layers = [];
+      pageElement.findElements('layer').forEach((XmlElement layer) {
+        Map<int, XppContent> content = {};
+
+        /// unfortunately, it's not possible to forEach threw all child **elements**, but only threw
+        /// all **nodes** (including text nodes etc.). Let's workaround...
+
+        /// cleaning nodes and numbering them
+        int index = 0;
+        layer.children.forEach((XmlNode node) {
+          if (node.nodeType == XmlNodeType.TEXT) {
+            if (node.text.trim().isNotEmpty)
+              print('Skipping text \'${node.text}\'');
+            return;
+          }
+          if (node.nodeType != XmlNodeType.ELEMENT) {
+            print('Unexpected XmlNodeType. Expected XmlNodeType.ELEMENT, got ' +
+                node.nodeType.toString() +
+                '. Removing.');
+            return;
+          }
+          //print(node.text);
+          node.setAttribute('counter', index.toString());
+          index++;
+        });
+
+        /// processing all images first
+        layer.findElements('image').forEach((imageElement) {
+          print('Found image.');
+          content[int.parse(imageElement.getAttribute('counter'))] = XppImage(
+              data: base64Decode(imageElement.text.trim()),
+              topLeft: Offset(double.parse(imageElement.getAttribute('left')),
+                  double.parse(imageElement.getAttribute('top'))),
+              bottomRight: Offset(
+                  double.parse(imageElement.getAttribute('right')),
+                  double.parse(imageElement.getAttribute('bottom'))));
+        });
+        layers.add(XppLayer(
+            content:
+                List.generate(content.keys.length, (index) => content[index])));
+      });
       pages.add(XppPage(
+          background: background,
+          layers: layers,
           pageSize: XppPageSize(
-              width: double.parse(element.getAttribute('width')),
-              height: double.parse(element.getAttribute('height')))));
+              width: double.parse(pageElement.getAttribute('width')),
+              height: double.parse(pageElement.getAttribute('height')))));
     });
 
     return XppFile(title: title, previewImage: previewImage, pages: pages);
@@ -73,6 +122,7 @@ class XppFile {
   Uint8List previewImage;
 
   /// [List] of [XppPages] inside the document
+  @required
   List<XppPage> pages;
 
   /// the main title of the document. usually the [String] between the last `/` and the last `.`.
@@ -82,7 +132,7 @@ class XppFile {
   XmlDocument toXmlDocument() {
     // TODO: implement encoding the existing document to a [XmlDocument]
     throw UnimplementedError();
-    return XmlDocument();
+    //return XmlDocument();
   }
 
   /// creating the XML-encoded, utf8-encoded and gzipped [Uint8List] to be used in a .xopp file
@@ -90,9 +140,4 @@ class XppFile {
     return GZipEncoder()
         .encode(utf8.encode(toXmlDocument().toXmlString(pretty: true)));
   }
-}
-
-class XppLayer {
-  XppLayer({this.content});
-  List content;
 }
