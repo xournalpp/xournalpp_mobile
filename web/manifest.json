@@ -1,12 +1,12 @@
 {
-    "name": "xournalpp",
-    "short_name": "xournalpp",
+    "name": "Xournal++ - mobile edition",
+    "short_name": "Xournal++",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
+    "background_color": "#FFFFFF",
+    "theme_color": "#673ab7",
     "description": "A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {
@@ -15,8 +15,8 @@
             "type": "image/png"
         },
         {
-            "src": "icons/Icon-512.png",
-            "sizes": "512x512",
+            "src": "icons/Icon-1024.png",
+            "sizes": "1024x1024",
             "type": "image/png"
         }
     ]
