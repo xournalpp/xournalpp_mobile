@@ -1,3 +1,20 @@
 {
-  "newDocument": "New Document"
+  "newDocument": "New Document",
+  "tools": "Tools",
+  "toolboxNotImplementedYet": "Toolbox not implemented yet.",
+  "setDocumentTitle": "Set document title",
+  "newTitle": "New title",
+  "cancel": "Cancel",
+  "apply": "Apply",
+  "mobileEditionUnofficial": "Mobile edition (unofficial)",
+  "open": "Open",
+  "newFile": "New",
+  "save": "Save",
+  "notImplemented": "Not implemented",
+  "about": "About",
+  "aboutXournalMobileEdition": "About Xournal++ - Mobile edition",
+  "xournalMobileEditionInAnUnofficialProjectTryingToMake": "Xournal++ - Mobile edition in an unofficial project trying to make Xournal++ files and features available on different devices.",
+  "aboutXournal": "About Xournal++",
+  "sourceCode": "Source Code",
+  "okay": "Okay"
 }

@@ -15,6 +15,7 @@ dependencies:
   matrix_gesture_detector: any
   archive: ^2.0.13
   xml: ^4.3.0
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:
@@ -22,5 +23,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
 flutter_intl:
   enabled: true

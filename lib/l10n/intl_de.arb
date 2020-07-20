@@ -1,3 +1,20 @@
 {
-  "newDocument": "New Document"
+  "newDocument": "Neues Dokument",
+  "tools": "Werkzeuge",
+  "toolboxNotImplementedYet": "Werkzeugkasten noch nicht implementiert.",
+  "setDocumentTitle": "Titel des Dokuments ändern",
+  "newTitle": "Neuer Titel",
+  "cancel": "Abbrechen",
+  "apply": "Anwenden",
+  "mobileEditionUnofficial": "Mobile-Edition (inoffiziell)",
+  "open": "Öffnen",
+  "newFile": "Neu",
+  "save": "Speichern",
+  "notImplemented": "Nicht implementiert",
+  "about": "About",
+  "aboutXournalMobileEdition": "Über Xournal++ - Mobile-Edition",
+  "xournalMobileEditionInAnUnofficialProjectTryingToMake": "Xournal++ - Mobile-Edition ist ein inoffizielles Projekt, das es versucht, Xournal++ Dateien und -Funktionen auf anderen Geräten bereitzustellen.",
+  "aboutXournal": "Über Xournal++",
+  "sourceCode": "Quellcode",
+  "okay": "Okay"
 }

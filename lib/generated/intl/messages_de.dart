@@ -21,6 +21,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "newDocument" : MessageLookupByLibrary.simpleMessage("New Document")
+    "about" : MessageLookupByLibrary.simpleMessage("About"),
+    "aboutXournal" : MessageLookupByLibrary.simpleMessage("Über Xournal++"),
+    "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("Über Xournal++ - Mobile-Edition"),
+    "apply" : MessageLookupByLibrary.simpleMessage("Anwenden"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
+    "mobileEditionUnofficial" : MessageLookupByLibrary.simpleMessage("Mobile-Edition (inoffiziell)"),
+    "newDocument" : MessageLookupByLibrary.simpleMessage("Neues Dokument"),
+    "newFile" : MessageLookupByLibrary.simpleMessage("Neu"),
+    "newTitle" : MessageLookupByLibrary.simpleMessage("Neuer Titel"),
+    "notImplemented" : MessageLookupByLibrary.simpleMessage("Nicht implementiert"),
+    "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
+    "open" : MessageLookupByLibrary.simpleMessage("Öffnen"),
+    "save" : MessageLookupByLibrary.simpleMessage("Speichern"),
+    "setDocumentTitle" : MessageLookupByLibrary.simpleMessage("Titel des Dokuments ändern"),
+    "sourceCode" : MessageLookupByLibrary.simpleMessage("Quellcode"),
+    "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Werkzeugkasten noch nicht implementiert."),
+    "tools" : MessageLookupByLibrary.simpleMessage("Werkzeuge"),
+    "xournalMobileEditionInAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile-Edition ist ein inoffizielles Projekt, das es versucht, Xournal++ Dateien und -Funktionen auf anderen Geräten bereitzustellen.")
   };
 }
