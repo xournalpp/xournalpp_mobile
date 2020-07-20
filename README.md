@@ -14,9 +14,9 @@ Alternatively, you can download pre-build binaries for **Linux** and **Android**
 
 ### Visible parts already working:
 
-[x] Read the document title
-[x] Read and display the number of pages
-[x] Load dummy pages in the correct aspect ratio
+- [x] Read the document title
+- [x] Read and display the number of pages
+- [x] Load dummy pages in the correct aspect ratio
 
 ## Getting started
 
