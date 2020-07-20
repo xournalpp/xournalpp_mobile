@@ -20,7 +20,7 @@ before_script:
   - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
   - set -o pipefail
   # flutter sdk setup
-  - git clone -b beta https://github.com/flutter/flutter.git /flutter
+  - git clone -b master https://github.com/flutter/flutter.git /flutter
   - export PATH=$PATH:/flutter/bin
   - flutter upgrade
   - echo flutter.sdk=$PWD/flutter > android/local.properties
@@ -69,8 +69,6 @@ build:web:
 build:linux:
   stage: build
   script:
-    - flutter channel master
-      - flutter upgrade
     - flutter config --enable-linux-desktop
     - flutter pub get
     - set +o pipefail
