@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/main.dart';
-import 'package:xournalpp/src/xournalppFile.dart';
+import 'package:xournalpp/src/XppFile.dart';
 
 class MainDrawer extends StatefulWidget {
   @override

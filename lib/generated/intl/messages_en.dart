@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("About Xournal++ - Mobile edition"),
     "apply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
+    "doubleTapToChange" : MessageLookupByLibrary.simpleMessage("Double tap to change."),
     "mobileEditionUnofficial" : MessageLookupByLibrary.simpleMessage("Mobile edition (unofficial)"),
     "newDocument" : MessageLookupByLibrary.simpleMessage("New Document"),
     "newFile" : MessageLookupByLibrary.simpleMessage("New"),

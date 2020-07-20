@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:xournalpp/src/xournalppFile.dart';
+import 'package:xournalpp/src/XppFile.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 import 'generated/l10n.dart';
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Xournal++',
+      title: kIsWeb ? 'Xournal++ Web' : 'Xournal++ - mobile edition',
       localizationsDelegates: [S.delegate],
       supportedLocales: [Locale('en'), Locale('de')],
       theme: ThemeData(
@@ -72,10 +73,13 @@ class _CanvasPageState extends State<CanvasPage> {
     final page = _file.pages[currentPage];
     return Scaffold(
       appBar: AppBar(
-        title: GestureDetector(
-          child: Text(widget.file?.title ?? S.of(context).newDocument),
-          onDoubleTap: _showTitleDialog,
-          onLongPress: _showTitleDialog,
+        title: Tooltip(
+          message: S.of(context).doubleTapToChange,
+          child: GestureDetector(
+            onDoubleTap: _showTitleDialog,
+            onLongPress: _showTitleDialog,
+            child: Text(widget.file?.title ?? S.of(context).newDocument),
+          ),
         ),
       ),
       drawer: MainDrawer(),
@@ -117,7 +121,8 @@ class _CanvasPageState extends State<CanvasPage> {
                             color: Colors.white,
                             border: (currentPage == i)
                                 ? Border.all(color: Colors.red)
-                                : null),
+                                : null,
+                            borderRadius: BorderRadius.circular(2)),
                         child: Text('Test'),
                       ),
                     ),

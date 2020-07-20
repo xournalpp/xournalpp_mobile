@@ -188,6 +188,15 @@ class S {
       args: [],
     );
   }
+
+  String get doubleTapToChange {
+    return Intl.message(
+      'Double tap to change.',
+      name: 'doubleTapToChange',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
