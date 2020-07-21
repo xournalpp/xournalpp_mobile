@@ -159,7 +159,6 @@ class XppFile {
                 break;
             }
           }
-          //"black", "blue", "red", "green", "gray", "lightblue", "lightgreen", "magenta", "orange", "yellow", "white"
           content[int.parse(textElement.getAttribute('counter'))] = XppText(
               color: color,
               // note: not trimming
@@ -181,6 +180,86 @@ class XppFile {
               offset: Offset(double.parse(textElement.getAttribute('x')),
                   double.parse(textElement.getAttribute('y'))));
         });
+
+        /// processing all strokes
+        layer.findElements('stroke').forEach((strokeElement) {
+          XppStrokeTool tool;
+          switch (strokeElement.getAttribute('tool')) {
+            case "pen":
+              tool = XppStrokeTool.PEN;
+              break;
+            case "eraser":
+              tool = XppStrokeTool.ERASER;
+              return;
+              break;
+            case "highlighter":
+              tool = XppStrokeTool.HIGHLIGHTER;
+              print('Highlighter');
+              return;
+              break;
+            default:
+              print("Unsupported XppStrokeType: " +
+                  strokeElement.getAttribute('tool'));
+              break;
+          }
+          Color color = Colors.black;
+          if (strokeElement.getAttribute('color') != null) {
+            switch (strokeElement.getAttribute('color')) {
+              case "black":
+                break;
+              case "blue":
+                color = Colors.blue;
+                break;
+              case "red":
+                color = Colors.red;
+                break;
+              case "green":
+                color = Colors.green;
+                break;
+              case "gray":
+              case "grey":
+                color = Colors.grey;
+                break;
+              case "lightblue":
+                color = Colors.lightBlue;
+                break;
+              case "lightgreen":
+                color = Colors.lightGreen;
+                break;
+              case "magenta":
+                color = Colors.purpleAccent;
+                break;
+              case "orange":
+                color = Colors.orange;
+                break;
+              case "yellow":
+                color = Colors.yellow;
+                break;
+              case "white":
+                color = Colors.white;
+                break;
+              default:
+                final colorString = strokeElement.getAttribute('color');
+                color = HexColor(colorString);
+                break;
+            }
+          }
+          List<XppStrokePoint> points = [];
+          List<String> rawWidth =
+              strokeElement.getAttribute('width').split(' ');
+          List<String> rawPoints = strokeElement.text.trim().split(' ');
+          for (int i = 0; i < rawPoints.length / 2; i++) {
+            points.add(XppStrokePoint(
+                width: double.parse(
+                    (rawWidth.length > i) ? rawWidth[i] : rawWidth[0]),
+                x: double.parse(rawPoints[i * 2]),
+                y: double.parse(rawPoints[i * 2 + 1])));
+          }
+          if (points.isEmpty) return;
+          content[int.parse(strokeElement.getAttribute('counter'))] =
+              XppStroke(tool: tool, color: color, points: points);
+        });
+
         layers.add(XppLayer(
             content:
                 List.generate(content.keys.length, (index) => content[index])));

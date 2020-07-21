@@ -1,3 +1,4 @@
+import 'package:catcher/catcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/src/XppFile.dart';
@@ -9,7 +10,19 @@ import 'generated/l10n.dart';
 import 'widgets/drawer.dart';
 
 void main() {
-  runApp(MyApp());
+  /// STEP 1. Create catcher configuration.
+  /// Debug configuration with dialog report mode and console handler. It will show dialog and once user accepts it, error will be shown   /// in console.
+  CatcherOptions debugOptions = CatcherOptions(DialogReportMode(), [
+    ConsoleHandler(),
+  ]);
+
+  /// Release configuration. Same as above, but once user accepts dialog, user will be prompted to send email with crash to support.
+  CatcherOptions releaseOptions = CatcherOptions(DialogReportMode(), [
+    EmailManualHandler(["the-one@with-the-braid.cf"])
+  ]);
+
+  /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
+  Catcher(MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);
 }
 
 class MyApp extends StatelessWidget {
@@ -43,7 +56,7 @@ class _CanvasPageState extends State<CanvasPage> {
   XppFile _file;
   double padding = 16;
 
-  XppPage currentPage;
+  int currentPage = 0;
 
   double _currentZoom = 1;
 
@@ -62,12 +75,6 @@ class _CanvasPageState extends State<CanvasPage> {
     });
     width += 2 * padding;
 
-    double height = padding;
-
-    _file.pages.forEach((element) {
-      height += element.pageSize.height + padding;
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Tooltip(
@@ -81,17 +88,17 @@ class _CanvasPageState extends State<CanvasPage> {
       drawer: MainDrawer(),
       body: Stack(children: [
         Zoom(
-          width: currentPage.pageSize.width * 5,
-          height: currentPage.pageSize.height * 5,
+          width: _file.pages[currentPage].pageSize.width * 5,
+          height: _file.pages[currentPage].pageSize.height * 5,
           initZoom: _currentZoom,
           child: Center(
             child: SizedBox(
-              width: currentPage.pageSize.width,
-              height: currentPage.pageSize.height,
+              width: _file.pages[currentPage].pageSize.width,
+              height: _file.pages[currentPage].pageSize.height,
               child: Transform.scale(
                 scale: 5,
                 child: XppPageStack(
-                  page: currentPage,
+                  page: _file.pages[currentPage],
                 ),
               ),
             ),
@@ -140,44 +147,12 @@ class _CanvasPageState extends State<CanvasPage> {
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Container(
-          color: Colors.grey,
-          constraints: BoxConstraints(maxHeight: 100),
-          child: ListView.builder(
-            itemBuilder: (c, i) {
-              final page = _file.pages[i];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () => setState(() => currentPage = page),
-                    child: Card(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: (currentPage == page)
-                                ? Border.all(color: Colors.red)
-                                : null,
-                            borderRadius: BorderRadius.circular(4)),
-                        child: AspectRatio(
-                          aspectRatio:
-                              page.pageSize.width / page.pageSize.height,
-                          child: FittedBox(
-                            child: XppPageStack(
-                              page: page,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-            itemCount: _file.pages.length,
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-          ),
-        ),
+            color: Colors.grey,
+            constraints: BoxConstraints(maxHeight: 100),
+            child: XppPagesListView(
+              pages: _file.pages,
+              onPageChange: (newPage) => setState(() => currentPage = newPage),
+            )),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Builder(
@@ -194,7 +169,6 @@ class _CanvasPageState extends State<CanvasPage> {
 
   void _setMetadata() {
     _file = widget.file ?? XppFile.empty();
-    currentPage = _file?.pages[0];
   }
 
   void _showTitleDialog() {
@@ -230,5 +204,70 @@ class _CanvasPageState extends State<CanvasPage> {
             ],
           );
         });
+  }
+}
+
+class XppPagesListView extends StatefulWidget {
+  @required
+  final List<XppPage> pages;
+  @required
+  final Function(int pageNumber) onPageChange;
+  final int initialPage;
+
+  const XppPagesListView(
+      {Key key, this.pages, this.onPageChange, this.initialPage = 0})
+      : super(key: key);
+  @override
+  _XppPagesListViewState createState() => _XppPagesListViewState();
+}
+
+class _XppPagesListViewState extends State<XppPagesListView> {
+  int currentPage;
+
+  @override
+  void initState() {
+    currentPage = widget.initialPage;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (c, i) {
+        final page = widget.pages[i];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: GestureDetector(
+              onTap: () {
+                setState(() => currentPage = i);
+                widget.onPageChange(i);
+              },
+              child: Card(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: (currentPage == i)
+                          ? Border.all(color: Colors.red)
+                          : Border.all(color: Color.fromARGB(1, 0, 0, 0)),
+                      borderRadius: BorderRadius.circular(4)),
+                  child: AspectRatio(
+                    aspectRatio: page.pageSize.width / page.pageSize.height,
+                    child: FittedBox(
+                      child: XppPageStack(
+                        page: page,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      itemCount: widget.pages.length,
+      scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
+    );
   }
 }

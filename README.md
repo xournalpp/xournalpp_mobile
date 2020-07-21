@@ -4,12 +4,9 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 
 # Try it out
 
-***Update:** We can now render images and text!. You **won't see any
-strokes** if you open a file but you **will see your images and texts**.* :tada:
+***Mission completed:** We can now render strokes, images and text!. We thereby support the full `.xopp` file format.* :tada:
 
-This project is not yet ready for use. We are still implementing backend stuff like the handling of
-the file format. As there is unfortunately [no full documentation](https://github.com/xournalpp/xournalpp/issues/2124)
-of the `.xopp` format, you could describe this process als `try {...} catch (Exception e) {...}`.
+*Please note: stroke support is incredibly bad. There are lots of errors thrown.*
 
 https://xournal.online/
 
@@ -23,8 +20,11 @@ Alternatively, you can download pre-build binaries for **Linux** and **Android**
 - [x] Smooth fade in after thumbnail rendering
 - [x] Render images on the canvas
 - [x] Render text on the canvas
+- [x] Strokes (lots of errors remaining)
 
 ## Getting started
+
+Get your information about the `.xopp` file format at http://www-math.mit.edu/~auroux/software/xournal/manual.html#file-format .
 
 Install Flutter first. See [flutter.dev](https://flutter.dev/docs/get-started/install) for more details.
 ```

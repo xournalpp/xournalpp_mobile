@@ -16,6 +16,7 @@ dependencies:
   xml: ^4.3.0
   url_launcher: ^5.5.0
   transparent_image: any
+  catcher: ^0.3.15
 
 dev_dependencies:
   flutter_test:
