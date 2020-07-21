@@ -188,7 +188,7 @@ class XppFile {
         percentCompleted = (((pageIndex - 1) / pageElements.length) +
                 (layerIndex / layerElements.length)) -
             1;
-        print(percentCompleted);
+        //print(percentCompleted);
         try {
           percentageCallback(percentCompleted);
         } catch (e) {}

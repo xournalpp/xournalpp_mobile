@@ -8,6 +8,9 @@ class HexColor extends Color {
     if (hexColor.length == 6) {
       hexColor = "FF" + hexColor;
     }
+    if (hexColor.length == 8) {
+      hexColor = hexColor.substring(6, 8) + hexColor.substring(0, 6);
+    }
     return int.parse(hexColor, radix: 16);
   }
 
