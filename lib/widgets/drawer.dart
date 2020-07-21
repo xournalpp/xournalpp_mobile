@@ -31,11 +31,23 @@ class _MainDrawerState extends State<MainDrawer> {
           ListTile(
             leading: Icon(Icons.file_upload),
             title: Text(S.of(context).open),
-            onTap: () => XppFile.open().then((openedFile) =>
+            onTap: () {
+              //Navigator.of(context).pop();
+              double percentage = 0;
+              ScaffoldFeatureController snackBarController =
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      duration: Duration(days: 999),
+                      content: Builder(
+                          builder: (context) =>
+                              Text(S.of(context).loadingFile))));
+              XppFile.open((newPercentage) {}).then((openedFile) {
+                snackBarController.close();
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => CanvasPage(
                           file: openedFile,
-                        )))),
+                        )));
+              });
+            },
           ),
           ListTile(
             leading: Icon(Icons.insert_drive_file),

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/src/XppFile.dart';
-import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPage.dart';
+import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 import 'generated/l10n.dart';
@@ -45,6 +45,8 @@ class _CanvasPageState extends State<CanvasPage> {
 
   XppPage currentPage;
 
+  double _currentZoom = 1;
+
   @override
   void initState() {
     _setMetadata();
@@ -77,36 +79,64 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       ),
       drawer: MainDrawer(),
-      body: Zoom(
-        width: currentPage.pageSize.width * 5,
-        height: currentPage.pageSize.height * 5,
-        initZoom: 1,
-        child: Center(
-          child: SizedBox(
-            width: currentPage.pageSize.width,
-            height: currentPage.pageSize.height,
-            child: Transform.scale(
-              scale: 5,
-              child: Stack(
-                  children: List.generate(currentPage.layers.length, (index) {
-                XppLayer currentLayer = currentPage.layers[index];
-                return Stack(
-                  children: List.generate(currentLayer.content.length, (n) {
-                    print('Content');
-                    XppContent currentContent = currentLayer.content[n];
-                    if (currentContent == null) return (Container());
-                    return Positioned(
-                      child: currentContent.render(),
-                      top: currentContent?.getOffset()?.dy,
-                      left: currentContent?.getOffset()?.dx,
-                    );
-                  }),
-                );
-              })),
+      body: Stack(children: [
+        Zoom(
+          width: currentPage.pageSize.width * 5,
+          height: currentPage.pageSize.height * 5,
+          initZoom: _currentZoom,
+          child: Center(
+            child: SizedBox(
+              width: currentPage.pageSize.width,
+              height: currentPage.pageSize.height,
+              child: Transform.scale(
+                scale: 5,
+                child: XppPageStack(
+                  page: currentPage,
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Positioned(
+            bottom: 16,
+            right: 16,
+            child: Tooltip(
+              message: S.of(context).notWorkingYet,
+              child: SizedBox(
+                width: 64,
+                child: Column(
+                  children: [
+                    IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          _currentZoom += .1;
+                          if (_currentZoom > 1) _currentZoom = 1;
+                        }),
+                    SizedBox(
+                      height: 128,
+                      child: RotatedBox(
+                        quarterTurns: 3,
+                        child: Slider(
+                          min: 0,
+                          max: 1,
+                          label: '${_currentZoom * 100} %',
+                          value: _currentZoom,
+                          onChanged: (newZoom) =>
+                              setState(() => _currentZoom = newZoom),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          _currentZoom -= .1;
+                          if (_currentZoom < 0) _currentZoom = 0;
+                        }),
+                  ],
+                ),
+              ),
+            ))
+      ]),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Container(
@@ -115,26 +145,28 @@ class _CanvasPageState extends State<CanvasPage> {
           child: ListView.builder(
             itemBuilder: (c, i) {
               final page = _file.pages[i];
-              page.layers.forEach((layer) {
-                layer.content.forEach((element) {
-                  print(element);
-                });
-              });
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                   child: GestureDetector(
                     onTap: () => setState(() => currentPage = page),
-                    child: AspectRatio(
-                      aspectRatio: page.pageSize.width / page.pageSize.height,
+                    child: Card(
                       child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: (currentPage == page)
                                 ? Border.all(color: Colors.red)
                                 : null,
-                            borderRadius: BorderRadius.circular(2)),
-                        child: Text('Test'),
+                            borderRadius: BorderRadius.circular(4)),
+                        child: AspectRatio(
+                          aspectRatio:
+                              page.pageSize.width / page.pageSize.height,
+                          child: FittedBox(
+                            child: XppPageStack(
+                              page: page,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -154,7 +186,7 @@ class _CanvasPageState extends State<CanvasPage> {
             content: Text(S.of(context).toolboxNotImplementedYet),
           )),
           tooltip: S.of(context).tools,
-          child: Icon(Icons.inbox),
+          child: Icon(Icons.format_paint),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

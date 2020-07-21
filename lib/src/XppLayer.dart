@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:file_picker_cross/file_picker_cross.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class XppLayer {
   XppLayer({this.content});
@@ -76,10 +77,17 @@ class XppImage extends XppContent {
 
   @override
   Widget render() {
-    return Image.memory(
-      data,
-      width: bottomRight.dx - topLeft.dx,
-      height: bottomRight.dy - topLeft.dy,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        CircularProgressIndicator(),
+        FadeInImage(
+          image: MemoryImage(data),
+          placeholder: MemoryImage(kTransparentImage),
+          width: bottomRight.dx - topLeft.dx,
+          height: bottomRight.dy - topLeft.dy,
+        )
+      ],
     );
   }
 
@@ -88,15 +96,25 @@ class XppImage extends XppContent {
 }
 
 class XppText extends XppContent {
+  @required
+  final Color color;
+  @required
+  final double size;
+  @required
+  final String text;
+  @required
+  final Offset offset;
+  @required
+  final String fontFamily;
+
+  XppText({this.size, this.offset, this.fontFamily, this.color, this.text});
+
   @override
-  Offset getOffset() {
-    // TODO: implement getOffset
-    throw UnimplementedError();
-  }
+  Offset getOffset() => offset;
 
   @override
   Widget render() {
-    // TODO: implement render
-    throw UnimplementedError();
+    return DefaultTextStyle.merge(
+        style: TextStyle(color: color), child: (SelectableText(text)));
   }
 }

@@ -17,5 +17,7 @@
   "aboutXournal": "About Xournal++",
   "sourceCode": "Source Code",
   "okay": "Okay",
-  "doubleTapToChange": "Double tap to change."
+  "doubleTapToChange": "Double tap to change.",
+  "notWorkingYet": "Not working yet.",
+  "loadingFile": "Loading file..."
 }
