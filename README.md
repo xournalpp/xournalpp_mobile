@@ -11,7 +11,7 @@ This project is not yet ready for use. We are still implementing backend stuff l
 the file format. As there is unfortunately [no full documentation](https://github.com/xournalpp/xournalpp/issues/2124)
 of the `.xopp` format, you could describe this process als `try {...} catch (Exception e) {...}`.
 
-https://theonewiththebraid.gitlab.io/xournalpp_mobile/
+https://xournal.online/
 
 Alternatively, you can download pre-build binaries for **Linux** and **Android** from the GitLab pipeline.
 
