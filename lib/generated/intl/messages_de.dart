@@ -26,12 +26,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("Über Xournal++ - Mobile-Edition"),
     "apply" : MessageLookupByLibrary.simpleMessage("Anwenden"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
+    "close" : MessageLookupByLibrary.simpleMessage("Schließen"),
     "doubleTapToChange" : MessageLookupByLibrary.simpleMessage("Doppelt tippen zum Ändern."),
     "loadingFile" : MessageLookupByLibrary.simpleMessage("Lade Datei..."),
     "mobileEditionUnofficial" : MessageLookupByLibrary.simpleMessage("Mobile-Edition (inoffiziell)"),
     "newDocument" : MessageLookupByLibrary.simpleMessage("Neues Dokument"),
     "newFile" : MessageLookupByLibrary.simpleMessage("Neu"),
     "newTitle" : MessageLookupByLibrary.simpleMessage("Neuer Titel"),
+    "noFileSelected" : MessageLookupByLibrary.simpleMessage("Keine Datei gewählt"),
     "notImplemented" : MessageLookupByLibrary.simpleMessage("Nicht implementiert"),
     "notWorkingYet" : MessageLookupByLibrary.simpleMessage("Funktioniert noch nicht."),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
@@ -41,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sourceCode" : MessageLookupByLibrary.simpleMessage("Quellcode"),
     "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Werkzeugkasten noch nicht implementiert."),
     "tools" : MessageLookupByLibrary.simpleMessage("Werkzeuge"),
-    "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile-Edition ist ein inoffizielles Projekt, das es versucht, Xournal++ Dateien und -Funktionen auf anderen Geräten bereitzustellen.")
+    "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile-Edition ist ein inoffizielles Projekt, das es versucht, Xournal++ Dateien und -Funktionen auf anderen Geräten bereitzustellen."),
+    "youDidNotSelectAnyFile" : MessageLookupByLibrary.simpleMessage("Du hast keine Datei ausgewählt..")
   };
 }

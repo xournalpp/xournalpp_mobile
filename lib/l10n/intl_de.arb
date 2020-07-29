@@ -19,5 +19,8 @@
   "okay": "Okay",
   "doubleTapToChange": "Doppelt tippen zum Ändern.",
   "notWorkingYet": "Funktioniert noch nicht.",
-  "loadingFile": "Lade Datei..."
+  "loadingFile": "Lade Datei...",
+  "noFileSelected": "Keine Datei gewählt",
+  "youDidNotSelectAnyFile": "Du hast keine Datei ausgewählt..",
+  "close": "Schließen"
 }

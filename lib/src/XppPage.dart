@@ -5,6 +5,7 @@ import 'package:xournalpp/src/XppLayer.dart';
 
 class XppPage {
   XppPage({this.pageSize, this.background, this.layers});
+
   XppPageSize pageSize;
   XppBackground background;
   @required

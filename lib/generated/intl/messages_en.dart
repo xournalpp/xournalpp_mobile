@@ -23,15 +23,17 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "about" : MessageLookupByLibrary.simpleMessage("About"),
     "aboutXournal" : MessageLookupByLibrary.simpleMessage("About Xournal++"),
-    "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("About Xournal++ - Mobile edition"),
+    "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("About Xournal++ - mobile edition"),
     "apply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
+    "close" : MessageLookupByLibrary.simpleMessage("Close"),
     "doubleTapToChange" : MessageLookupByLibrary.simpleMessage("Double tap to change."),
     "loadingFile" : MessageLookupByLibrary.simpleMessage("Loading file..."),
-    "mobileEditionUnofficial" : MessageLookupByLibrary.simpleMessage("Mobile edition (unofficial)"),
+    "mobileEditionUnofficial" : MessageLookupByLibrary.simpleMessage("mobile edition (unofficial)"),
     "newDocument" : MessageLookupByLibrary.simpleMessage("New Document"),
     "newFile" : MessageLookupByLibrary.simpleMessage("New"),
     "newTitle" : MessageLookupByLibrary.simpleMessage("New title"),
+    "noFileSelected" : MessageLookupByLibrary.simpleMessage("No file selected"),
     "notImplemented" : MessageLookupByLibrary.simpleMessage("Not implemented"),
     "notWorkingYet" : MessageLookupByLibrary.simpleMessage("Not working yet."),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
@@ -41,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sourceCode" : MessageLookupByLibrary.simpleMessage("Source Code"),
     "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Toolbox not implemented yet."),
     "tools" : MessageLookupByLibrary.simpleMessage("Tools"),
-    "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.")
+    "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices."),
+    "youDidNotSelectAnyFile" : MessageLookupByLibrary.simpleMessage("You did not select any file.")
   };
 }

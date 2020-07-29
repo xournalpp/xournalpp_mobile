@@ -7,11 +7,13 @@ import 'package:transparent_image/transparent_image.dart';
 
 class XppLayer {
   XppLayer({this.content});
+
   List<XppContent> content;
 }
 
 abstract class XppContent {
   Offset getOffset();
+
   Widget render();
 }
 

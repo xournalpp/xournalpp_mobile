@@ -6,6 +6,7 @@ class XppPageStack extends StatelessWidget {
   final XppPage page;
 
   const XppPageStack({Key key, this.page}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

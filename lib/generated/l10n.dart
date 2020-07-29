@@ -103,10 +103,10 @@ class S {
     );
   }
 
-  /// `Mobile edition (unofficial)`
+  /// `mobile edition (unofficial)`
   String get mobileEditionUnofficial {
     return Intl.message(
-      'Mobile edition (unofficial)',
+      'mobile edition (unofficial)',
       name: 'mobileEditionUnofficial',
       desc: '',
       args: [],
@@ -163,20 +163,20 @@ class S {
     );
   }
 
-  /// `About Xournal++ - Mobile edition`
+  /// `About Xournal++ - mobile edition`
   String get aboutXournalMobileEdition {
     return Intl.message(
-      'About Xournal++ - Mobile edition',
+      'About Xournal++ - mobile edition',
       name: 'aboutXournalMobileEdition',
       desc: '',
       args: [],
     );
   }
 
-  /// `Xournal++ - Mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.`
+  /// `Xournal++ - mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.`
   String get xournalMobileEditionIsAnUnofficialProjectTryingToMake {
     return Intl.message(
-      'Xournal++ - Mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.',
+      'Xournal++ - mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.',
       name: 'xournalMobileEditionIsAnUnofficialProjectTryingToMake',
       desc: '',
       args: [],
@@ -238,6 +238,36 @@ class S {
     return Intl.message(
       'Loading file...',
       name: 'loadingFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No file selected`
+  String get noFileSelected {
+    return Intl.message(
+      'No file selected',
+      name: 'noFileSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You did not select any file.`
+  String get youDidNotSelectAnyFile {
+    return Intl.message(
+      'You did not select any file.',
+      name: 'youDidNotSelectAnyFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
       desc: '',
       args: [],
     );
