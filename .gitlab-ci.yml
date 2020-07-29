@@ -20,7 +20,7 @@ before_script:
   - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
   - set -o pipefail
   # flutter sdk setup
-  - git clone -b beta https://github.com/flutter/flutter.git /flutter
+  - git clone -b dev https://github.com/flutter/flutter.git /flutter
   - export PATH=$PATH:/flutter/bin
   - echo flutter.sdk=$PWD/flutter > android/local.properties
   - chmod +x ./android/gradlew
