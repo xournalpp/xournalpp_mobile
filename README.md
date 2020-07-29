@@ -72,7 +72,7 @@ The accent color is Material Pink.
 
 # Misc
 
-This software is powered by (TestApp)[https://testapp.schule] education software - Learning. Easily.
+This software is powered by the education software [TestApp](https://testapp.schule) - **Learning. Easily.**
 [![TestApp banner](https://gitlab.com/testapp-system/testapp-flutter/-/raw/mobile/assets/Google%20Play%20EN.png)](https://testapp.schule)
 
 ## Legal notes
