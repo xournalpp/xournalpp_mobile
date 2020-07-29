@@ -8,7 +8,7 @@
 PRODUCT_NAME = xournalpp
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = ga.testapp.xournalpp
+PRODUCT_BUNDLE_IDENTIFIER = online.xournal.mobile
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2020 The one with the braid. All rights reserved.

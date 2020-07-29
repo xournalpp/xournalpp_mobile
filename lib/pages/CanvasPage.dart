@@ -106,6 +106,7 @@ class _CanvasPageState extends State<CanvasPage> {
                   children: [
                     IconButton(
                         icon: Icon(Icons.add),
+                        color: Theme.of(context).primaryColor,
                         onPressed: () {
                           _currentZoom += .1;
                           if (_currentZoom > 1) _currentZoom = 1;
@@ -126,6 +127,7 @@ class _CanvasPageState extends State<CanvasPage> {
                     ),
                     IconButton(
                         icon: Icon(Icons.remove),
+                        color: Theme.of(context).primaryColor,
                         onPressed: () {
                           _currentZoom -= .1;
                           if (_currentZoom < 0) _currentZoom = 0;
@@ -173,6 +175,7 @@ class _CanvasPageState extends State<CanvasPage> {
             content: Padding(
               padding: const EdgeInsets.only(left: 8, right: 8),
               child: TextField(
+                  autofocus: true,
                   controller: titleController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),

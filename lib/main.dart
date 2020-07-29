@@ -31,10 +31,17 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [S.delegate],
       supportedLocales: [Locale('en')],
       theme: ThemeData(
+        brightness: Brightness.light,
         primarySwatch: Colors.deepPurple,
+        accentColor: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      darkTheme: ThemeData(brightness: Brightness.dark),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.pink,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       home: CanvasPage(),
     );
   }
