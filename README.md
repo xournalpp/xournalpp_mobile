@@ -62,8 +62,12 @@ flutter run -d linux # or macos
 
 Our primary color is the Material DeepPurple. I simply prefer a colorful application over an old-fashioned gray GTK+ application.
 
-`#673ab7` / `rgb(103, 58, 183)` / `CMYK(44%, 68%, 0%, 28%)`, / `hsl(261°, 51%, 48%)`
+`#673ab7` / `rgb(103, 58, 183)` / `CMYK(44%, 68%, 0%, 28%)` / `hsl(261°, 51%, 48%)`
+
+The accent color is Material Pink.
+
+`#e91e63` / `rgb(233, 30, 99)` / `CMYK(0%, 87%, 58%, 9%)`/ `hsl(340°, 81%, 51%)`
 
 ## Legal notes
 
-This project is licensed under the terms and conditions of the EUPL-1.2 found in [LICENSE](LICENSE).
+This project is licensed under the terms and conditions of the EUPL-1.2 found in [LICENCE](LICENCE).
