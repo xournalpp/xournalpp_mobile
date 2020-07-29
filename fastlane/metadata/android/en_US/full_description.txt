@@ -1,0 +1,21 @@
+A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
+
+# Try it out
+
+***Mission completed:** We can now render strokes, images and text!. We thereby support the full `.xopp` file format.* :tada:
+
+*Please note: stroke support is incredibly bad. There are lots of errors thrown.*
+
+https://xournal.online/
+
+Alternatively, you can download pre-build binaries for **Linux** and **Android** from the GitLab pipeline.
+
+### Visible parts already working:
+
+- [x] Read the document title
+- [x] Read and display the number of pages
+- [x] Create thumbnails of the pages for the navigation bar
+- [x] Smooth fade in after thumbnail rendering
+- [x] Render images on the canvas
+- [x] Render text on the canvas
+- [x] Strokes (lots of errors remaining)

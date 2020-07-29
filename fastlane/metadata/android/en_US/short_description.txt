@@ -1,0 +1,1 @@
+A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.

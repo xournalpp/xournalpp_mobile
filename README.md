@@ -2,6 +2,8 @@
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
+![advertising banner](assets/advertising-banner.png)
+
 # Try it out
 
 ***Mission completed:** We can now render strokes, images and text!. We thereby support the full `.xopp` file format.* :tada:
@@ -67,6 +69,11 @@ Our primary color is the Material DeepPurple. I simply prefer a colorful applica
 The accent color is Material Pink.
 
 `#e91e63` / `rgb(233, 30, 99)` / `CMYK(0%, 87%, 58%, 9%)`/ `hsl(340°, 81%, 51%)`
+
+# Misc
+
+This software is powered by (TestApp)[https://testapp.schule] education software - Learning. Easily.
+[![TestApp banner](https://gitlab.com/testapp-system/testapp-flutter/-/raw/mobile/assets/Google%20Play%20EN.png)](https://testapp.schule)
 
 ## Legal notes
 
