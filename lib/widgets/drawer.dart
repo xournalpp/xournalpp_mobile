@@ -23,7 +23,7 @@ class _MainDrawerState extends State<MainDrawer> {
               child: UserAccountsDrawerHeader(
                 accountName: Text(
                   'Xournal++',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 accountEmail: Text(S.of(context).mobileEditionUnofficial,
                     style: Theme.of(context).textTheme.headline6),
@@ -86,24 +86,36 @@ class _MainDrawerState extends State<MainDrawer> {
                   context: context,
                   builder: (context) => AlertDialog(
                         title: Text(S.of(context).aboutXournalMobileEdition),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset('assets/xournalpp.png', scale: 4),
-                            Text(S
-                                .of(context)
-                                .xournalMobileEditionIsAnUnofficialProjectTryingToMake),
-                            Wrap(spacing: 4, runSpacing: 4, children: [
-                              OutlineButton(
-                                  onPressed: () => launch(Uri.encodeFull(
-                                      'https://github.com/xournalpp/xournalpp')),
-                                  child: Text(S.of(context).aboutXournal)),
-                              OutlineButton(
-                                  onPressed: () => launch(Uri.encodeFull(
-                                      'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
-                                  child: Text(S.of(context).sourceCode))
-                            ]),
-                          ],
+                        content: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 4,
+                                runSpacing: 4,
+                                children: [
+                                  Image.asset('assets/xournalpp.png', scale: 6),
+                                  Image.asset('assets/feature-banner.png',
+                                      scale: 4),
+                                ],
+                              ),
+                              Text(S
+                                  .of(context)
+                                  .xournalMobileEditionIsAnUnofficialProjectTryingToMake),
+                              Wrap(spacing: 4, runSpacing: 4, children: [
+                                OutlineButton(
+                                    onPressed: () => launch(Uri.encodeFull(
+                                        'https://github.com/xournalpp/xournalpp')),
+                                    child: Text(S.of(context).aboutXournal)),
+                                OutlineButton(
+                                    onPressed: () => launch(Uri.encodeFull(
+                                        'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
+                                    child: Text(S.of(context).sourceCode))
+                              ]),
+                            ],
+                          ),
                         ),
                         actions: [
                           FlatButton(

@@ -22,7 +22,8 @@ class XppPageStack extends StatelessWidget {
                 currentContent.getOffset() == null ||
                 currentContent.render() == null) return (Container());
             return Positioned(
-              child: currentContent.render(),
+              child: Builder(
+                  builder: (c) => currentContent.render() ?? Text('Error')),
               top: currentContent.getOffset()?.dy ?? 0,
               left: currentContent.getOffset()?.dx ?? 0,
             );

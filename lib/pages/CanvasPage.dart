@@ -131,69 +131,78 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
       ),
       drawer: MainDrawer(),
       body: Stack(children: [
-        Zoom(
-          width: _file.pages[currentPage].pageSize.width * 5,
-          height: _file.pages[currentPage].pageSize.height * 5,
-          initZoom: _currentZoom,
-          child: Center(
-            child: SizedBox(
-              width: _file.pages[currentPage].pageSize.width,
-              height: _file.pages[currentPage].pageSize.height,
-              child: Transform.scale(
-                scale: 5,
-                child: XppPageStack(
-                  page: _file.pages[currentPage],
+        Hero(
+          tag: 'ZoomArea',
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.surface.withOpacity(.5),
+                BlendMode.darken),
+            child: Zoom(
+              width: _file.pages[currentPage].pageSize.width * 5,
+              height: _file.pages[currentPage].pageSize.height * 5,
+              initZoom: _currentZoom,
+              child: Center(
+                child: SizedBox(
+                  width: _file.pages[currentPage].pageSize.width,
+                  height: _file.pages[currentPage].pageSize.height,
+                  child: Transform.scale(
+                    scale: 5,
+                    child: XppPageStack(
+                      page: _file.pages[currentPage],
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ),
         Positioned(
-            bottom: 16,
-            right: 16,
-            child: Tooltip(
-              message: S.of(context).notWorkingYet,
-              child: SizedBox(
-                width: 64,
-                child: Column(
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.add),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          _currentZoom += .1;
-                          if (_currentZoom > 1) _currentZoom = 1;
-                        }),
-                    SizedBox(
-                      height: 128,
-                      child: RotatedBox(
-                        quarterTurns: 3,
-                        child: Slider(
-                          min: 0,
-                          max: 1,
-                          label: '${_currentZoom * 100} %',
-                          value: _currentZoom,
-                          onChanged: (newZoom) =>
-                              setState(() => _currentZoom = newZoom),
-                        ),
+          bottom: 16,
+          right: 16,
+          child: Tooltip(
+            message: S.of(context).notWorkingYet,
+            child: SizedBox(
+              width: 64,
+              child: Column(
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.add),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        _currentZoom += .1;
+                        if (_currentZoom > 1) _currentZoom = 1;
+                      }),
+                  SizedBox(
+                    height: 128,
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Slider(
+                        min: 0,
+                        max: 1,
+                        label: '${_currentZoom * 100} %',
+                        value: _currentZoom,
+                        onChanged: (newZoom) =>
+                            setState(() => _currentZoom = newZoom),
                       ),
                     ),
-                    IconButton(
-                        icon: Icon(Icons.remove),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          _currentZoom -= .1;
-                          if (_currentZoom < 0) _currentZoom = 0;
-                        }),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.remove),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        _currentZoom -= .1;
+                        if (_currentZoom < 0) _currentZoom = 0;
+                      }),
+                ],
               ),
-            ))
+            ),
+          ),
+        )
       ]),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Container(
-            color: Colors.grey,
+            color: Theme.of(context).colorScheme.surface,
             constraints: BoxConstraints(maxHeight: 100),
             child: XppPagesListView(
               pages: _file.pages,

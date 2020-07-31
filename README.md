@@ -62,7 +62,9 @@ flutter config --enable-linux-desktop # or --enable-macos-desktop
 flutter run -d linux # or macos
 ```
 
-## Colors
+## Colors and Typography
+
+### Colors
 
 Our primary color is the Material DeepPurple. I simply prefer a colorful application over an old-fashioned gray GTK+ application.
 
@@ -71,6 +73,21 @@ Our primary color is the Material DeepPurple. I simply prefer a colorful applica
 The accent color is Material Pink.
 
 `#e91e63` / `rgb(233, 30, 99)` / `CMYK(0%, 87%, 58%, 9%)`/ `hsl(340°, 81%, 51%)`
+
+The light color is White.
+
+`#ffffff` / `rgb(255, 255, 255)` / `CMYK(0%, 0%, 0%, 0%)`/ `hsl(0°, 0%, 100%)`
+
+The dark color is Material Blue Grey 900.
+
+`#263238` / `rgb(38, 50, 56)` / `CMYK(32%, 11%, 0%, 78%)`/ `hsl(200°, 19%, 18%)`
+
+### Fonts
+
+* Display Text: Open Sans Extra Bold *(800)* `Apache 2.0`, *accent color* or *light color*
+* Title and Heading: Open Sans Regular *(400)* `Apache 2.0`, *light color*
+* Emphasis: Glacial Indifference Regular *(400)* `SIL Open Font License`, *light color*, *UPPERCASE*
+* Body: Open Sans Light *(300)* `Apache 2.0`, *light color*
 
 # Misc
 
