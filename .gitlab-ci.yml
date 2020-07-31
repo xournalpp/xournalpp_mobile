@@ -78,9 +78,10 @@ build:linux:
     - flutter pub get
     - set +o pipefail
     - flutter build linux
+    - mv build/linux/release/bundle xournalpp-mobile
   artifacts:
     paths:
-      - build/linux/release/bundle/
+      - xournalpp-mobile
 
 pages:
   stage: deploy
