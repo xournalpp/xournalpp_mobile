@@ -1,6 +1,6 @@
 # <img src="assets/xournalpp-adaptive.png" width="64" style="height: auto;"/> Xournal++ - mobile edition (unofficial)
 
-![Bitrise build](https://img.shields.io/bitrise/dd58f8fe5b4bf6c0?style=for-the-badge&token=Ihrbr8U0mqFlVBOocwtnQA) ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/TheOneWithTheBraid/xournalpp_mobile/master?style=for-the-badge)
+![Current version](https://img.shields.io/badge/dynamic/yaml?label=Current%20version&query=version&url=https%3A%2F%2Fgitlab.com%2FTheOneWithTheBraid%2Fxournalpp_mobile%2Fraw%2Fmaster%2Fpubspec.yaml%3Finline%3Dfalse&style=for-the-badge) ![Bitrise build](https://img.shields.io/bitrise/dd58f8fe5b4bf6c0?style=for-the-badge&token=Ihrbr8U0mqFlVBOocwtnQA) ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/TheOneWithTheBraid/xournalpp_mobile/master?style=for-the-badge)
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
@@ -8,13 +8,13 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 
 # Try it out
 
-***Mission completed:** We can now render strokes, images and text!. We thereby support the full `.xopp` file format.* :tada:
+***Mission completed:** We can now render strokes, images and text and LaTeX!. We thereby support the full `.xopp` file format.* :tada:
 
-*Please note: stroke support is incredibly bad. There are lots of errors thrown.*
+[Open web app](https://xournal.online/)
 
-https://xournal.online/
+[Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
 
-Alternatively, you can download pre-build binaries for **Linux** and **Android** from the GitLab pipeline.
+[Download for Android](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Aapk)
 
 ### Visible parts already working:
 
@@ -24,7 +24,12 @@ Alternatively, you can download pre-build binaries for **Linux** and **Android**
 - [x] Smooth fade in after thumbnail rendering
 - [x] Render images on the canvas
 - [x] Render text on the canvas
-- [x] Strokes (lots of errors remaining)
+- [x] Strokes
+- [x] Highlighter
+- [x] LaTeX
+- [ ] Whiteout eraser
+- [ ] Saving
+- [ ] Basic editing
 
 ## Getting started
 
