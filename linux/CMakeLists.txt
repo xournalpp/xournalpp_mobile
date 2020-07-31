@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "xournalpp")
+set(BINARY_NAME "xournalpp-mobile")
+set(APPLICATION_ID "online.xournal.mobile")
 
 cmake_policy(SET CMP0063 NEW)
 
@@ -31,6 +32,8 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # System-level dependencies.
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
+
+add_definitions(-DAPPLICATION_ID="${APPLICATION_ID}")
 
 # Application build
 add_executable(${BINARY_NAME}

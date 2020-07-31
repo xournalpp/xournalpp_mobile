@@ -1,0 +1,22 @@
+name: xournalpp-mobile
+version: 1.0.1
+summary: Infinitely take notes, sketch and learn
+description: A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
+
+confinement: strict
+base: core18
+grade: stable
+
+apps:
+  xournalpp-mobile:
+    command: xournalpp_mobile
+    extensions: [flutter-master] # Where "master" defines which Flutter channel to use for the build
+    plugs:
+    - network
+
+parts:
+  xournalpp-mobile:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart # The main entry-point file of the application
+
