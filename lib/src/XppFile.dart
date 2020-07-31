@@ -25,15 +25,22 @@ class XppFile {
 
   /// showing a file picker, decoding and parsing to [XppFile]
   static Future<XppFile> open(Function(double) percentageCallback) async {
+    /// showing a [FilePickerCross]
+    FilePickerCross rawFile = await FilePickerCross.pick(
+        type: FileTypeCross.custom, fileExtension: 'xopp');
+
+    /// decoding by [fromFilePickerCross]
+    return await fromFilePickerCross(rawFile, percentageCallback);
+  }
+
+  /// decoding and parsing a [FilePickerCross] to [XppFile]
+  static Future<XppFile> fromFilePickerCross(
+      FilePickerCross rawFile, Function(double) percentageCallback) async {
     /// for potential progress indicator and a better UX we provide feedback about
     /// the state of parsing. Huge documents may require a minute or two.
     double percentCompleted = 0;
 
     if (percentageCallback == null) percentageCallback = (percentage) {};
-
-    /// showing a [FilePickerCross]
-    FilePickerCross rawFile = await FilePickerCross.pick(
-        type: FileTypeCross.custom, fileExtension: 'xopp');
 
     /// extracting the document title
     String title = rawFile.path.substring(

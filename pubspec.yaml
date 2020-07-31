@@ -17,6 +17,8 @@ dependencies:
   url_launcher: ^5.5.0
   transparent_image: ^1.0.0
   catcher: ^0.3.17
+  receive_sharing_intent: ^1.4.0
+  after_init: ^0.1.2
 
 dev_dependencies:
   flutter_test:

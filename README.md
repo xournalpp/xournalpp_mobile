@@ -2,7 +2,7 @@
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
-![feature banner](assets/feature-banner.png)
+![feature banner](assets/feature-banner.svg)
 
 # Try it out
 
