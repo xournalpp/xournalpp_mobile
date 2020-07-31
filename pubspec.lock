@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.17"
+  catex:
+    dependency: transitive
+    description:
+      name: catex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+6"
   characters:
     dependency: transitive
     description:
@@ -198,6 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  katex_flutter:
+    dependency: "direct main"
+    description:
+      name: katex_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1+25"
   logging:
     dependency: transitive
     description:

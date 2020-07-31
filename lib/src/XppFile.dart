@@ -7,6 +7,10 @@ import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
+import 'package:xournalpp/layer_contents/XppImage.dart';
+import 'package:xournalpp/layer_contents/XppStroke.dart';
+import 'package:xournalpp/layer_contents/XppTexImage.dart';
+import 'package:xournalpp/layer_contents/XppText.dart';
 import 'package:xournalpp/src/HexColor.dart';
 
 import 'XppLayer.dart';
@@ -181,6 +185,17 @@ class XppFile {
                   double.parse(textElement.getAttribute('y'))));
         });
 
+        /// processing all lateximages
+        layer.findElements('teximage').forEach((texElement) {
+          content[int.parse(texElement.getAttribute('counter'))] = XppTexImage(
+              text: texElement.getAttribute('text').trim(),
+              topLeft: Offset(double.parse(texElement.getAttribute('left')),
+                  double.parse(texElement.getAttribute('top'))),
+              bottomRight: Offset(
+                  double.parse(texElement.getAttribute('right')),
+                  double.parse(texElement.getAttribute('bottom'))));
+        });
+
         /// processing all strokes
         layer.findElements('stroke').forEach((strokeElement) {
           XppStrokeTool tool;
@@ -190,12 +205,12 @@ class XppFile {
               break;
             case "eraser":
               tool = XppStrokeTool.ERASER;
+
+              /// TODO: implement whiteout eraser
               return;
               break;
             case "highlighter":
               tool = XppStrokeTool.HIGHLIGHTER;
-              print('Highlighter');
-              return;
               break;
             default:
               print("Unsupported XppStrokeType: " +
