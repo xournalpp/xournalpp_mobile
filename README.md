@@ -1,6 +1,6 @@
 # <img src="assets/xournalpp-adaptive.png" width="64" style="height: auto;"/> Xournal++ - mobile edition (unofficial)
 
-![Current version](https://img.shields.io/badge/dynamic/yaml?label=Current%20version&query=version&url=https%3A%2F%2Fgitlab.com%2FTheOneWithTheBraid%2Fxournalpp_mobile%2Fraw%2Fmaster%2Fpubspec.yaml%3Finline%3Dfalse&style=for-the-badge) ![Bitrise build](https://img.shields.io/bitrise/dd58f8fe5b4bf6c0?style=for-the-badge&token=Ihrbr8U0mqFlVBOocwtnQA) ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/TheOneWithTheBraid/xournalpp_mobile/master?style=for-the-badge)
+![Current version](https://img.shields.io/badge/dynamic/yaml?label=Current%20version&query=version&url=https%3A%2F%2Fgitlab.com%2FTheOneWithTheBraid%2Fxournalpp_mobile%2Fraw%2Fmaster%2Fpubspec.yaml%3Finline%3Dfalse&style=for-the-badge) ![Bitrise build](https://img.shields.io/bitrise/dd58f8fe5b4bf6c0?style=for-the-badge&token=Ihrbr8U0mqFlVBOocwtnQA) ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/TheOneWithTheBraid/xournalpp_mobile/master?style=for-the-badge) [![Google Play](https://img.shields.io/endpoint?color=689f38&url=https%3A%2F%2Fplayshields.herokuapp.com%2Fplay%3Fi%3Donline.xournal.mobile%26l%3DGoogle-Play%26m%3D%24version&style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=online.xournal.mobile)
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
@@ -12,9 +12,11 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 
 [Open web app](https://xournal.online/)
 
-[Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
+[Download in Google Play](https://play.google.com/store/apps/details?id=online.xournal.mobile)
 
-[Download for Android](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Aapk)
+[Download APK](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Aapk)
+
+[Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
 
 ### Visible parts already working:
 
