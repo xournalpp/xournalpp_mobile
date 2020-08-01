@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
+import 'package:xournalpp/pages/OpenPage.dart';
 import 'package:xournalpp/src/XppFile.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -29,6 +30,12 @@ class _MainDrawerState extends State<MainDrawer> {
                     style: Theme.of(context).textTheme.headline6),
                 currentAccountPicture: Image.asset('assets/xournalpp.png'),
               ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => OpenPage())),
             ),
             ListTile(
               leading: Icon(Icons.file_upload),

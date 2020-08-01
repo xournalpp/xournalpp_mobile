@@ -6,6 +6,7 @@ import 'package:archive/archive.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/layer_contents/XppImage.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
@@ -34,7 +35,22 @@ class XppFile {
         type: FileTypeCross.custom, fileExtension: 'xopp');
 
     /// decoding by [fromFilePickerCross]
-    return await fromFilePickerCross(rawFile, percentageCallback);
+    XppFile file = await fromFilePickerCross(rawFile, percentageCallback);
+
+    SharedPreferences.getInstance().then((prefs) {
+      String jsonData = prefs.getString('recentFiles');
+      if (jsonData != null) {
+        jsonData = '[]';
+      }
+      Set<Map> files = jsonDecode(jsonData).toSet();
+      files.add({
+        'preview': base64Encode(file.previewImage),
+        'name': file.title,
+        'path': rawFile.path
+      });
+    });
+
+    return file;
   }
 
   /// decoding and parsing a [FilePickerCross] to [XppFile]

@@ -52,13 +52,13 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" /> <!-- application/x-gzip -->
+                <data android:mimeType="application/x-xopp" /> <!-- application/x-xopp -->
             </intent-filter>
             <!-- unsure whether SEND_MULTIPLE should be supported -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" />
+                <data android:mimeType="application/x-xopp" />
             </intent-filter>
 
         </activity>

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
@@ -7,9 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
-import 'package:xournalpp/src/conditional/open_file_generic.dart'
-    if (dart.library.html) 'package:xournalpp/src/conditional/open_file_web.dart'
-    if (dart.library.io) 'package:xournalpp/src/conditional/open_file_io.dart';
+import 'package:xournalpp/src/conditional/open_file/open_file_generic.dart'
+    if (dart.library.html) 'package:xournalpp/src/conditional/open_file/open_file_web.dart'
+    if (dart.library.io) 'package:xournalpp/src/conditional/open_file/open_file_io.dart';
 import 'package:xournalpp/src/globals.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
@@ -33,15 +32,12 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
 
   double _currentZoom = 1;
 
-  StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
-  String _sharedText;
 
   @override
   void didInitState() {
     // For sharing images coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) {
+    ReceiveSharingIntent.getMediaStream().listen((List<SharedMediaFile> value) {
       setState(() {
         _sharedFiles = value;
         receivedShareNotification(value);
@@ -59,11 +55,7 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
     });
 
     // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
-      setState(() {
-        _sharedText = value;
-      });
+    ReceiveSharingIntent.getTextStream().listen((String value) {
       receivedShareNotification(value);
     }, onError: (err) {
       print("getLinkStream error: $err");
@@ -71,10 +63,7 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
 
     // For sharing or opening urls/text coming from outside the app while the app is closed
     ReceiveSharingIntent.getInitialText().then((String value) {
-      setState(() {
-        _sharedText = value;
-        receivedShareNotification(value);
-      });
+      receivedShareNotification(value);
     });
   }
 

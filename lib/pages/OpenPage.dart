@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
+import 'package:xournalpp/src/XppFile.dart';
+import 'package:xournalpp/src/conditional/open_file/open_file_generic.dart';
+import 'package:xournalpp/widgets/DropFile.dart';
 import 'package:xournalpp/widgets/drawer.dart';
 
 class OpenPage extends StatefulWidget {
@@ -11,9 +16,22 @@ class OpenPage extends StatefulWidget {
 }
 
 class _OpenPageState extends State<OpenPage> {
-  DropzoneViewController _fileDropController;
+  bool _loadedRecent = false;
+  List<Map> recentFiles = [];
 
-  bool _fileHover = false;
+  @override
+  void initState() {
+    SharedPreferences.getInstance().then((prefs) {
+      String jsonData = prefs.getString('recentFiles');
+      if (jsonData != null) {
+        recentFiles = (jsonDecode(jsonData) as List<Map>).reversed;
+      }
+      setState(() {
+        _loadedRecent = true;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,64 +40,10 @@ class _OpenPageState extends State<OpenPage> {
       appBar: AppBar(
         title: Text('Xournal++'),
       ),
-      body: Column(
-        children: [
-          if (kIsWeb)
-            Container(
-                constraints: BoxConstraints(maxHeight: 320),
-                child: Stack(
-                  children: [
-                    DropzoneView(
-                      onDrop: (value) {
-                        print(value);
-                      },
-                      onHover: () => _fileHover = true,
-                      onLeave: () => _fileHover = false,
-                      onError: (message) {
-                        _fileHover = false;
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: Text('Error loading file'),
-                                  actions: [
-                                    FlatButton(
-                                      onPressed: () => Clipboard.setData(
-                                          ClipboardData(text: message)),
-                                      child: Text('Copy error message'),
-                                    ),
-                                    FlatButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text('Okay'))
-                                  ],
-                                  content: Text(
-                                      'The following error was detected:\n$message'),
-                                ));
-                      },
-                      onCreated: (controller) {
-                        _fileDropController = controller;
-                      },
-                      operation: DragOperation.link,
-                      //mime: ['application/x-gzip', 'xopp'],
-                    ),
-                    Center(
-                      child: Text.rich(
-                        TextSpan(children: [
-                          WidgetSpan(child: Icon(Icons.file_upload)),
-                          TextSpan(text: 'Drop files to open')
-                        ]),
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary),
-                      ),
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                    color: _fileHover
-                        ? Theme.of(context).accentColor
-                        : Theme.of(context).backgroundColor,
-                    borderRadius: BorderRadius.circular(8)))
-        ],
+      body: ListView(
+        children: [if (kIsWeb) DropFile()]..addAll(_loadedRecent
+            ? generateRecentFileList(recentFiles, context)
+            : [CircularProgressIndicator()]),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.of(context)
@@ -89,4 +53,38 @@ class _OpenPageState extends State<OpenPage> {
       ),
     );
   }
+}
+
+Iterable<Widget> generateRecentFileList(List<Map> files, BuildContext context) {
+  return List.generate(files.length > 0 ? files.length : 1, (index) {
+    if (files.length > 0) {
+      Map fileInfo = files[index];
+      return ListTile(
+        isThreeLine: true,
+        leading: Container(
+          child: Stack(
+            children: [
+              CircularProgressIndicator(),
+              FadeInImage(
+                  placeholder: MemoryImage(kTransparentImage),
+                  image: MemoryImage(base64Decode(fileInfo['preview']))),
+            ],
+          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        ),
+        title: Text(fileInfo['name']),
+        onTap: () async {
+          XppFile file = await XppFile.fromFilePickerCross(
+              openFileByUri(fileInfo['path']), (percent) {});
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CanvasPage(file: file)));
+        },
+      );
+    } else {
+      return ListTile(
+        leading: Icon(Icons.info),
+        title: Text('No recent files.'),
+      );
+    }
+  });
 }
