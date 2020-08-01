@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
+import 'package:xournalpp/pages/OpenPage.dart';
 
 import 'generated/l10n.dart';
 
@@ -143,7 +144,7 @@ class MyApp extends StatelessWidget {
               backgroundColor: kDarkColor,
               actionTextColor: kSecondaryColorAccent,
               contentTextStyle: kBodyFont)),
-      home: CanvasPage(),
+      home: OpenPage(),
     );
   }
 }

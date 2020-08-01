@@ -146,6 +146,27 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_dropzone:
+    dependency: "direct main"
+    description:
+      name: flutter_dropzone
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
+  flutter_dropzone_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_dropzone_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
+  flutter_dropzone_web:
+    dependency: transitive
+    description:
+      name: flutter_dropzone_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -212,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2"
   katex_flutter:
     dependency: "direct main"
     description:
