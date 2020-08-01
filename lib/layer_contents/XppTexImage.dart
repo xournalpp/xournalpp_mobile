@@ -40,7 +40,7 @@ class XppTexImage extends XppContent {
 
   @override
   Widget render() {
-    return new KaTeX(laTeXCode: Text('\$$text\$'));
+    return new KaTeX(laTeXCode: Text('\$\\displaystyle{$text}\$'));
   }
 
   @override
