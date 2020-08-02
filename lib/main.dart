@@ -1,16 +1,13 @@
 import 'dart:ui';
 
-import 'package:after_init/after_init.dart';
 import 'package:catcher/catcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:xournalpp/pages/CanvasPage.dart';
 import 'package:xournalpp/pages/OpenPage.dart';
 
 import 'generated/l10n.dart';
 
-void main() {
+void main(List<String> arguments) {
   /// STEP 1. Create catcher configuration.
   /// Debug configuration with dialog report mode and console handler. It will show dialog and once user accepts it, error will be shown   /// in console.
   CatcherOptions debugOptions = CatcherOptions(DialogReportMode(), [
@@ -23,7 +20,8 @@ void main() {
   ]);
 
   /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
-  Catcher(MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);
+  Catcher(XournalppMobile(),
+      debugConfig: debugOptions, releaseConfig: releaseOptions);
 }
 
 const Color kPrimaryColor = Colors.deepPurple;
@@ -63,7 +61,7 @@ const TextStyle kEmphasisFont = TextStyle(
     height: 1.22,
     letterSpacing: 1.8);
 
-class MyApp extends StatelessWidget {
+class XournalppMobile extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
