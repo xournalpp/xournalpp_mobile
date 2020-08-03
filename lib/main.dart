@@ -20,8 +20,8 @@ void main(List<String> arguments) {
   ]);
 
   /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
-  //Catcher(XournalppMobile(),      debugConfig: debugOptions, releaseConfig: releaseOptions);
-  runApp(XournalppMobile());
+  Catcher(XournalppMobile(),
+      debugConfig: debugOptions, releaseConfig: releaseOptions);
 }
 
 const Color kPrimaryColor = Colors.deepPurple;

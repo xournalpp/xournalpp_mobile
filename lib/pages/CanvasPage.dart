@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -193,7 +194,7 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
         )
       ]),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: kIsWeb ? null : CircularNotchedRectangle(),
         child: Container(
             color: Theme.of(context).colorScheme.surface,
             constraints: BoxConstraints(maxHeight: 100),

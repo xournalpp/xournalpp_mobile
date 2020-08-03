@@ -47,9 +47,7 @@ class XppFile {
         'path': rawFile.path
       });
       jsonData = jsonEncode(files.toList());
-      prefs
-          .setString(PreferencesKeys.kRecentFiles, jsonData)
-          .then((value) => print(value));
+      prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
     });
 
     return file;
