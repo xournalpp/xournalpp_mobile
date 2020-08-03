@@ -16,6 +16,7 @@ import 'package:xournalpp/src/HexColor.dart';
 
 import 'XppLayer.dart';
 import 'XppPage.dart';
+import 'globals.dart';
 
 class XppFile {
   XppFile({this.title, this.pages, this.previewImage});
@@ -38,16 +39,17 @@ class XppFile {
     XppFile file = await fromFilePickerCross(rawFile, percentageCallback);
 
     SharedPreferences.getInstance().then((prefs) {
-      String jsonData = prefs.getString('recentFiles');
-      if (jsonData != null) {
-        jsonData = '[]';
-      }
-      Set<Map> files = jsonDecode(jsonData).toSet();
+      String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
+      Set files = (jsonDecode(jsonData) as Iterable).toSet();
       files.add({
         'preview': base64Encode(file.previewImage),
         'name': file.title,
         'path': rawFile.path
       });
+      jsonData = jsonEncode(files.toList());
+      prefs
+          .setString(PreferencesKeys.kRecentFiles, jsonData)
+          .then((value) => print(value));
     });
 
     return file;

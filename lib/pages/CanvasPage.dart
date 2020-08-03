@@ -36,35 +36,39 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
 
   @override
   void didInitState() {
-    // For sharing images coming from outside the app while the app is in the memory
-    ReceiveSharingIntent.getMediaStream().listen((List<SharedMediaFile> value) {
-      setState(() {
-        _sharedFiles = value;
-        receivedShareNotification(value);
+    try {
+      // For sharing images coming from outside the app while the app is in the memory
+      ReceiveSharingIntent.getMediaStream().listen(
+          (List<SharedMediaFile> value) {
+        setState(() {
+          _sharedFiles = value;
+          receivedShareNotification(value);
+        });
+      }, onError: (err) {
+        print("getIntentDataStream error: $err");
       });
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
 
-    // For sharing images coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
-      setState(() {
-        _sharedFiles = value;
+      // For sharing images coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialMedia()
+          .then((List<SharedMediaFile> value) {
+        setState(() {
+          _sharedFiles = value;
+          receivedShareNotification(value);
+        });
+      }).catchError((e) {});
+
+      // For sharing or opening urls/text coming from outside the app while the app is in the memory
+      ReceiveSharingIntent.getTextStream().listen((String value) {
         receivedShareNotification(value);
+      }, onError: (err) {
+        print("getLinkStream error: $err");
       });
-    });
 
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    ReceiveSharingIntent.getTextStream().listen((String value) {
-      receivedShareNotification(value);
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
-
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialText().then((String value) {
-      receivedShareNotification(value);
-    });
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialText().then((String value) {
+        receivedShareNotification(value);
+      }).catchError((e) {});
+    } catch (e) {}
   }
 
   @override

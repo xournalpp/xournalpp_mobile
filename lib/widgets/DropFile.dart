@@ -2,6 +2,7 @@ import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
 import 'package:xournalpp/src/XppFile.dart';
 
@@ -36,7 +37,8 @@ class _DropFileState extends State<DropFile> {
                     _fileDropController.getFilename(file).then((filename) {
                       var controller =
                           Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Opening file ' + filename + ' ...'),
+                        content:
+                            Text(S.of(context).openingFile + filename + ' ...'),
                         duration: Duration(days: 999),
                       ));
                       _fileDropController.getFileData(file).then((bytes) {
@@ -63,19 +65,26 @@ class _DropFileState extends State<DropFile> {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                    title: Text('Error opening file'),
-                                    content: SelectableText(
-                                        'I\'m very sorry, but I couldn\'t read the file $filename . Are you sure I have the permission? And are you sure it is a Xournal++ file?\n${e.toString()}'),
+                                    title: Text(S.of(context).errorOpeningFile),
+                                    content: SelectableText(S
+                                            .of(context)
+                                            .imVerySorryButICouldntReadTheFile +
+                                        '$filename' +
+                                        S
+                                            .of(context)
+                                            .areYouSureIHaveThePermissionAndAreYou +
+                                        '\n${e.toString()}'),
                                     actions: [
                                       FlatButton(
                                           onPressed: () => Clipboard.setData(
                                               ClipboardData(
                                                   text: e.toString())),
-                                          child: Text('Copy message')),
+                                          child: Text(
+                                              S.of(context).copyErrorMessage)),
                                       FlatButton(
                                         onPressed: () =>
                                             Navigator.of(context).pop(),
-                                        child: Text('Okay'),
+                                        child: Text(S.of(context).okay),
                                       ),
                                     ],
                                   ));
@@ -100,20 +109,22 @@ class _DropFileState extends State<DropFile> {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                              title: Text('Error loading file'),
+                              title: Text(S.of(context).errorLoadingFile),
                               actions: [
                                 FlatButton(
                                   onPressed: () => Clipboard.setData(
                                       ClipboardData(text: message)),
-                                  child: Text('Copy error message'),
+                                  child: Text(S.of(context).copyErrorMessage),
                                 ),
                                 FlatButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    child: Text('Okay'))
+                                    child: Text(S.of(context).okay))
                               ],
                               content: Text(
-                                  'The following error was detected:\n$message'),
+                                  S.of(context).theFollowingErrorWasDetected +
+                                      '\n' +
+                                      message),
                             ));
                   },
                   onCreated: (controller) {
@@ -135,7 +146,7 @@ class _DropFileState extends State<DropFile> {
                               Icons.file_upload,
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
-                            Text('Drop files to open')
+                            Text(S.of(context).dropFilesToOpen)
                           ],
                           mainAxisAlignment: MainAxisAlignment.center,
                         ),

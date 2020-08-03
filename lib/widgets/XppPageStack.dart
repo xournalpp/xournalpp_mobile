@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPage.dart';
 
@@ -23,7 +24,8 @@ class XppPageStack extends StatelessWidget {
                 currentContent.render() == null) return (Container());
             return Positioned(
               child: Builder(
-                  builder: (c) => currentContent.render() ?? Text('Error')),
+                  builder: (c) =>
+                      currentContent.render() ?? Text(S.of(context).error)),
               top: currentContent.getOffset()?.dy ?? 0,
               left: currentContent.getOffset()?.dx ?? 0,
             );

@@ -20,8 +20,8 @@ void main(List<String> arguments) {
   ]);
 
   /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
-  Catcher(XournalppMobile(),
-      debugConfig: debugOptions, releaseConfig: releaseOptions);
+  //Catcher(XournalppMobile(),      debugConfig: debugOptions, releaseConfig: releaseOptions);
+  runApp(XournalppMobile());
 }
 
 const Color kPrimaryColor = Colors.deepPurple;
@@ -47,7 +47,7 @@ const TextStyle kHugeFont = TextStyle(
 final TextStyle kLargeFont = TextStyle(
   fontFamily: 'Open Sans',
   fontSize: kLargeFontSize,
-  color: kDarkColor,
+  color: kLightColor,
   height: 1.4,
 );
 const TextStyle kBodyFont = TextStyle(
@@ -78,10 +78,12 @@ class XournalppMobile extends StatelessWidget {
           textTheme: TextTheme(
             headline1: kHugeFont,
             headline2: kHugeFont,
-            headline3: kLargeFont.copyWith(color: kLightColor),
-            headline4: kLargeFont.copyWith(color: kLightColor),
-            headline5: kLargeFont.copyWith(color: kLightColor),
-            headline6: kLargeFont.copyWith(color: kLightColor),
+            headline3: kLargeFont
+                .copyWith(color: kDarkColor)
+                .copyWith(fontSize: kLargeFontSize * kFontSizeDivision),
+            headline4: kLargeFont.copyWith(color: kDarkColor),
+            headline5: kLargeFont.copyWith(color: kDarkColor),
+            headline6: kLargeFont.copyWith(color: kDarkColor),
             bodyText1: kBodyFont,
             bodyText2: kEmphasisFont,
             caption: kEmphasisFont,

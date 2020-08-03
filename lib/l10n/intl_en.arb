@@ -22,5 +22,17 @@
   "loadingFile": "Loading file...",
   "noFileSelected": "No file selected",
   "youDidNotSelectAnyFile": "You did not select any file.",
-  "close": "Close"
+  "close": "Close",
+  "recentFiles": "Recent files",
+  "newNotebook": "New Notebook",
+  "noRecentFiles": "No recent files.",
+  "openingFile": "Opening file",
+  "errorOpeningFile": "Error opening file",
+  "dropFilesToOpen": "Drop files to open",
+  "errorLoadingFile": "Error loading file",
+  "theFollowingErrorWasDetected": "The following error was detected:",
+  "copyErrorMessage": "Copy error message",
+  "imVerySorryButICouldntReadTheFile": "I'm very sorry, but I couldn't read the file ",
+  "areYouSureIHaveThePermissionAndAreYou": ". Are you sure I have the permission? And are you sure it is a Xournal++ file?",
+  "error": "Error"
 }

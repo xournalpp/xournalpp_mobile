@@ -22,5 +22,17 @@
   "loadingFile": "Lade Datei...",
   "noFileSelected": "Keine Datei gewählt",
   "youDidNotSelectAnyFile": "Du hast keine Datei ausgewählt..",
-  "close": "Schließen"
+  "close": "Schließen",
+  "recentFiles": "Zuletzt verwendete Dateien",
+  "newNotebook": "Neues Notizbuch",
+  "noRecentFiles": "Keine zuletzt verwendeten Dateien.",
+  "openingFile": "Öffne Datei",
+  "errorOpeningFile": "Fehler beim Öffnen der Datei",
+  "dropFilesToOpen": "Dateien zum Öffnen hier hinschieben",
+  "errorLoadingFile": "Fehler beim Öffnen der Datei",
+  "theFollowingErrorWasDetected": "Folgender Fehler ist aufgetreten:",
+  "copyErrorMessage": "Fehlermeldung kopieren",
+  "imVerySorryButICouldntReadTheFile": "Es tut mir Leid, aber ich konnte die Datei ",
+  "areYouSureIHaveThePermissionAndAreYou": " leider nicht lesen. Bist du dir sicher, dass ich dazu die Berechtigung habe, und, dass es eine richtige Xournal++ Datei ist?",
+  "error": "Fehler"
 }
