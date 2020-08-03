@@ -7,7 +7,7 @@ import 'package:xournalpp/pages/OpenPage.dart';
 
 import 'generated/l10n.dart';
 
-void main(List<String> arguments) {
+void main() {
   /// STEP 1. Create catcher configuration.
   /// Debug configuration with dialog report mode and console handler. It will show dialog and once user accepts it, error will be shown   /// in console.
   CatcherOptions debugOptions = CatcherOptions(DialogReportMode(), [
