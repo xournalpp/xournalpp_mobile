@@ -1,15 +1,15 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
-import 'package:xournalpp/src/conditional/open_file_generic.dart'
-    if (dart.library.html) 'package:xournalpp/src/conditional/open_file_web.dart'
-    if (dart.library.io) 'package:xournalpp/src/conditional/open_file_io.dart';
+import 'package:xournalpp/src/conditional/open_file/open_file_generic.dart'
+    if (dart.library.html) 'package:xournalpp/src/conditional/open_file/open_file_web.dart'
+    if (dart.library.io) 'package:xournalpp/src/conditional/open_file/open_file_io.dart';
 import 'package:xournalpp/src/globals.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
@@ -33,49 +33,43 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
 
   double _currentZoom = 1;
 
-  StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles;
-  String _sharedText;
 
   @override
   void didInitState() {
-    // For sharing images coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) {
-      setState(() {
-        _sharedFiles = value;
-        receivedShareNotification(value);
+    try {
+      // For sharing images coming from outside the app while the app is in the memory
+      ReceiveSharingIntent.getMediaStream().listen(
+          (List<SharedMediaFile> value) {
+        setState(() {
+          _sharedFiles = value;
+          receivedShareNotification(value);
+        });
+      }, onError: (err) {
+        print("getIntentDataStream error: $err");
       });
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
 
-    // For sharing images coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialMedia().then((List<SharedMediaFile> value) {
-      setState(() {
-        _sharedFiles = value;
-        receivedShareNotification(value);
-      });
-    });
+      // For sharing images coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialMedia()
+          .then((List<SharedMediaFile> value) {
+        setState(() {
+          _sharedFiles = value;
+          receivedShareNotification(value);
+        });
+      }).catchError((e) {});
 
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
-      setState(() {
-        _sharedText = value;
-      });
-      receivedShareNotification(value);
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
-
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialText().then((String value) {
-      setState(() {
-        _sharedText = value;
+      // For sharing or opening urls/text coming from outside the app while the app is in the memory
+      ReceiveSharingIntent.getTextStream().listen((String value) {
         receivedShareNotification(value);
+      }, onError: (err) {
+        print("getLinkStream error: $err");
       });
-    });
+
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialText().then((String value) {
+        receivedShareNotification(value);
+      }).catchError((e) {});
+    } catch (e) {}
   }
 
   @override
@@ -200,7 +194,7 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
         )
       ]),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: kIsWeb ? null : CircularNotchedRectangle(),
         child: Container(
             color: Theme.of(context).colorScheme.surface,
             constraints: BoxConstraints(maxHeight: 100),

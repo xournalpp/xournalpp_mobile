@@ -242,6 +242,114 @@ class S {
       args: [],
     );
   }
+
+  String get recentFiles {
+    return Intl.message(
+      'Recent files',
+      name: 'recentFiles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get newNotebook {
+    return Intl.message(
+      'New Notebook',
+      name: 'newNotebook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get noRecentFiles {
+    return Intl.message(
+      'No recent files.',
+      name: 'noRecentFiles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get openingFile {
+    return Intl.message(
+      'Opening file',
+      name: 'openingFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorOpeningFile {
+    return Intl.message(
+      'Error opening file',
+      name: 'errorOpeningFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get dropFilesToOpen {
+    return Intl.message(
+      'Drop files to open',
+      name: 'dropFilesToOpen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorLoadingFile {
+    return Intl.message(
+      'Error loading file',
+      name: 'errorLoadingFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get theFollowingErrorWasDetected {
+    return Intl.message(
+      'The following error was detected:',
+      name: 'theFollowingErrorWasDetected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get copyErrorMessage {
+    return Intl.message(
+      'Copy error message',
+      name: 'copyErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get imVerySorryButICouldntReadTheFile {
+    return Intl.message(
+      'I\'m very sorry, but I couldn\'t read the file ',
+      name: 'imVerySorryButICouldntReadTheFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get areYouSureIHaveThePermissionAndAreYou {
+    return Intl.message(
+      '. Are you sure I have the permission? And are you sure it is a Xournal++ file?',
+      name: 'areYouSureIHaveThePermissionAndAreYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get error {
+    return Intl.message(
+      'Error',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
