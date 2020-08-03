@@ -1,10 +1,8 @@
 import 'dart:ui';
 
-import 'package:after_init/after_init.dart';
 import 'package:catcher/catcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
 
 import 'generated/l10n.dart';
@@ -22,7 +20,8 @@ void main() {
   ]);
 
   /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
-  Catcher(MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);
+  //Catcher(MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);
+  runApp(MyApp());
 }
 
 const Color kPrimaryColor = Colors.deepPurple;

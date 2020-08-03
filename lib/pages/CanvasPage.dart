@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:xournalpp/generated/l10n.dart';
+import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/src/conditional/open_file_generic.dart'
     if (dart.library.html) 'package:xournalpp/src/conditional/open_file_web.dart'
     if (dart.library.io) 'package:xournalpp/src/conditional/open_file_io.dart';
 import 'package:xournalpp/src/globals.dart';
+import 'package:xournalpp/widgets/PointerListener.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
 import 'package:xournalpp/widgets/drawer.dart';
@@ -137,18 +139,34 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
             colorFilter: ColorFilter.mode(
                 Theme.of(context).colorScheme.surface.withOpacity(.5),
                 BlendMode.darken),
-            child: Zoom(
-              width: _file.pages[currentPage].pageSize.width * 5,
-              height: _file.pages[currentPage].pageSize.height * 5,
-              initZoom: _currentZoom,
-              child: Center(
-                child: SizedBox(
-                  width: _file.pages[currentPage].pageSize.width,
-                  height: _file.pages[currentPage].pageSize.height,
-                  child: Transform.scale(
-                    scale: 5,
-                    child: XppPageStack(
-                      page: _file.pages[currentPage],
+            child: PointerListener(
+              onNewContent: (newContent) {
+                setState(() {
+                  /// TODO: manage layers
+                  _file.pages[currentPage].layers[0].content.add(newContent);
+                  _file.pages[currentPage].layers[0].content.forEach((content) {
+                    if (content.runtimeType is XppStroke)
+                      (content as XppStroke).points.toList().forEach((element) {
+                        print(element.x);
+                        print(element.y);
+                        print(element.width);
+                      });
+                  });
+                });
+              },
+              child: Zoom(
+                width: _file.pages[currentPage].pageSize.width * 5,
+                height: _file.pages[currentPage].pageSize.height * 5,
+                initZoom: _currentZoom,
+                child: Center(
+                  child: SizedBox(
+                    width: _file.pages[currentPage].pageSize.width,
+                    height: _file.pages[currentPage].pageSize.height,
+                    child: Transform.scale(
+                      scale: 5,
+                      child: XppPageStack(
+                        page: _file.pages[currentPage],
+                      ),
                     ),
                   ),
                 ),

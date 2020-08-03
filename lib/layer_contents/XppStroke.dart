@@ -10,6 +10,7 @@ class XppStroke extends XppContent {
 
   @override
   Offset getOffset() {
+    if (points.isEmpty) return Offset(0, 0);
     double x = points[0].x;
     // finding smallest x point
     points.forEach((point) {
@@ -24,6 +25,7 @@ class XppStroke extends XppContent {
   }
 
   Offset get bottomRight {
+    if (points.isEmpty) return Offset(0, 0);
     double x = points[0].x;
     // finding largest x point
     points.forEach((point) {
@@ -65,13 +67,13 @@ class XppStrokePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (points.isEmpty) return;
     var paint = Paint()
       ..color = color
-      ..strokeWidth = points[0].width
+      ..strokeWidth = points[0]?.width ?? 5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    if (points.isEmpty) return;
     var path = Path();
     path.moveTo(
         points[0].offset.dx - topLeft.dx, points[0].offset.dy - topLeft.dy);

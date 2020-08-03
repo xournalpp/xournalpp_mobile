@@ -11,5 +11,3 @@ abstract class XppContent {
 
   Widget render();
 }
-
-enum XppContentTypes { STROKE, TEXT, IMAGE }
