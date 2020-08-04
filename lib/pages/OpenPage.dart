@@ -29,7 +29,7 @@ class OpenPage extends StatefulWidget {
 
 class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   bool _loadedRecent = false;
-  List recentFiles = [];
+  Set recentFiles = Set();
   Completer<BuildContext> scaffoldCompleter = Completer();
 
   List<SharedMediaFile> _sharedFiles;
@@ -66,7 +66,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
     SharedPreferences.getInstance().then((prefs) {
       String jsonData = prefs.getString(PreferencesKeys.kRecentFiles);
       if (jsonData != null) {
-        recentFiles = (jsonDecode(jsonData) as List).reversed.toList();
+        recentFiles = (jsonDecode(jsonData) as List).reversed.toList().toSet();
       }
       setState(() {
         _loadedRecent = true;
@@ -267,10 +267,10 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   }
 }
 
-Iterable<Widget> generateRecentFileList(List files, BuildContext context) {
+Iterable<Widget> generateRecentFileList(Set files, BuildContext context) {
   return List.generate(files.length > 0 ? files.length : 1, (index) {
     if (files.length > 0) {
-      Map fileInfo = files[index];
+      Map fileInfo = files.toList()[index];
       return ListTile(
         isThreeLine: true,
         title: Container(),

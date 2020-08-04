@@ -36,6 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "error" : MessageLookupByLibrary.simpleMessage("Error"),
     "errorLoadingFile" : MessageLookupByLibrary.simpleMessage("Error loading file"),
     "errorOpeningFile" : MessageLookupByLibrary.simpleMessage("Error opening file"),
+    "home" : MessageLookupByLibrary.simpleMessage("Home"),
     "imVerySorryButICouldntReadTheFile" : MessageLookupByLibrary.simpleMessage("I\'m very sorry, but I couldn\'t read the file "),
     "loadingFile" : MessageLookupByLibrary.simpleMessage("Loading file..."),
     "mobileEditionUnofficial" : MessageLookupByLibrary.simpleMessage("mobile edition (unofficial)"),

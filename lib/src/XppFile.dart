@@ -33,7 +33,7 @@ class XppFile {
 
   /// showing a [open] dialog and pushes a [CanvasPage] to the provided [BuildContext]'s [Navigator]
   static void openAndEdit({BuildContext context}) async {
-    double percentage = 0;
+    //double percentage = 0;
     ScaffoldFeatureController snackBarController = Scaffold.of(context)
         .showSnackBar(SnackBar(
             duration: Duration(days: 999),
@@ -348,11 +348,12 @@ class XppFile {
     SharedPreferences.getInstance().then((prefs) {
       String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
       Set files = (jsonDecode(jsonData) as Iterable).toSet();
-      files.add({
-        'preview': base64Encode(file.previewImage),
-        'name': file.title,
-        'path': rawFile.path
-      });
+      if (files.where((element) => element['path'] == rawFile.path).length < 1)
+        files.add({
+          'preview': base64Encode(file.previewImage),
+          'name': file.title,
+          'path': rawFile.path
+        });
       jsonData = jsonEncode(files.toList());
       prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
     });
