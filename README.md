@@ -1,10 +1,10 @@
 # <img src="assets/xournalpp-adaptive.png" width="64" style="height: auto;"/> Xournal++ - mobile edition (unofficial)
 
-![Current version](https://img.shields.io/badge/dynamic/yaml?label=Current%20version&query=version&url=https%3A%2F%2Fgitlab.com%2FTheOneWithTheBraid%2Fxournalpp_mobile%2Fraw%2Fmaster%2Fpubspec.yaml%3Finline%3Dfalse&style=for-the-badge&logo=flutter&logoColor=white) ![Bitrise build](https://img.shields.io/bitrise/dd58f8fe5b4bf6c0?style=for-the-badge&token=Ihrbr8U0mqFlVBOocwtnQA&logo=bitrise&logoColor=white) ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/TheOneWithTheBraid/xournalpp_mobile/master?style=for-the-badge&logo=gitlab&logoColor=white) ![Google Play](https://img.shields.io/endpoint?color=689f38&url=https%3A%2F%2Fplayshields.herokuapp.com%2Fplay%3Fi%3Donline.xournal.mobile%26l%3DGoogle-Play%26m%3D%24version&style=for-the-badge&logo=google-play&logoColor=white)
+[![Current version](https://img.shields.io/badge/dynamic/yaml?label=Current%20version&query=version&url=https%3A%2F%2Fgitlab.com%2FTheOneWithTheBraid%2Fxournalpp_mobile%2Fraw%2Fmaster%2Fpubspec.yaml%3Finline%3Dfalse&style=for-the-badge&logo=flutter&logoColor=white)](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/tags) [![Bitrise build](https://img.shields.io/bitrise/dd58f8fe5b4bf6c0?style=for-the-badge&token=Ihrbr8U0mqFlVBOocwtnQA&logo=bitrise&logoColor=white)](https://app.bitrise.io/app/dd58f8fe5b4bf6c0) [![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/TheOneWithTheBraid/xournalpp_mobile/master?style=for-the-badge&logo=gitlab&logoColor=white)](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/pipelines) [![Google Play](https://img.shields.io/endpoint?color=689f38&url=https%3A%2F%2Fplayshields.herokuapp.com%2Fplay%3Fi%3Donline.xournal.mobile%26l%3DGoogle-Play%26m%3D%24version&style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=online.xournal.mobile)
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
-![feature banner](assets/feature-banner.svg)
+![feature banner](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/raw/master/assets/feature-banner.svg)
 
 # Try it out
 
@@ -18,6 +18,8 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 
 [Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
 
+[Build for Windows](#desktop-support)
+
 ### Visible parts already working:
 
 - [x] Read the document title
@@ -29,19 +31,25 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 - [x] Strokes
 - [x] Highlighter
 - [x] LaTeX
+- [x] Recent files list
 - [ ] Whiteout eraser
 - [ ] Saving
 - [ ] Basic editing
 
 ## Getting started
 
+### Prepare
+
 Get your information about the `.xopp` file format at http://www-math.mit.edu/~auroux/software/xournal/manual.html#file-format .
 
 Install Flutter first. See [flutter.dev](https://flutter.dev/docs/get-started/install) for more details.
+
 ```
 # Run Flutter doctor to check whether the installation was successful
 flutter doctor
 ```
+
+### Get the sources and run
 
 Connect any Android or iOS device.
 
@@ -51,22 +59,30 @@ cd xournalpp_mobile
 flutter run
 ```
 
+### Test for the web
+
 If you want to test for the web, please run:
 
 ```
 flutter channel beta
 flutter upgrade
 flutter config --enable-web
-flutter run -d web
+flutter run -d web --release # unfortunately, the debug flavour will result an empty screen
 ```
 
-If you want to test for Linux or macOS, please run:
+### Desktop support
+
+We Linux is perfectly supported by Xournal++ - mobile editing and you can get prebuild binaries [above](#try-it-out).
+
+Windows is supported and tested too, but there are unfortunately no prebuilt binaries available. Execute the following commands to build them yourself.
+
+If you want to test for Linux, Windows or macOS, please run:
 
 ```
 flutter channel master
 flutter upgrade
-flutter config --enable-linux-desktop # or --enable-macos-desktop
-flutter run -d linux # or macos
+flutter config --enable-linux-desktop # or --enable-macos-desktop or --enable-windows-desktop
+flutter run -d linux # or macos or windows
 ```
 
 ## Colors and Typography
