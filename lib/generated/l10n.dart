@@ -350,6 +350,42 @@ class S {
       args: [],
     );
   }
+
+  String get youveBeenRedirectedToTheLocalApp {
+    return Intl.message(
+      'You\'ve been redirected to the local app.',
+      name: 'youveBeenRedirectedToTheLocalApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get opening {
+    return Intl.message(
+      'Opening',
+      name: 'opening',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get background {
+    return Intl.message(
+      'Background',
+      name: 'background',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get abort {
+    return Intl.message(
+      'Abort',
+      name: 'abort',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

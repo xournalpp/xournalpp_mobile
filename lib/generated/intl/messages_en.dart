@@ -21,11 +21,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "abort" : MessageLookupByLibrary.simpleMessage("Abort"),
     "about" : MessageLookupByLibrary.simpleMessage("About"),
     "aboutXournal" : MessageLookupByLibrary.simpleMessage("About Xournal++"),
     "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("About Xournal++ - mobile edition"),
     "apply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "areYouSureIHaveThePermissionAndAreYou" : MessageLookupByLibrary.simpleMessage(". Are you sure I have the permission? And are you sure it is a Xournal++ file?"),
+    "background" : MessageLookupByLibrary.simpleMessage("Background"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "close" : MessageLookupByLibrary.simpleMessage("Close"),
     "copyErrorMessage" : MessageLookupByLibrary.simpleMessage("Copy error message"),
@@ -47,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notWorkingYet" : MessageLookupByLibrary.simpleMessage("Not working yet."),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
     "open" : MessageLookupByLibrary.simpleMessage("Open"),
+    "opening" : MessageLookupByLibrary.simpleMessage("Opening"),
     "openingFile" : MessageLookupByLibrary.simpleMessage("Opening file"),
     "recentFiles" : MessageLookupByLibrary.simpleMessage("Recent files"),
     "save" : MessageLookupByLibrary.simpleMessage("Save"),
@@ -56,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Toolbox not implemented yet."),
     "tools" : MessageLookupByLibrary.simpleMessage("Tools"),
     "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices."),
-    "youDidNotSelectAnyFile" : MessageLookupByLibrary.simpleMessage("You did not select any file.")
+    "youDidNotSelectAnyFile" : MessageLookupByLibrary.simpleMessage("You did not select any file."),
+    "youveBeenRedirectedToTheLocalApp" : MessageLookupByLibrary.simpleMessage("You\'ve been redirected to the local app.")
   };
 }

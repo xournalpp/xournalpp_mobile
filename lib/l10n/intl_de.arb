@@ -34,5 +34,9 @@
   "copyErrorMessage": "Fehlermeldung kopieren",
   "imVerySorryButICouldntReadTheFile": "Es tut mir Leid, aber ich konnte die Datei ",
   "areYouSureIHaveThePermissionAndAreYou": " leider nicht lesen. Bist du dir sicher, dass ich dazu die Berechtigung habe, und, dass es eine richtige Xournal++ Datei ist?",
-  "error": "Fehler"
+  "error": "Fehler",
+  "youveBeenRedirectedToTheLocalApp": "Du wurdest in die lokale App weitergeleitet.",
+  "opening": "Öffne",
+  "background": "Hintergrund",
+  "abort": "Abbrechen"
 }

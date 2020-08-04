@@ -21,11 +21,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "abort" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "about" : MessageLookupByLibrary.simpleMessage("About"),
     "aboutXournal" : MessageLookupByLibrary.simpleMessage("Über Xournal++"),
     "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("Über Xournal++ - Mobile-Edition"),
     "apply" : MessageLookupByLibrary.simpleMessage("Anwenden"),
     "areYouSureIHaveThePermissionAndAreYou" : MessageLookupByLibrary.simpleMessage(" leider nicht lesen. Bist du dir sicher, dass ich dazu die Berechtigung habe, und, dass es eine richtige Xournal++ Datei ist?"),
+    "background" : MessageLookupByLibrary.simpleMessage("Hintergrund"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "close" : MessageLookupByLibrary.simpleMessage("Schließen"),
     "copyErrorMessage" : MessageLookupByLibrary.simpleMessage("Fehlermeldung kopieren"),
@@ -47,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notWorkingYet" : MessageLookupByLibrary.simpleMessage("Funktioniert noch nicht."),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
     "open" : MessageLookupByLibrary.simpleMessage("Öffnen"),
+    "opening" : MessageLookupByLibrary.simpleMessage("Öffne"),
     "openingFile" : MessageLookupByLibrary.simpleMessage("Öffne Datei"),
     "recentFiles" : MessageLookupByLibrary.simpleMessage("Zuletzt verwendete Dateien"),
     "save" : MessageLookupByLibrary.simpleMessage("Speichern"),
@@ -56,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Werkzeugkasten noch nicht implementiert."),
     "tools" : MessageLookupByLibrary.simpleMessage("Werkzeuge"),
     "xournalMobileEditionIsAnUnofficialProjectTryingToMake" : MessageLookupByLibrary.simpleMessage("Xournal++ - Mobile-Edition ist ein inoffizielles Projekt, das es versucht, Xournal++ Dateien und -Funktionen auf anderen Geräten bereitzustellen."),
-    "youDidNotSelectAnyFile" : MessageLookupByLibrary.simpleMessage("Du hast keine Datei ausgewählt..")
+    "youDidNotSelectAnyFile" : MessageLookupByLibrary.simpleMessage("Du hast keine Datei ausgewählt.."),
+    "youveBeenRedirectedToTheLocalApp" : MessageLookupByLibrary.simpleMessage("Du wurdest in die lokale App weitergeleitet.")
   };
 }

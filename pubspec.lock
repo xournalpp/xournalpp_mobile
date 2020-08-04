@@ -369,9 +369,9 @@ packages:
   receive_sharing_intent:
     dependency: "direct main"
     description:
-      name: receive_sharing_intent
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../receive_sharing_intent"
+      relative: true
+    source: path
     version: "1.4.0+2"
   sentry:
     dependency: transitive

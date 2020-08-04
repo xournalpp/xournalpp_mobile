@@ -1,8 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:after_init/after_init.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/main.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
@@ -19,10 +24,12 @@ class OpenPage extends StatefulWidget {
   _OpenPageState createState() => _OpenPageState();
 }
 
-class _OpenPageState extends State<OpenPage> {
+class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   bool _loadedRecent = false;
   List recentFiles = [];
+  Completer<BuildContext> scaffoldCompleter = Completer();
 
+  List<SharedMediaFile> _sharedFiles;
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
@@ -35,6 +42,44 @@ class _OpenPageState extends State<OpenPage> {
       });
     });
     super.initState();
+  }
+
+  @override
+  void didInitState() {
+    scaffoldCompleter.complete(context);
+    try {
+      // For sharing images coming from outside the app while the app is in the memory
+      ReceiveSharingIntent.getMediaStream().listen(
+          (List<SharedMediaFile> value) {
+        setState(() {
+          _sharedFiles = value;
+          receivedShareNotification(value);
+        });
+      }, onError: (err) {
+        print("getIntentDataStream error: $err");
+      });
+
+      // For sharing images coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialMedia()
+          .then((List<SharedMediaFile> value) {
+        setState(() {
+          _sharedFiles = value;
+          receivedShareNotification(value);
+        });
+      }).catchError((e) {});
+
+      // For sharing or opening urls/text coming from outside the app while the app is in the memory
+      ReceiveSharingIntent.getTextStream().listen((String value) {
+        receivedShareNotification(value);
+      }, onError: (err) {
+        print("getLinkStream error: $err");
+      });
+
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialText().then((String value) {
+        receivedShareNotification(value);
+      }).catchError((e) {});
+    } catch (e) {}
   }
 
   @override
@@ -64,6 +109,93 @@ class _OpenPageState extends State<OpenPage> {
         icon: Icon(Icons.note_add),
       ),
     );
+  }
+
+  void receivedShareNotification(dynamic data) async {
+    if (data == null ||
+        lastIntentData == data ||
+        data is List &&
+            lastIntentData is List &&
+            data[0].path == lastIntentData[0].path) return;
+    lastIntentData = data;
+    if (data is String) {
+      /// checking if we were redirected from the web site
+      if (data.startsWith('http')) {
+        scaffoldCompleter.future.then((scaffoldContext) =>
+            Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+              content: Text(S.of(context).youveBeenRedirectedToTheLocalApp),
+            )));
+        return;
+      } else {
+        /// seems to be an opened file
+        /// ... which is awfully encoded as a content:// URI using the path as **queryComponent** instead of as **path** (why???)
+        String path = '/' +
+            Uri.decodeQueryComponent(
+                Uri.parse(data as String).path.substring(1));
+        print(path);
+        data = [
+          SharedMediaFile(
+              path, base64Encode(kTransparentImage), null, SharedMediaType.FILE)
+        ];
+        _sharedFiles = data;
+      }
+    }
+    if (data is List) {
+      bool _aborted = false;
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(S.of(context).openingFile),
+                content: Text(S.of(context).opening +
+                    ' ${data[0].path.substring(data[0].path.lastIndexOf('/') + 1, data[0].path.lastIndexOf('.'))} ...'),
+                actions: [
+                  FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(S.of(context).background),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _aborted = true;
+                    },
+                    child: Text(S.of(context).abort),
+                  )
+                ],
+              ));
+      try {
+        XppFile file = await XppFile.fromFilePickerCross(
+            openFileByUri(_sharedFiles[0].path), (percentage) => null);
+        if (_aborted) return;
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => CanvasPage(
+                  file: file,
+                )));
+      } catch (e) {
+        Navigator.of(context).pop();
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text(S.of(context).errorOpeningFile),
+                  content: SelectableText(
+                      S.of(context).imVerySorryButICouldntReadTheFile +
+                          _sharedFiles[0].path +
+                          S.of(context).areYouSureIHaveThePermissionAndAreYou +
+                          '\n${e.toString()}'),
+                  actions: [
+                    FlatButton(
+                        onPressed: () => Clipboard.setData(
+                            ClipboardData(text: e.toString())),
+                        child: Text(S.of(context).copyErrorMessage)),
+                    FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(S.of(context).okay),
+                    ),
+                  ],
+                ));
+      }
+    } else {
+      print('Unsupported runtimeType: ${data.runtimeType.toString()}');
+    }
   }
 }
 

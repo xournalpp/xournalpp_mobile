@@ -1,16 +1,9 @@
 import 'dart:ui';
 
-import 'package:after_init/after_init.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
-import 'package:xournalpp/src/conditional/open_file/open_file_generic.dart'
-    if (dart.library.html) 'package:xournalpp/src/conditional/open_file/open_file_web.dart'
-    if (dart.library.io) 'package:xournalpp/src/conditional/open_file/open_file_io.dart';
-import 'package:xournalpp/src/globals.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
 import 'package:xournalpp/widgets/drawer.dart';
@@ -25,52 +18,13 @@ class CanvasPage extends StatefulWidget {
   _CanvasPageState createState() => _CanvasPageState();
 }
 
-class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
+class _CanvasPageState extends State<CanvasPage> {
   XppFile _file;
   double padding = 16;
 
   int currentPage = 0;
 
   double _currentZoom = 1;
-
-  List<SharedMediaFile> _sharedFiles;
-
-  @override
-  void didInitState() {
-    try {
-      // For sharing images coming from outside the app while the app is in the memory
-      ReceiveSharingIntent.getMediaStream().listen(
-          (List<SharedMediaFile> value) {
-        setState(() {
-          _sharedFiles = value;
-          receivedShareNotification(value);
-        });
-      }, onError: (err) {
-        print("getIntentDataStream error: $err");
-      });
-
-      // For sharing images coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialMedia()
-          .then((List<SharedMediaFile> value) {
-        setState(() {
-          _sharedFiles = value;
-          receivedShareNotification(value);
-        });
-      }).catchError((e) {});
-
-      // For sharing or opening urls/text coming from outside the app while the app is in the memory
-      ReceiveSharingIntent.getTextStream().listen((String value) {
-        receivedShareNotification(value);
-      }, onError: (err) {
-        print("getLinkStream error: $err");
-      });
-
-      // For sharing or opening urls/text coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialText().then((String value) {
-        receivedShareNotification(value);
-      }).catchError((e) {});
-    } catch (e) {}
-  }
 
   @override
   void initState() {
@@ -254,71 +208,5 @@ class _CanvasPageState extends State<CanvasPage> with AfterInitMixin {
             ],
           );
         });
-  }
-
-  void receivedShareNotification(dynamic data) async {
-    if (data == null ||
-        lastIntentData == data ||
-        data is List &&
-            lastIntentData is List &&
-            data[0].path == lastIntentData[0].path) return;
-    lastIntentData = data;
-    if (data is String) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You\'ve been redirected to the local app.'),
-      ));
-    } else if (data is List) {
-      bool _aborted = false;
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Opening file'),
-                content: Text(
-                    'Opening ${data[0].path.substring(data[0].path.lastIndexOf('/') + 1, data[0].path.lastIndexOf('.'))} ...'),
-                actions: [
-                  FlatButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Background'),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _aborted = true;
-                    },
-                    child: Text('Abort'),
-                  )
-                ],
-              ));
-      try {
-        XppFile file = await XppFile.fromFilePickerCross(
-            openFileByUri(_sharedFiles[0].path), (percentage) => null);
-        if (_aborted) return;
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => CanvasPage(
-                  file: file,
-                )));
-      } catch (e) {
-        Navigator.of(context).pop();
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Error opening file'),
-                  content: SelectableText(
-                      'I\'m very sorry, but I couldn\'t read the file ${_sharedFiles[0].path} . Are you sure I have the permission? And are you sure it is a Xournal++ file?\n${e.toString()}'),
-                  actions: [
-                    FlatButton(
-                        onPressed: () => Clipboard.setData(
-                            ClipboardData(text: e.toString())),
-                        child: Text('Copy message')),
-                    FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('Okay'),
-                    ),
-                  ],
-                ));
-      }
-    } else {
-      print('Unsupported runtimeType: ${data.runtimeType.toString()}');
-    }
   }
 }
