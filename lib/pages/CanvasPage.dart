@@ -5,15 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
-/*
-import 'package:xournalpp/src/conditional/open_file_generic.dart'
-    if (dart.library.html) 'package:xournalpp/src/conditional/open_file_web.dart'
-    if (dart.library.io) 'package:xournalpp/src/conditional/open_file_io.dart';*/
-import 'package:xournalpp/src/globals.dart';
+import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
-import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 class CanvasPage extends StatefulWidget {

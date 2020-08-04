@@ -10,6 +10,7 @@ class PointerListener extends StatefulWidget {
 
   const PointerListener({Key key, this.onNewContent, this.child})
       : super(key: key);
+
   @override
   _PointerListenerState createState() => _PointerListenerState();
 }

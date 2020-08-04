@@ -33,6 +33,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   Completer<BuildContext> scaffoldCompleter = Completer();
 
   List<SharedMediaFile> _sharedFiles;
+
   @override
   void initState() {
     // trying to load fitting locale
