@@ -33,44 +33,14 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text('Home'),
+              title: Text(S.of(context).home),
               onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => OpenPage())),
             ),
             ListTile(
-              leading: Icon(Icons.file_upload),
-              title: Text(S.of(context).open),
-              onTap: () {
-                //Navigator.of(context).pop();
-                double percentage = 0;
-                ScaffoldFeatureController snackBarController =
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        duration: Duration(days: 999),
-                        content: Builder(
-                            builder: (context) =>
-                                Text(S.of(context).loadingFile))));
-                XppFile.open((newPercentage) {}).then((openedFile) {
-                  snackBarController.close();
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => CanvasPage(
-                            file: openedFile,
-                          )));
-                }).catchError((e) {
-                  snackBarController.close();
-                  showDialog(
-                      context: context,
-                      builder: (c) => AlertDialog(
-                            title: Text(S.of(context).noFileSelected),
-                            content: Text(S.of(context).youDidNotSelectAnyFile),
-                            actions: [
-                              FlatButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: Text(S.of(context).close))
-                            ],
-                          ));
-                });
-              },
-            ),
+                leading: Icon(Icons.folder),
+                title: Text(S.of(context).open),
+                onTap: () => XppFile.openAndEdit(context: context)),
             ListTile(
               leading: Icon(Icons.insert_drive_file),
               title: Text(S.of(context).newFile),

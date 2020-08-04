@@ -146,7 +146,7 @@ class _DropFileState extends State<DropFile> {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.file_upload,
+                                Icons.open_with,
                                 color: Theme.of(context).colorScheme.onPrimary,
                               ),
                               Text(S.of(context).dropFilesToOpen)

@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:after_init/after_init.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -19,7 +20,7 @@ import 'package:xournalpp/src/conditional/open_file/open_file_generic.dart'
     if (dart.library.io) 'package:xournalpp/src/conditional/open_file/open_file_io.dart';
 import 'package:xournalpp/src/globals.dart';
 import 'package:xournalpp/widgets/DropFile.dart';
-import 'package:xournalpp/widgets/drawer.dart';
+import 'package:xournalpp/widgets/MainDrawer.dart';
 
 class OpenPage extends StatefulWidget {
   @override
@@ -128,6 +129,36 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
       body: ListView(
         children: [
           if (kIsWeb) DropFile(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Builder(
+              builder: (context) => GestureDetector(
+                onTap: () => XppFile.openAndEdit(context: context),
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Card(
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: DefaultTextStyle.merge(
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondary),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.folder,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary),
+                            Text(S.of(context).open),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           ListTile(
             title: Text(
               S.of(context).recentFiles,

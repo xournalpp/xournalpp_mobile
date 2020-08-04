@@ -6,7 +6,7 @@ import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
-import 'package:xournalpp/widgets/drawer.dart';
+import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 class CanvasPage extends StatefulWidget {

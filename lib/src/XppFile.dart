@@ -8,10 +8,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
+import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/layer_contents/XppImage.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/layer_contents/XppTexImage.dart';
 import 'package:xournalpp/layer_contents/XppText.dart';
+import 'package:xournalpp/pages/CanvasPage.dart';
 import 'package:xournalpp/src/HexColor.dart';
 
 import 'XppLayer.dart';
@@ -27,6 +29,39 @@ class XppFile {
       XppPage(
           pageSize: pageSize ?? XppPageSize.a4, layers: [XppLayer(content: [])])
     ]);
+  }
+
+  /// showing a [open] dialog and pushes a [CanvasPage] to the provided [BuildContext]'s [Navigator]
+  static void openAndEdit({BuildContext context}) async {
+    double percentage = 0;
+    ScaffoldFeatureController snackBarController = Scaffold.of(context)
+        .showSnackBar(SnackBar(
+            duration: Duration(days: 999),
+            content: Builder(
+                builder: (context) => Text(S.of(context).loadingFile))));
+    XppFile file;
+    try {
+      file = await open((percentage) => null);
+
+      snackBarController.close();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => CanvasPage(
+                file: file,
+              )));
+    } catch (e) {
+      snackBarController.close();
+      showDialog(
+          context: context,
+          builder: (c) => AlertDialog(
+                title: Text(S.of(context).noFileSelected),
+                content: Text(S.of(context).youDidNotSelectAnyFile),
+                actions: [
+                  FlatButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(S.of(context).close))
+                ],
+              ));
+    }
   }
 
   /// showing a file picker, decoding and parsing to [XppFile]
