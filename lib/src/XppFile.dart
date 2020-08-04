@@ -38,18 +38,6 @@ class XppFile {
     /// decoding by [fromFilePickerCross]
     XppFile file = await fromFilePickerCross(rawFile, percentageCallback);
 
-    SharedPreferences.getInstance().then((prefs) {
-      String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
-      Set files = (jsonDecode(jsonData) as Iterable).toSet();
-      files.add({
-        'preview': base64Encode(file.previewImage),
-        'name': file.title,
-        'path': rawFile.path
-      });
-      jsonData = jsonEncode(files.toList());
-      prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
-    });
-
     return file;
   }
 
@@ -318,7 +306,23 @@ class XppFile {
               height: double.parse(pageElement.getAttribute('height')))));
     });
 
-    return XppFile(title: title, previewImage: previewImage, pages: pages);
+    XppFile file =
+        XppFile(title: title, previewImage: previewImage, pages: pages);
+
+    /// starting async task to save recent files list
+    SharedPreferences.getInstance().then((prefs) {
+      String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
+      Set files = (jsonDecode(jsonData) as Iterable).toSet();
+      files.add({
+        'preview': base64Encode(file.previewImage),
+        'name': file.title,
+        'path': rawFile.path
+      });
+      jsonData = jsonEncode(files.toList());
+      prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
+    });
+
+    return file;
   }
 
   /// thumbnail image data

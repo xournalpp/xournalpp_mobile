@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -32,6 +34,34 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   List<SharedMediaFile> _sharedFiles;
   @override
   void initState() {
+    // trying to load fitting locale
+    if (['en', 'de'].contains(window.locale.languageCode))
+      S.load(Locale(window.locale.languageCode));
+
+    /// TODO: implement custom change of language
+    // checking for locale override
+    /*Preferences().fetch('language').then((languageCode) {
+      switch (languageCode) {
+        case 'en':
+          S.load(Locale('en'));
+          break;
+
+        case 'de':
+          S.load(Locale('de'));
+          break;
+
+        case 'fr':
+          S.load(Locale('fr'));
+          break;
+
+        case 'tlh':
+          S.load(Locale('tlh'));
+          break;
+        default:
+          break;
+      }
+    });*/
+
     SharedPreferences.getInstance().then((prefs) {
       String jsonData = prefs.getString(PreferencesKeys.kRecentFiles);
       if (jsonData != null) {
@@ -46,7 +76,6 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
 
   @override
   void didInitState() {
-    scaffoldCompleter.complete(context);
     try {
       // For sharing images coming from outside the app while the app is in the memory
       ReceiveSharingIntent.getMediaStream().listen(
@@ -87,7 +116,14 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(
-        title: Text('Xournal++'),
+        title: Builder(
+          /// just need a builder here to provide a valid context for background tasks
+          builder: (context) {
+            if (!scaffoldCompleter.isCompleted)
+              scaffoldCompleter.complete(context);
+            return Text('Xournal++');
+          },
+        ),
       ),
       body: ListView(
         children: [
@@ -129,9 +165,10 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
       } else {
         /// seems to be an opened file
         /// ... which is awfully encoded as a content:// URI using the path as **queryComponent** instead of as **path** (why???)
-        String path = '/' +
-            Uri.decodeQueryComponent(
-                Uri.parse(data as String).path.substring(1));
+        /// unfortunately, android needs to copy the file to our own app directory
+        /// TODO: don't copy files we can directly read
+        print(data);
+        String path = await FlutterAbsolutePath.getAbsolutePath(data as String);
         print(path);
         data = [
           SharedMediaFile(

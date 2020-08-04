@@ -28,33 +28,6 @@ class _CanvasPageState extends State<CanvasPage> {
 
   @override
   void initState() {
-    // trying to load fitting locale
-    if (['en', 'de'].contains(window.locale.languageCode))
-      S.load(Locale(window.locale.languageCode));
-
-    /// TODO: implement custom change of language
-    // checking for locale override
-    /*Preferences().fetch('language').then((languageCode) {
-      switch (languageCode) {
-        case 'en':
-          S.load(Locale('en'));
-          break;
-
-        case 'de':
-          S.load(Locale('de'));
-          break;
-
-        case 'fr':
-          S.load(Locale('fr'));
-          break;
-
-        case 'tlh':
-          S.load(Locale('tlh'));
-          break;
-        default:
-          break;
-      }
-    });*/
     _setMetadata();
     super.initState();
   }
@@ -157,7 +130,9 @@ class _CanvasPageState extends State<CanvasPage> {
               onPageChange: (newPage) => setState(() => currentPage = newPage),
             )),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: kIsWeb
+          ? FloatingActionButtonLocation.centerFloat
+          : FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
           onPressed: () => Scaffold.of(context).showSnackBar(SnackBar(
