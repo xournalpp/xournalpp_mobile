@@ -490,6 +490,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.5.0"
+  url_launcher_fde:
+    dependency: "direct main"
+    description:
+      path: "plugins/flutter_plugins/url_launcher_fde"
+      ref: master
+      resolved-ref: "9e9b68b67c2a2c0b82eed2224f709aff2ccbab7c"
+      url: "git://github.com/google/flutter-desktop-embedding.git"
+    source: git
+    version: "0.1.0"
   url_launcher_linux:
     dependency: transitive
     description:

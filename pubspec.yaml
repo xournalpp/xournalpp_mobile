@@ -16,6 +16,12 @@ dependencies:
   archive: ^2.0.13
   xml: ^4.2.0
   url_launcher: ^5.5.0
+  # for Windows
+  url_launcher_fde:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/flutter_plugins/url_launcher_fde
+      ref: master
   transparent_image: ^1.0.0
   catcher: ^0.3.17
   receive_sharing_intent: ^1.4.0

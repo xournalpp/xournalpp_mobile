@@ -356,7 +356,7 @@ class XppFile {
         });
       jsonData = jsonEncode(files.toList());
       prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
-    });
+    }).catchError((e){});
 
     return file;
   }

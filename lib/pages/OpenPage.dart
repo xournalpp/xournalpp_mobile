@@ -36,38 +36,46 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   @override
   void initState() {
     // trying to load fitting locale
-    if (['en', 'de'].contains(window.locale.languageCode))
-      S.load(Locale(window.locale.languageCode));
 
-    /// TODO: implement custom change of language
-    // checking for locale override
-    /*Preferences().fetch('language').then((languageCode) {
-      switch (languageCode) {
-        case 'en':
-          S.load(Locale('en'));
-          break;
+    try {
+      if (['en', 'de'].contains(window?.locale?.languageCode ?? 'en'))
+        S.load(Locale(window.locale.languageCode));
+      /// TODO: implement custom change of language
+      // checking for locale override
+      /*Preferences().fetch('language').then((languageCode) {
+        switch (languageCode) {
+          case 'en':
+            S.load(Locale('en'));
+            break;
 
-        case 'de':
-          S.load(Locale('de'));
-          break;
+          case 'de':
+            S.load(Locale('de'));
+            break;
 
-        case 'fr':
-          S.load(Locale('fr'));
-          break;
+          case 'fr':
+            S.load(Locale('fr'));
+            break;
 
-        case 'tlh':
-          S.load(Locale('tlh'));
-          break;
-        default:
-          break;
-      }
-    });*/
+          case 'tlh':
+            S.load(Locale('tlh'));
+            break;
+          default:
+            break;
+        }
+      });*/
+    } catch(e){}
+
 
     SharedPreferences.getInstance().then((prefs) {
       String jsonData = prefs.getString(PreferencesKeys.kRecentFiles);
       if (jsonData != null) {
         recentFiles = (jsonDecode(jsonData) as List).reversed.toList().toSet();
       }
+      setState(() {
+        _loadedRecent = true;
+      });
+    }).catchError((e){
+      print('No SharedPreferences available for this platform.');
       setState(() {
         _loadedRecent = true;
       });
