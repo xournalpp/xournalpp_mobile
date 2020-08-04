@@ -8,8 +8,12 @@ import 'intl/messages_all.dart';
 // Made by Localizely
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+
 class S {
   S();
+  
+  static S current;
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -19,7 +23,9 @@ class S {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S();
+      S.current = S();
+      
+      return S.current;
     });
   } 
 
@@ -27,6 +33,7 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `New Document`
   String get newDocument {
     return Intl.message(
       'New Document',
@@ -36,6 +43,7 @@ class S {
     );
   }
 
+  /// `Tools`
   String get tools {
     return Intl.message(
       'Tools',
@@ -45,6 +53,7 @@ class S {
     );
   }
 
+  /// `Toolbox not implemented yet.`
   String get toolboxNotImplementedYet {
     return Intl.message(
       'Toolbox not implemented yet.',
@@ -54,6 +63,7 @@ class S {
     );
   }
 
+  /// `Set document title`
   String get setDocumentTitle {
     return Intl.message(
       'Set document title',
@@ -63,6 +73,7 @@ class S {
     );
   }
 
+  /// `New title`
   String get newTitle {
     return Intl.message(
       'New title',
@@ -72,6 +83,7 @@ class S {
     );
   }
 
+  /// `Cancel`
   String get cancel {
     return Intl.message(
       'Cancel',
@@ -81,6 +93,7 @@ class S {
     );
   }
 
+  /// `Apply`
   String get apply {
     return Intl.message(
       'Apply',
@@ -90,6 +103,7 @@ class S {
     );
   }
 
+  /// `mobile edition (unofficial)`
   String get mobileEditionUnofficial {
     return Intl.message(
       'mobile edition (unofficial)',
@@ -99,6 +113,7 @@ class S {
     );
   }
 
+  /// `Open`
   String get open {
     return Intl.message(
       'Open',
@@ -108,6 +123,7 @@ class S {
     );
   }
 
+  /// `New`
   String get newFile {
     return Intl.message(
       'New',
@@ -117,6 +133,7 @@ class S {
     );
   }
 
+  /// `Save`
   String get save {
     return Intl.message(
       'Save',
@@ -126,6 +143,7 @@ class S {
     );
   }
 
+  /// `Not implemented`
   String get notImplemented {
     return Intl.message(
       'Not implemented',
@@ -135,6 +153,7 @@ class S {
     );
   }
 
+  /// `About`
   String get about {
     return Intl.message(
       'About',
@@ -144,6 +163,7 @@ class S {
     );
   }
 
+  /// `About Xournal++ - mobile edition`
   String get aboutXournalMobileEdition {
     return Intl.message(
       'About Xournal++ - mobile edition',
@@ -153,6 +173,7 @@ class S {
     );
   }
 
+  /// `Xournal++ - mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.`
   String get xournalMobileEditionIsAnUnofficialProjectTryingToMake {
     return Intl.message(
       'Xournal++ - mobile edition is an unofficial project trying to make Xournal++ files and features available on different devices.',
@@ -162,6 +183,7 @@ class S {
     );
   }
 
+  /// `About Xournal++`
   String get aboutXournal {
     return Intl.message(
       'About Xournal++',
@@ -171,6 +193,7 @@ class S {
     );
   }
 
+  /// `Source Code`
   String get sourceCode {
     return Intl.message(
       'Source Code',
@@ -180,6 +203,7 @@ class S {
     );
   }
 
+  /// `Okay`
   String get okay {
     return Intl.message(
       'Okay',
@@ -189,6 +213,7 @@ class S {
     );
   }
 
+  /// `Double tap to change.`
   String get doubleTapToChange {
     return Intl.message(
       'Double tap to change.',
@@ -198,6 +223,7 @@ class S {
     );
   }
 
+  /// `Not working yet.`
   String get notWorkingYet {
     return Intl.message(
       'Not working yet.',
@@ -207,6 +233,7 @@ class S {
     );
   }
 
+  /// `Loading file...`
   String get loadingFile {
     return Intl.message(
       'Loading file...',
@@ -216,6 +243,7 @@ class S {
     );
   }
 
+  /// `No file selected`
   String get noFileSelected {
     return Intl.message(
       'No file selected',
@@ -225,6 +253,7 @@ class S {
     );
   }
 
+  /// `You did not select any file.`
   String get youDidNotSelectAnyFile {
     return Intl.message(
       'You did not select any file.',
@@ -234,6 +263,7 @@ class S {
     );
   }
 
+  /// `Close`
   String get close {
     return Intl.message(
       'Close',
@@ -243,6 +273,7 @@ class S {
     );
   }
 
+  /// `Recent files`
   String get recentFiles {
     return Intl.message(
       'Recent files',
@@ -252,6 +283,7 @@ class S {
     );
   }
 
+  /// `New Notebook`
   String get newNotebook {
     return Intl.message(
       'New Notebook',
@@ -261,6 +293,7 @@ class S {
     );
   }
 
+  /// `No recent files.`
   String get noRecentFiles {
     return Intl.message(
       'No recent files.',
@@ -270,6 +303,7 @@ class S {
     );
   }
 
+  /// `Opening file`
   String get openingFile {
     return Intl.message(
       'Opening file',
@@ -279,6 +313,7 @@ class S {
     );
   }
 
+  /// `Error opening file`
   String get errorOpeningFile {
     return Intl.message(
       'Error opening file',
@@ -288,6 +323,7 @@ class S {
     );
   }
 
+  /// `Drop files to open`
   String get dropFilesToOpen {
     return Intl.message(
       'Drop files to open',
@@ -297,6 +333,7 @@ class S {
     );
   }
 
+  /// `Error loading file`
   String get errorLoadingFile {
     return Intl.message(
       'Error loading file',
@@ -306,6 +343,7 @@ class S {
     );
   }
 
+  /// `The following error was detected:`
   String get theFollowingErrorWasDetected {
     return Intl.message(
       'The following error was detected:',
@@ -315,6 +353,7 @@ class S {
     );
   }
 
+  /// `Copy error message`
   String get copyErrorMessage {
     return Intl.message(
       'Copy error message',
@@ -324,6 +363,7 @@ class S {
     );
   }
 
+  /// `I'm very sorry, but I couldn't read the file `
   String get imVerySorryButICouldntReadTheFile {
     return Intl.message(
       'I\'m very sorry, but I couldn\'t read the file ',
@@ -333,6 +373,7 @@ class S {
     );
   }
 
+  /// `. Are you sure I have the permission? And are you sure it is a Xournal++ file?`
   String get areYouSureIHaveThePermissionAndAreYou {
     return Intl.message(
       '. Are you sure I have the permission? And are you sure it is a Xournal++ file?',
@@ -342,6 +383,7 @@ class S {
     );
   }
 
+  /// `Error`
   String get error {
     return Intl.message(
       'Error',
@@ -351,6 +393,7 @@ class S {
     );
   }
 
+  /// `You've been redirected to the local app.`
   String get youveBeenRedirectedToTheLocalApp {
     return Intl.message(
       'You\'ve been redirected to the local app.',
@@ -360,6 +403,7 @@ class S {
     );
   }
 
+  /// `Opening`
   String get opening {
     return Intl.message(
       'Opening',
@@ -369,6 +413,7 @@ class S {
     );
   }
 
+  /// `Background`
   String get background {
     return Intl.message(
       'Background',
@@ -378,6 +423,7 @@ class S {
     );
   }
 
+  /// `Abort`
   String get abort {
     return Intl.message(
       'Abort',

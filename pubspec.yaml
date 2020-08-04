@@ -18,8 +18,7 @@ dependencies:
   url_launcher: ^5.5.0
   transparent_image: ^1.0.0
   catcher: ^0.3.17
-  receive_sharing_intent:
-    path: ../receive_sharing_intent
+  receive_sharing_intent: ^1.4.0
   after_init: ^0.1.2
   flutter_dropzone: ^1.0.7
   shared_preferences: ^0.5.8
