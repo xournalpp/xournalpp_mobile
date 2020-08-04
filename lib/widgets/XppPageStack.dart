@@ -9,24 +9,36 @@ class XppPageStack extends StatefulWidget {
   const XppPageStack({Key key, this.page}) : super(key: key);
 
   @override
-  _XppPageStackState createState() => _XppPageStackState();
+  XppPageStackState createState() => XppPageStackState();
 }
 
-class _XppPageStackState extends State<XppPageStack> {
+class XppPageStackState extends State<XppPageStack> {
+  XppPage page;
+  @override
+  void initState() {
+    page = widget.page;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(page.layers);
     return SizedBox(
-      width: widget.page.pageSize.width,
-      height: widget.page.pageSize.height,
+      width: page.pageSize.width,
+      height: page.pageSize.height,
       child: (Stack(
-          children: List.generate(widget.page.layers.length, (index) {
-        XppLayer currentLayer = widget.page.layers[index];
+          children: List.generate(page.layers.length, (index) {
+        XppLayer currentLayer = page.layers[index];
         return Stack(
           children: List.generate(currentLayer.content.length, (n) {
             XppContent currentContent = currentLayer.content[n];
             if (currentContent == null ||
                 currentContent.getOffset() == null ||
-                currentContent.render() == null) return (Container());
+                currentContent.render() == null) {
+              print(currentContent);
+              return (Container());
+            }
+            print(currentContent.getOffset());
             return Positioned(
               child: Builder(
                   builder: (c) =>
@@ -38,5 +50,10 @@ class _XppPageStackState extends State<XppPageStack> {
         );
       }))),
     );
+  }
+
+  void setPageData(XppPage pageData) {
+    print('UPDATING PAINT');
+    setState(() => page = pageData);
   }
 }

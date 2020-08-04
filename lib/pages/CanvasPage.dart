@@ -28,6 +28,9 @@ class _CanvasPageState extends State<CanvasPage> {
 
   double _currentZoom = 1;
 
+  /// used fro parent-child communication
+  final GlobalKey<XppPageStackState> _pageStackKey = GlobalKey();
+
   @override
   void initState() {
     _setMetadata();
@@ -62,18 +65,23 @@ class _CanvasPageState extends State<CanvasPage> {
                 BlendMode.darken),
             child: PointerListener(
               onNewContent: (newContent) {
+                print('NEW CONTENT');
                 setState(() {
                   /// TODO: manage layers
-                  _file.pages[currentPage].layers[0].content.add(newContent);
+                  _file.pages[currentPage].layers[0].content =
+                      new List.from(_file.pages[currentPage].layers[0].content)
+                        ..add(newContent);
                   _file.pages[currentPage].layers[0].content.forEach((content) {
                     if (content.runtimeType is XppStroke)
                       (content as XppStroke).points.toList().forEach((element) {
-                        print(element.x);
-                        print(element.y);
-                        print(element.width);
+                        //print(element.x);
+                        //print(element.y);
+                        //print(element.width);
                       });
                   });
                 });
+                _pageStackKey.currentState
+                    .setPageData(_file.pages[currentPage]);
               },
               child: Zoom(
                 width: _file.pages[currentPage].pageSize.width * 5,
@@ -86,6 +94,8 @@ class _CanvasPageState extends State<CanvasPage> {
                     child: Transform.scale(
                       scale: 5,
                       child: XppPageStack(
+                        /// to communicate from [PointerListener] to [XppPageStack]
+                        key: _pageStackKey,
                         page: _file.pages[currentPage],
                       ),
                     ),
