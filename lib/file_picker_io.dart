@@ -32,7 +32,7 @@ Future<Map<String, Uint8List>> selectFilesDesktop(
 }
 
 Future<Uint8List> _readFileByte(String filePath) async {
-  Uri myUri = Uri.parse(filePath);
+  Uri myUri = Platform.isWindows ? Uri.file(filePath,windows: true) : Uri.parse(filePath);
   File audioFile = new File.fromUri(myUri);
   Uint8List bytes;
   await audioFile.readAsBytes().then((value) {
