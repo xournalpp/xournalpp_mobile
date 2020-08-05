@@ -57,7 +57,6 @@ class _PointerListenerState extends State<PointerListener> {
           widget.child,
           if (points.length > 0)
             CustomPaint(
-              size: Size.infinite,
               /*size: Size(
       bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),*/
               foregroundPainter: XppStrokePainter(
@@ -66,22 +65,21 @@ class _PointerListenerState extends State<PointerListener> {
         ],
       ),
     );
+  }
 
-    // clearPoints method used to reset the canvas
-    // method can be called using
-    //   key.currentState.clearPoints();
+  // clearPoints method used to reset the canvas
+  // method can be called using
+  //   key.currentState.clearPoints();
 
-    void clearPoints() {
-      setState(() {
-        points.clear();
-      });
-    }
+  void clearPoints() {
+    setState(() {
+      points.clear();
+    });
   }
 
   void saveStroke() {
     /// TODO: different colors
     /// TODO: different tools
-    print(points);
     if (points.isNotEmpty)
       widget.onNewContent(XppStroke(
           tool: XppStrokeTool.PEN, color: Colors.green, points: points));

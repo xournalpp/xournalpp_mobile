@@ -14,6 +14,7 @@ class XppPageStack extends StatefulWidget {
 
 class XppPageStackState extends State<XppPageStack> {
   XppPage page;
+
   @override
   void initState() {
     page = widget.page;
@@ -24,11 +25,11 @@ class XppPageStackState extends State<XppPageStack> {
   Widget build(BuildContext context) {
     print(page.layers);
     return SizedBox(
-      width: page.pageSize.width,
-      height: page.pageSize.height,
+      width: widget.page.pageSize.width,
+      height: widget.page.pageSize.height,
       child: (Stack(
-          children: List.generate(page.layers.length, (index) {
-        XppLayer currentLayer = page.layers[index];
+          children: List.generate(widget.page.layers.length, (index) {
+        XppLayer currentLayer = widget.page.layers[index];
         return Stack(
           children: List.generate(currentLayer.content.length, (n) {
             XppContent currentContent = currentLayer.content[n];
