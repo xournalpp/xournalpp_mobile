@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppLayer.dart';
@@ -7,8 +8,17 @@ class PointerListener extends StatefulWidget {
   final Function(XppContent) onNewContent;
   @required
   final Widget child;
+  @required
+  final bool enabled;
+  @required
+  final Matrix4 translationMatrix;
 
-  const PointerListener({Key key, this.onNewContent, this.child})
+  const PointerListener(
+      {Key key,
+      this.onNewContent,
+      this.child,
+      this.enabled = true,
+      this.translationMatrix})
       : super(key: key);
 
   @override
@@ -22,35 +32,28 @@ class _PointerListenerState extends State<PointerListener> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerMove: (data) {
-        print('Moving');
-        print(data);
-        if (!isPen(data)) return;
-        points = new List.from(points)
-          ..add(XppStrokePoint(
-              x: data.position.dx,
-              y: data.position.dy,
-              width: data.pressure == 0 ? 5 : data.pressure * 10));
-        print(points[points.length - 1].width);
+        if (!widget.enabled) return;
+        points.add(XppStrokePoint(
+            x: data.position.dx - widget.translationMatrix.getTranslation().x,
+            y: data.position.dy - widget.translationMatrix.getTranslation().y,
+            width: (data.pressure == 0 ? 5 : data.pressure * 10) *
+                widget.translationMatrix.getTranslation().z));
         setState(() {});
       },
       onPointerDown: (data) {
         print('Down');
-        print(data);
       },
       onPointerUp: (data) {
         print('Up');
-        print(data);
         saveStroke();
         points.clear();
       },
       onPointerCancel: (data) {
         print('Cancel');
-        print(data);
         points.clear();
       },
       onPointerSignal: (data) {
         print('Signal');
-        print(data);
       },
       child: Stack(
         children: [
@@ -80,12 +83,12 @@ class _PointerListenerState extends State<PointerListener> {
   void saveStroke() {
     /// TODO: different colors
     /// TODO: different tools
-    if (points.isNotEmpty)
-      widget.onNewContent(XppStroke(
-          tool: XppStrokeTool.PEN, color: Colors.green, points: points));
-  }
-
-  bool isPen(PointerMoveEvent data) {
-    return true;
+    if (points.isNotEmpty) {
+      XppStroke stroke = XppStroke(
+          tool: XppStrokeTool.PEN,
+          color: Colors.green,
+          points: List.from(points));
+      widget.onNewContent(stroke);
+    }
   }
 }

@@ -23,7 +23,6 @@ class XppPageStackState extends State<XppPageStack> {
 
   @override
   Widget build(BuildContext context) {
-    print(page.layers);
     return SizedBox(
       width: widget.page.pageSize.width,
       height: widget.page.pageSize.height,
@@ -36,10 +35,8 @@ class XppPageStackState extends State<XppPageStack> {
             if (currentContent == null ||
                 currentContent.getOffset() == null ||
                 currentContent.render() == null) {
-              print(currentContent);
               return (Container());
             }
-            print(currentContent.getOffset());
             return Positioned(
               child: Builder(
                   builder: (c) =>
@@ -54,7 +51,6 @@ class XppPageStackState extends State<XppPageStack> {
   }
 
   void setPageData(XppPage pageData) {
-    print('UPDATING PAINT');
     setState(() => page = pageData);
   }
 }

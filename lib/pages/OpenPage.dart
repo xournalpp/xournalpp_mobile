@@ -199,9 +199,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
         /// ... which is awfully encoded as a content:// URI using the path as **queryComponent** instead of as **path** (why???)
         /// unfortunately, android needs to copy the file to our own app directory
         /// TODO: don't copy files we can directly read
-        print(data);
         String path = await FlutterAbsolutePath.getAbsolutePath(data as String);
-        print(path);
         data = [
           SharedMediaFile(
               path, base64Encode(kTransparentImage), null, SharedMediaType.FILE)

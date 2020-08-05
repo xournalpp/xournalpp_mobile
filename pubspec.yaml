@@ -23,6 +23,8 @@ dependencies:
   flutter_dropzone: ^1.0.7
   shared_preferences: ^0.5.8
   flutter_absolute_path: 1.0.6
+  matrix_gesture_detector: ^0.1.0
+  vector_math: any
 
 dev_dependencies:
   flutter_test:

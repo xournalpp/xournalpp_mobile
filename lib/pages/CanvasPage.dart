@@ -7,9 +7,10 @@ import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
+import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
 import 'package:xournalpp/widgets/XppPagesListView.dart';
-import 'package:zoom_widget/zoom_widget.dart';
+import 'package:xournalpp/widgets/ZoomableWidget.dart';
 
 class CanvasPage extends StatefulWidget {
   CanvasPage({Key key, this.file}) : super(key: key);
@@ -26,10 +27,14 @@ class _CanvasPageState extends State<CanvasPage> {
 
   int currentPage = 0;
 
-  double _currentZoom = 1;
-
   /// used fro parent-child communication
   final GlobalKey<XppPageStackState> _pageStackKey = GlobalKey();
+
+  ZoomController _zoomController = ZoomController();
+
+  bool _toolBoxOpened = false;
+
+  EditingTool _currentTool = EditingTool.MOVE;
 
   @override
   void initState() {
@@ -56,48 +61,51 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       ),
       drawer: MainDrawer(),
-      body: Stack(children: [
+      body: Stack(fit: StackFit.expand, children: [
         Hero(
           tag: 'ZoomArea',
           child: ColorFiltered(
             colorFilter: ColorFilter.mode(
                 Theme.of(context).colorScheme.surface.withOpacity(.5),
                 BlendMode.darken),
-            child: PointerListener(
-              onNewContent: (newContent) {
-                print('NEW CONTENT');
-                setState(() {
-                  /// TODO: manage layers
-                  _file.pages[currentPage].layers[0].content =
-                      new List.from(_file.pages[currentPage].layers[0].content)
-                        ..add(newContent);
-                  _file.pages[currentPage].layers[0].content.forEach((content) {
-                    if (content.runtimeType is XppStroke)
-                      (content as XppStroke).points.toList().forEach((element) {
-                        //print(element.x);
-                        //print(element.y);
-                        //print(element.width);
+            child: ZoomableWidget(
+              enabled: _currentTool == EditingTool.MOVE,
+              controller: _zoomController,
+              child: Transform.scale(
+                scale: 1,
+                child: PointerListener(
+                  enabled: _currentTool == EditingTool.STYLUS,
+                  translationMatrix: _zoomController.matrix,
+                  onNewContent: (newContent) {
+                    setState(() {
+                      /// TODO: manage layers
+                      _file.pages[currentPage].layers[0].content =
+                          new List.from(
+                              _file.pages[currentPage].layers[0].content)
+                            ..add(newContent);
+                      _file.pages[currentPage].layers[0].content
+                          .forEach((content) {
+                        if (content.runtimeType is XppStroke)
+                          (content as XppStroke)
+                              .points
+                              .toList()
+                              .forEach((element) {
+                            //print(element.x);
+                            //print(element.y);
+                            //print(element.width);
+                          });
                       });
-                  });
-                });
-                _pageStackKey.currentState
-                    .setPageData(_file.pages[currentPage]);
-              },
-              child: Zoom(
-                width: _file.pages[currentPage].pageSize.width * 5,
-                height: _file.pages[currentPage].pageSize.height * 5,
-                initZoom: _currentZoom,
-                child: Center(
-                  child: SizedBox(
-                    width: _file.pages[currentPage].pageSize.width,
-                    height: _file.pages[currentPage].pageSize.height,
-                    child: Transform.scale(
-                      scale: 5,
-                      child: XppPageStack(
-                        /// to communicate from [PointerListener] to [XppPageStack]
-                        key: _pageStackKey,
-                        page: _file.pages[currentPage],
-                      ),
+                    });
+                    _pageStackKey.currentState
+                        .setPageData(_file.pages[currentPage]);
+                  },
+                  child: Card(
+                    elevation: 12,
+                    color: Colors.white,
+                    child: XppPageStack(
+                      /// to communicate from [PointerListener] to [XppPageStack]
+                      key: _pageStackKey,
+                      page: _file.pages[currentPage],
                     ),
                   ),
                 ),
@@ -118,8 +126,8 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.add),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        _currentZoom += .1;
-                        if (_currentZoom > 1) _currentZoom = 1;
+                        _zoomController.zoom += .1;
+                        if (_zoomController.zoom > 1) _zoomController.zoom = 1;
                       }),
                   SizedBox(
                     height: 128,
@@ -128,10 +136,10 @@ class _CanvasPageState extends State<CanvasPage> {
                       child: Slider(
                         min: 0,
                         max: 1,
-                        label: '${_currentZoom * 100} %',
-                        value: _currentZoom,
+                        label: '${_zoomController.zoom * 100} %',
+                        value: _zoomController.zoom,
                         onChanged: (newZoom) =>
-                            setState(() => _currentZoom = newZoom),
+                            setState(() => _zoomController.zoom = newZoom),
                       ),
                     ),
                   ),
@@ -139,8 +147,8 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.remove),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        _currentZoom -= .1;
-                        if (_currentZoom < 0) _currentZoom = 0;
+                        _zoomController.zoom -= .1;
+                        if (_zoomController.zoom < 0) _zoomController.zoom = 0;
                       }),
                 ],
               ),
@@ -163,9 +171,19 @@ class _CanvasPageState extends State<CanvasPage> {
           : FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
-          onPressed: () => Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(S.of(context).toolboxNotImplementedYet),
-          )),
+          onPressed: () {
+            _toolBoxOpened
+                ? Navigator.of(context).pop()
+                : Scaffold.of(context)
+                    .showBottomSheet((context) => ToolBoxBottomSheet(
+                          tool: _currentTool,
+                          onToolChange: (newTool) {
+                            print(newTool);
+                            setState(() => _currentTool = newTool);
+                          },
+                        ));
+            _toolBoxOpened = !_toolBoxOpened;
+          },
           tooltip: S.of(context).tools,
           child: Icon(Icons.format_paint),
         ),

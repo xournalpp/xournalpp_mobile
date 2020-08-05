@@ -41,6 +41,9 @@ class XppStroke extends XppContent {
 
   @override
   Widget render() {
+    if (points.isEmpty) {
+      return (Container());
+    }
     Color colorToUse = color;
     if (tool == XppStrokeTool.ERASER) color = Colors.white;
     if (tool == XppStrokeTool.HIGHLIGHTER) {
@@ -70,6 +73,8 @@ class XppStrokePainter extends CustomPainter {
     if (points.isEmpty) return;
     var paint = Paint()
       ..color = color
+
+      /// TODO: workaround pressure
       ..strokeWidth = points[0]?.width ?? 5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
