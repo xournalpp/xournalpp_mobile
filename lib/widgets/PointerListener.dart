@@ -1,15 +1,20 @@
+import 'dart:ui';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class PointerListener extends StatefulWidget {
   @required
   final Function(XppContent) onNewContent;
   @required
+  final Function({int device, PointerDeviceKind kind}) onDeviceChange;
+  @required
   final Widget child;
   @required
-  final bool enabled;
+  final Map<PointerDeviceKind, EditingTool> toolData;
   @required
   final Matrix4 translationMatrix;
 
@@ -17,55 +22,61 @@ class PointerListener extends StatefulWidget {
       {Key key,
       this.onNewContent,
       this.child,
-      this.enabled = true,
-      this.translationMatrix})
+      this.toolData = const {},
+      this.translationMatrix,
+      this.onDeviceChange})
       : super(key: key);
 
   @override
-  _PointerListenerState createState() => _PointerListenerState();
+  PointerListenerState createState() => PointerListenerState();
 }
 
-class _PointerListenerState extends State<PointerListener> {
+class PointerListenerState extends State<PointerListener> {
   List<XppStrokePoint> points = [];
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerMove: (data) {
-        if (!widget.enabled) return;
-        points.add(XppStrokePoint(
-            x: data.position.dx - widget.translationMatrix.getTranslation().x,
-            y: data.position.dy - widget.translationMatrix.getTranslation().y,
-            width: (data.pressure == 0 ? 5 : data.pressure * 10) *
-                widget.translationMatrix.getTranslation().z));
-        setState(() {});
+    return MouseRegion(
+      onHover: (event) {
+        widget.onDeviceChange(device: event.device, kind: event.kind);
       },
-      onPointerDown: (data) {
-        print('Down');
-      },
-      onPointerUp: (data) {
-        print('Up');
-        saveStroke();
-        points.clear();
-      },
-      onPointerCancel: (data) {
-        print('Cancel');
-        points.clear();
-      },
-      onPointerSignal: (data) {
-        print('Signal');
-      },
-      child: Stack(
-        children: [
-          widget.child,
-          if (points.length > 0)
-            CustomPaint(
-              /*size: Size(
-      bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),*/
-              foregroundPainter: XppStrokePainter(
-                  points: points, color: Colors.green, topLeft: Offset(0, 0)),
-            ),
-        ],
+      child: Listener(
+        onPointerMove: (data) {
+          widget.onDeviceChange(device: data.device, kind: data.kind);
+          if (!isPen(data)) return;
+          setState(() {
+            points.add(XppStrokePoint(
+                x: data.localPosition.dx,
+                y: data.localPosition.dy,
+                width: (data.pressure == 0 ? 5 : data.pressure * 10) *
+                    widget.translationMatrix.getTranslation().z));
+          });
+        },
+        onPointerDown: (data) {
+          widget.onDeviceChange(device: data.device, kind: data.kind);
+        },
+        onPointerUp: (data) {
+          saveStroke();
+          points.clear();
+        },
+        onPointerCancel: (data) {
+          points.clear();
+        },
+        onPointerSignal: (data) {
+          widget.onDeviceChange(device: data.device, kind: data.kind);
+        },
+        child: Stack(
+          children: [
+            widget.child,
+            if (points.length > 0)
+              CustomPaint(
+                /*size: Size(
+        bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),*/
+                foregroundPainter: XppStrokePainter(
+                    points: points, color: Colors.green, topLeft: Offset(0, 0)),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -91,4 +102,10 @@ class _PointerListenerState extends State<PointerListener> {
       widget.onNewContent(stroke);
     }
   }
+
+  bool isPen(PointerMoveEvent data) =>
+      (widget.toolData.keys.contains(data.kind) &&
+          widget.toolData[data.kind] == EditingTool.STYLUS) ||
+      (!widget.toolData.keys.contains(data.kind) &&
+          data.kind == PointerDeviceKind.stylus);
 }

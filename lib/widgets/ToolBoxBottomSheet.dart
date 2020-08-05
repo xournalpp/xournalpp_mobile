@@ -13,15 +13,7 @@ class ToolBoxBottomSheet extends StatefulWidget {
 }
 
 class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
-  EditingTool _currentTool;
-
   double _height = 320;
-
-  @override
-  void initState() {
-    _currentTool = widget.tool;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +29,8 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
         ),
         builder: (context) => Container(
               height: _height,
-              padding: const EdgeInsets.all(8),
               child: ListView(
+                padding: const EdgeInsets.all(8),
                 shrinkWrap: true,
                 children: [
                   Text(
@@ -49,44 +41,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                     height: 48,
                     child: ListView(
                       shrinkWrap: true,
-                      children: [
-                        FloatingActionButton(
-                          onPressed: () {
-                            setState(() => _currentTool = EditingTool.STYLUS);
-                            widget.onToolChange(_currentTool);
-                          },
-                          child: Icon(Icons.edit),
-                          tooltip: 'Pen',
-                          elevation: 6,
-                          backgroundColor: _currentTool == EditingTool.STYLUS
-                              ? null
-                              : Theme.of(context).cardColor,
-                        ),
-                        FloatingActionButton(
-                          onPressed: () {
-                            setState(() => _currentTool = EditingTool.MOVE);
-                            widget.onToolChange(_currentTool);
-                          },
-                          child: Icon(Icons.pan_tool),
-                          tooltip: 'Move',
-                          elevation: 6,
-                          backgroundColor: _currentTool == EditingTool.MOVE
-                              ? null
-                              : Theme.of(context).cardColor,
-                        ),
-                        FloatingActionButton(
-                          onPressed: () {
-                            setState(() => _currentTool = EditingTool.TEXT);
-                            widget.onToolChange(_currentTool);
-                          },
-                          child: Icon(Icons.keyboard),
-                          tooltip: 'Text',
-                          elevation: 6,
-                          backgroundColor: _currentTool == EditingTool.TEXT
-                              ? null
-                              : Theme.of(context).cardColor,
-                        ),
-                      ],
+                      children: [],
                       scrollDirection: Axis.horizontal,
                     ),
                   )
@@ -96,4 +51,14 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
   }
 }
 
-enum EditingTool { STYLUS, TEXT, LATEX, IMAGE, MOVE, SELECT }
+enum EditingTool {
+  STYLUS,
+  HIGHLIGHT,
+  TEXT,
+  LATEX,
+  IMAGE,
+  MOVE,
+  SELECT,
+  ERASER,
+  WHITEOUT
+}
