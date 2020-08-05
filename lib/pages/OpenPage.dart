@@ -33,6 +33,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   Completer<BuildContext> scaffoldCompleter = Completer();
 
   List<SharedMediaFile> _sharedFiles;
+
   @override
   void initState() {
     // trying to load fitting locale
@@ -40,21 +41,22 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
     try {
       if (['en', 'de'].contains(window?.locale?.languageCode ?? 'en'))
         S.load(Locale(window.locale.languageCode));
+
       /// TODO: implement custom change of language
       // checking for locale override
       /*Preferences().fetch('language').then((languageCode) {
-        switch (languageCode) {
-          case 'en':
-            S.load(Locale('en'));
-            break;
+      switch (languageCode) {
+        case 'en':
+          S.load(Locale('en'));
+          break;
 
-          case 'de':
-            S.load(Locale('de'));
-            break;
+        case 'de':
+          S.load(Locale('de'));
+          break;
 
-          case 'fr':
-            S.load(Locale('fr'));
-            break;
+        case 'fr':
+          S.load(Locale('fr'));
+          break;
 
           case 'tlh':
             S.load(Locale('tlh'));
@@ -63,8 +65,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
             break;
         }
       });*/
-    } catch(e){}
-
+    } catch (e) {}
 
     SharedPreferences.getInstance().then((prefs) {
       String jsonData = prefs.getString(PreferencesKeys.kRecentFiles);
@@ -74,7 +75,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
       setState(() {
         _loadedRecent = true;
       });
-    }).catchError((e){
+    }).catchError((e) {
       print('No SharedPreferences available for this platform.');
       setState(() {
         _loadedRecent = true;
@@ -206,9 +207,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
         /// ... which is awfully encoded as a content:// URI using the path as **queryComponent** instead of as **path** (why???)
         /// unfortunately, android needs to copy the file to our own app directory
         /// TODO: don't copy files we can directly read
-        print(data);
         String path = await FlutterAbsolutePath.getAbsolutePath(data as String);
-        print(path);
         data = [
           SharedMediaFile(
               path, base64Encode(kTransparentImage), null, SharedMediaType.FILE)

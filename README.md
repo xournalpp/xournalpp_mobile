@@ -34,11 +34,13 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 - [x] Recent files list
 - [ ] Whiteout eraser
 - [ ] Saving
-- [ ] Basic editing
+- [x] Basic editing
 
 ## Getting started
 
 ### Prepare
+
+> You would like to contribute? Please check out issues to solve [here](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/issues) or get our `// TODO:`s [here](https://gitlab.com/search?search=TODO&project_id=20056916)!
 
 Get your information about the `.xopp` file format at http://www-math.mit.edu/~auroux/software/xournal/manual.html#file-format .
 

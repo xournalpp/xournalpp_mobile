@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:archive/archive.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
@@ -356,7 +355,7 @@ class XppFile {
         });
       jsonData = jsonEncode(files.toList());
       prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
-    }).catchError((e){});
+    });
 
     return file;
   }

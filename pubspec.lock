@@ -133,7 +133,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.13.0+1"
+    version: "1.13.2"
   file_picker_cross:
     dependency: "direct main"
     description:
@@ -166,7 +166,7 @@ packages:
       name: flutter_dropzone
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7"
+    version: "1.0.8"
   flutter_dropzone_platform_interface:
     dependency: transitive
     description:
@@ -218,7 +218,7 @@ packages:
       name: fluttertoast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.0.1+1"
+    version: "7.0.2"
   http:
     dependency: transitive
     description:
@@ -282,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10-nullsafety"
+  matrix_gesture_detector:
+    dependency: "direct main"
+    description:
+      name: matrix_gesture_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   meta:
     dependency: transitive
     description:
@@ -330,14 +337,14 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.2"
   petitparser:
     dependency: transitive
     description:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "3.1.0"
   platform:
     dependency: transitive
     description:
@@ -495,7 +502,7 @@ packages:
     description:
       path: "plugins/flutter_plugins/url_launcher_fde"
       ref: master
-      resolved-ref: "9e9b68b67c2a2c0b82eed2224f709aff2ccbab7c"
+      resolved-ref: "1feed8db2e5222af4e5d8495ac45135a2701c755"
       url: "git://github.com/google/flutter-desktop-embedding.git"
     source: git
     version: "0.1.0"
@@ -535,7 +542,7 @@ packages:
     source: hosted
     version: "3.4.2"
   vector_math:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: vector_math
       url: "https://pub.dartlang.org"
@@ -554,7 +561,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.0"
   yaml:
     dependency: transitive
     description:
@@ -562,13 +569,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
-  zoom_widget:
-    dependency: "direct main"
-    description:
-      name: zoom_widget
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.3"
 sdks:
   dart: ">=2.10.0-0.0.dev <2.10.0"
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
