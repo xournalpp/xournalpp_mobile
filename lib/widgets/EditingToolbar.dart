@@ -193,7 +193,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                   }),
             ),
             FloatingActionButton(
-              heroTag: EditingTool.SELECT,
+              heroTag: MaterialPicker,
               onPressed: () {
                 showDialog(
                   context: context,

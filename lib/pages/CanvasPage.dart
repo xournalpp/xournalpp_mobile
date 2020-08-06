@@ -51,7 +51,115 @@ class _CanvasPageState extends State<CanvasPage> {
 
   @override
   Widget build(BuildContext context) {
+    final child = ZoomableWidget(
+        key: _zoomableKey,
+        controller: _zoomController,
+        onInteractionUpdate: (details) {
+          setState(() => pageScale = details.scale);
+        },
+        child: Center(
+          child: Card(
+            elevation: 12,
+            color: Colors.white,
+            child: PointerListener(
+              key: _pointerListenerKey,
+              translationMatrix: _zoomController.value,
+              toolData: _toolData,
+              strokeWidth: toolWidth,
+              color: toolColor,
+              onDeviceChange: ({int device, PointerDeviceKind kind}) {
+                //_currentDevice = device;
+                setDefaultDeviceIfNotSet(kind: kind);
+                _currentDevice = kind;
+                _editingToolbarKey.currentState.setState(() {
+                  _editingToolbarKey.currentState.currentDevice = kind;
+                  _setZoomableState();
+                });
+              },
+              onNewContent: (newContent) {
+                setState(() {
+                  /// TODO: manage layers
+                  _file.pages[currentPage].layers[0].content =
+                      new List.from(_file.pages[currentPage].layers[0].content)
+                        ..add(newContent);
+                });
+                _pageStackKey.currentState
+                    .setPageData(_file.pages[currentPage]);
+              },
+              child: XppPageStack(
+                /// to communicate from [PointerListener] to [XppPageStack]
+                key: _pageStackKey,
+                page: _file.pages[currentPage],
+              ),
+            ),
+          ),
+        ));
     return Scaffold(
+      drawer: MainDrawer(),
+      body: Stack(fit: StackFit.expand, children: [
+        Hero(
+          tag: 'ZoomArea',
+          child: (kIsWeb
+              ? child
+              : ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      Theme.of(context).colorScheme.surface.withOpacity(.5),
+                      BlendMode.darken),
+                  child: child,
+                )),
+        ),
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: Tooltip(
+            message: '${(pageScale * 100).round()} %',
+            child: SizedBox(
+              width: 64,
+              child: Column(
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.add),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        pageScale *= 1.1;
+                        if (pageScale > 5) pageScale = 5;
+                        _zoomController.value =
+                            _zoomController.value.scaled(pageScale);
+                        setState(() {});
+                      }),
+                  SizedBox(
+                    height: 128,
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Slider(
+                        min: 0.1,
+                        max: 5,
+                        label: '${(pageScale * 100).round()} %',
+                        value: pageScale,
+                        onChanged: (newZoom) {
+                          pageScale = newZoom;
+                          _zoomController.value.scaled(pageScale);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.remove),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        pageScale /= 1.1;
+                        if (pageScale < .1) pageScale = .1;
+                        _zoomController.value =
+                            _zoomController.value.scaled(pageScale);
+                        setState(() {});
+                      }),
+                ],
+              ),
+            ),
+          ),
+        )
+      ]),
       appBar: AppBar(
         title: Tooltip(
           message: S.of(context).doubleTapToChange,
@@ -84,113 +192,6 @@ class _CanvasPageState extends State<CanvasPage> {
                       },
                     ))),
       ),
-      drawer: MainDrawer(),
-      body: Stack(fit: StackFit.expand, children: [
-        Hero(
-          tag: 'ZoomArea',
-          child: Builder(
-            builder: (context) {
-              final child = ZoomableWidget(
-                  key: _zoomableKey,
-                  controller: _zoomController,
-                  onInteractionUpdate: (details) {
-                    setState(() => pageScale = details.scale);
-                  },
-                  child: Center(
-                    child: Card(
-                      elevation: 12,
-                      color: Colors.white,
-                      child: PointerListener(
-                        key: _pointerListenerKey,
-                        translationMatrix: _zoomController.value,
-                        toolData: _toolData,
-                        strokeWidth: toolWidth,
-                        color: toolColor,
-                        onDeviceChange: ({int device, PointerDeviceKind kind}) {
-                          //_currentDevice = device;
-                          setDefaultDeviceIfNotSet(kind: kind);
-                          _currentDevice = kind;
-                          _editingToolbarKey.currentState.setState(() {
-                            _editingToolbarKey.currentState.currentDevice =
-                                kind;
-                            _setZoomableState();
-                          });
-                        },
-                        onNewContent: (newContent) {
-                          setState(() {
-                            /// TODO: manage layers
-                            _file.pages[currentPage].layers[0].content =
-                                new List.from(
-                                    _file.pages[currentPage].layers[0].content)
-                                  ..add(newContent);
-                          });
-                          _pageStackKey.currentState
-                              .setPageData(_file.pages[currentPage]);
-                        },
-                        child: XppPageStack(
-                          /// to communicate from [PointerListener] to [XppPageStack]
-                          key: _pageStackKey,
-                          page: _file.pages[currentPage],
-                        ),
-                      ),
-                    ),
-                  ));
-              return (kIsWeb
-                  ? child
-                  : ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.surface.withOpacity(.5),
-                          BlendMode.darken),
-                      child: child,
-                    ));
-            },
-          ),
-        ),
-        Positioned(
-          bottom: 16,
-          right: 16,
-          child: Tooltip(
-            message: '${(pageScale * 100).round()} %',
-            child: SizedBox(
-              width: 64,
-              child: Column(
-                children: [
-                  IconButton(
-                      icon: Icon(Icons.add),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        _zoomController.value.getTranslation().z += .1;
-                        if (_zoomController.value.getTranslation().z > 1)
-                          _zoomController.value.getTranslation().z = 1;
-                      }),
-                  SizedBox(
-                    height: 128,
-                    child: RotatedBox(
-                      quarterTurns: 3,
-                      child: Slider(
-                        min: 0.1,
-                        max: 5,
-                        label: '${(pageScale * 100).round()} %',
-                        value: pageScale,
-                        onChanged: (newZoom) => setState(() =>
-                            _zoomController.value.getTranslation().z = newZoom),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                      icon: Icon(Icons.remove),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        _zoomController.value.getTranslation().z -= .1;
-                        if (_zoomController.value.getTranslation().z < 0)
-                          _zoomController.value.getTranslation().z = 0;
-                      }),
-                ],
-              ),
-            ),
-          ),
-        )
-      ]),
       bottomNavigationBar: BottomAppBar(
         shape: kIsWeb ? null : CircularNotchedRectangle(),
         child: Container(
