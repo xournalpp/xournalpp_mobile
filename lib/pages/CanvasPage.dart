@@ -32,7 +32,7 @@ class _CanvasPageState extends State<CanvasPage> {
   /// used fro parent-child communication
   final GlobalKey<XppPageStackState> _pageStackKey = GlobalKey();
 
-  ZoomController _zoomController = ZoomController();
+  TransformationController _zoomController = TransformationController();
 
   GlobalKey<PointerListenerState> _pointerListenerKey = GlobalKey();
 
@@ -83,7 +83,7 @@ class _CanvasPageState extends State<CanvasPage> {
               child: Center(
                 child: PointerListener(
                   key: _pointerListenerKey,
-                  translationMatrix: _zoomController.matrix,
+                  translationMatrix: _zoomController.value,
                   toolData: _toolData,
                   onDeviceChange: ({int device, PointerDeviceKind kind}) {
                     //_currentDevice = device;
@@ -143,8 +143,9 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.add),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        _zoomController.zoom += .1;
-                        if (_zoomController.zoom > 1) _zoomController.zoom = 1;
+                        _zoomController.value.getTranslation().z += .1;
+                        if (_zoomController.value.getTranslation().z > 1)
+                          _zoomController.value.getTranslation().z = 1;
                       }),
                   SizedBox(
                     height: 128,
@@ -153,10 +154,11 @@ class _CanvasPageState extends State<CanvasPage> {
                       child: Slider(
                         min: 0,
                         max: 1,
-                        label: '${_zoomController.zoom * 100} %',
-                        value: _zoomController.zoom,
-                        onChanged: (newZoom) =>
-                            setState(() => _zoomController.zoom = newZoom),
+                        label:
+                            '${_zoomController.value.getTranslation().z * 100} %',
+                        value: _zoomController.value.getTranslation().z,
+                        onChanged: (newZoom) => setState(() =>
+                            _zoomController.value.getTranslation().z = newZoom),
                       ),
                     ),
                   ),
@@ -164,8 +166,9 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.remove),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        _zoomController.zoom -= .1;
-                        if (_zoomController.zoom < 0) _zoomController.zoom = 0;
+                        _zoomController.value.getTranslation().z -= .1;
+                        if (_zoomController.value.getTranslation().z < 0)
+                          _zoomController.value.getTranslation().z = 0;
                       }),
                 ],
               ),
