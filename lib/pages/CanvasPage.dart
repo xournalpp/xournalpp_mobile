@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/generated/l10n.dart';
-import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/widgets/EditingToolbar.dart';
+import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
@@ -24,22 +24,24 @@ class CanvasPage extends StatefulWidget {
 
 class _CanvasPageState extends State<CanvasPage> {
   XppFile _file;
-  double padding = 16;
 
   int currentPage = 0;
 
-  /// used fro parent-child communication
-  final GlobalKey<XppPageStackState> _pageStackKey = GlobalKey();
+  Color toolColor = Colors.blueGrey;
+  double toolWidth = 5;
 
   TransformationController _zoomController = TransformationController();
 
-  GlobalKey<PointerListenerState> _pointerListenerKey = GlobalKey();
-
   Map<PointerDeviceKind, EditingTool> _toolData = {};
-
   PointerDeviceKind _currentDevice = PointerDeviceKind.touch;
 
-  GlobalKey<EditingToolBarState> _editingToolbarKey = GlobalKey();
+  /// used fro parent-child communication
+  final GlobalKey<XppPageStackState> _pageStackKey = GlobalKey();
+  final GlobalKey<EditingToolBarState> _editingToolbarKey = GlobalKey();
+  final GlobalKey<PointerListenerState> _pointerListenerKey = GlobalKey();
+  final GlobalKey<ZoomableWidgetState> _zoomableKey = GlobalKey();
+
+  double pageScale = 1;
 
   @override
   void initState() {
@@ -63,68 +65,76 @@ class _CanvasPageState extends State<CanvasPage> {
             child: EditingToolBar(
                 key: _editingToolbarKey,
                 deviceMap: _toolData,
+                color: toolColor,
+                onWidthChange: (newWidth) {
+                  setState(() {
+                    toolWidth = newWidth *
+                        2; // average pressure is 0.5, so multiplying by 2
+                  });
+                },
+                onColorChange: (newColor) {
+                  setState(() {
+                    toolColor = newColor;
+                  });
+                },
                 onNewDeviceMap: (newDeviceMap) => setState(
-                      () => _toolData = newDeviceMap,
+                      () {
+                        _toolData = newDeviceMap;
+                        _setZoomableState();
+                      },
                     ))),
       ),
-      //drawer: MainDrawer(),
+      drawer: MainDrawer(),
       body: Stack(fit: StackFit.expand, children: [
         Hero(
           tag: 'ZoomArea',
           child: Builder(
             builder: (context) {
               final child = ZoomableWidget(
-                enabled: _toolData[_currentDevice] == null ||
-                    _toolData[_currentDevice] == EditingTool.MOVE,
-                controller: _zoomController,
-                child: Center(
-                  child: PointerListener(
-                    key: _pointerListenerKey,
-                    translationMatrix: _zoomController.value,
-                    toolData: _toolData,
-                    onDeviceChange: ({int device, PointerDeviceKind kind}) {
-                      //_currentDevice = device;
-                      setDefaultDeviceIfNotSet(kind: kind);
-                      _currentDevice = kind;
-                      _editingToolbarKey.currentState.setState(() {
-                        _editingToolbarKey.currentState.currentDevice = kind;
-                      });
-                    },
-                    onNewContent: (newContent) {
-                      setState(() {
-                        /// TODO: manage layers
-                        _file.pages[currentPage].layers[0].content =
-                            new List.from(
-                                _file.pages[currentPage].layers[0].content)
-                              ..add(newContent);
-                        _file.pages[currentPage].layers[0].content
-                            .forEach((content) {
-                          if (content.runtimeType is XppStroke)
-                            (content as XppStroke)
-                                .points
-                                .toList()
-                                .forEach((element) {
-                              //print(element.x);
-                              //print(element.y);
-                              //print(element.width);
-                            });
-                        });
-                      });
-                      _pageStackKey.currentState
-                          .setPageData(_file.pages[currentPage]);
-                    },
+                  key: _zoomableKey,
+                  controller: _zoomController,
+                  onInteractionUpdate: (details) {
+                    setState(() => pageScale = details.scale);
+                  },
+                  child: Center(
                     child: Card(
                       elevation: 12,
                       color: Colors.white,
-                      child: XppPageStack(
-                        /// to communicate from [PointerListener] to [XppPageStack]
-                        key: _pageStackKey,
-                        page: _file.pages[currentPage],
+                      child: PointerListener(
+                        key: _pointerListenerKey,
+                        translationMatrix: _zoomController.value,
+                        toolData: _toolData,
+                        strokeWidth: toolWidth,
+                        color: toolColor,
+                        onDeviceChange: ({int device, PointerDeviceKind kind}) {
+                          //_currentDevice = device;
+                          setDefaultDeviceIfNotSet(kind: kind);
+                          _currentDevice = kind;
+                          _editingToolbarKey.currentState.setState(() {
+                            _editingToolbarKey.currentState.currentDevice =
+                                kind;
+                            _setZoomableState();
+                          });
+                        },
+                        onNewContent: (newContent) {
+                          setState(() {
+                            /// TODO: manage layers
+                            _file.pages[currentPage].layers[0].content =
+                                new List.from(
+                                    _file.pages[currentPage].layers[0].content)
+                                  ..add(newContent);
+                          });
+                          _pageStackKey.currentState
+                              .setPageData(_file.pages[currentPage]);
+                        },
+                        child: XppPageStack(
+                          /// to communicate from [PointerListener] to [XppPageStack]
+                          key: _pageStackKey,
+                          page: _file.pages[currentPage],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              );
+                  ));
               return (kIsWeb
                   ? child
                   : ColorFiltered(
@@ -140,7 +150,7 @@ class _CanvasPageState extends State<CanvasPage> {
           bottom: 16,
           right: 16,
           child: Tooltip(
-            message: S.of(context).notWorkingYet,
+            message: '${(pageScale * 100).round()} %',
             child: SizedBox(
               width: 64,
               child: Column(
@@ -158,11 +168,10 @@ class _CanvasPageState extends State<CanvasPage> {
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Slider(
-                        min: 0,
-                        max: 1,
-                        label:
-                            '${_zoomController.value.getTranslation().z * 100} %',
-                        value: _zoomController.value.getTranslation().z,
+                        min: 0.1,
+                        max: 5,
+                        label: '${(pageScale * 100).round()} %',
+                        value: pageScale,
                         onChanged: (newZoom) => setState(() =>
                             _zoomController.value.getTranslation().z = newZoom),
                       ),
@@ -285,5 +294,11 @@ class _CanvasPageState extends State<CanvasPage> {
       }
       _toolData[kind] = tool;
     }
+  }
+
+  void _setZoomableState() {
+    _zoomableKey.currentState.setState(() => _zoomableKey.currentState.enabled =
+        _toolData[_currentDevice] == null ||
+            _toolData[_currentDevice] == EditingTool.MOVE);
   }
 }

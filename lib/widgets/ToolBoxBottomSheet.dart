@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xournalpp/generated/l10n.dart';
 
 class ToolBoxBottomSheet extends StatefulWidget {
   @required
@@ -34,7 +35,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                 shrinkWrap: true,
                 children: [
                   Text(
-                    'Tool',
+                    S.of(context).tool,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   Container(

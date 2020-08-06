@@ -1,12 +1,23 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class EditingToolBar extends StatefulWidget {
   final Function(Map<PointerDeviceKind, EditingTool>) onNewDeviceMap;
+  final Function(double newWidth) onWidthChange;
   final Map<PointerDeviceKind, EditingTool> deviceMap;
+  final Color color;
+  final Function(Color) onColorChange;
 
-  const EditingToolBar({Key key, this.onNewDeviceMap, this.deviceMap})
+  const EditingToolBar(
+      {Key key,
+      this.onNewDeviceMap,
+      this.deviceMap,
+      this.onWidthChange,
+      this.color,
+      this.onColorChange})
       : super(key: key);
 
   @override
@@ -16,9 +27,10 @@ class EditingToolBar extends StatefulWidget {
 class EditingToolBarState extends State<EditingToolBar> {
   PointerDeviceKind currentDevice;
 
+  double width = 2.5;
+
   @override
   Widget build(BuildContext context) {
-    print(currentDevice);
     return Container(
       height: 64,
       padding: const EdgeInsets.all(8),
@@ -37,7 +49,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.edit),
-              tooltip: 'Pen',
+              tooltip: S.of(context).pen,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.STYLUS
@@ -52,7 +64,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.brush),
-              tooltip: 'Highlighter (not implemented)',
+              tooltip: S.of(context).highlighterNotImplemented,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.HIGHLIGHT
@@ -67,7 +79,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.pan_tool),
-              tooltip: 'Move',
+              tooltip: S.of(context).move,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.MOVE
@@ -82,7 +94,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.keyboard),
-              tooltip: 'Text (not implemented)',
+              tooltip: S.of(context).textNotImplemented,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.TEXT
@@ -97,7 +109,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.science),
-              tooltip: 'LaTeX (not implemented)',
+              tooltip: S.of(context).latexNotImplemented,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.LATEX
@@ -112,7 +124,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.backspace),
-              tooltip: 'Eraser (not implemented)',
+              tooltip: S.of(context).eraserNotImplemented,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.ERASER
@@ -127,7 +139,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.format_paint),
-              tooltip: 'Whiteout eraser (not implemented)',
+              tooltip: S.of(context).whiteoutEraserNotImplemented,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.WHITEOUT
@@ -157,12 +169,62 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.tab_unselected),
-              tooltip: 'Select (not implemented)',
+              tooltip: S.of(context).selectNotImplemented,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.SELECT
                       ? null
                       : Theme.of(context).cardColor,
+            ),
+            Container(
+              constraints: BoxConstraints(maxWidth: 256, maxHeight: 48),
+              child: Slider(
+                  activeColor: Theme.of(context).colorScheme.secondary,
+                  label: S.of(context).strokeWidth + ' $width',
+                  inactiveColor: Theme.of(context).colorScheme.onPrimary,
+                  value: width,
+                  min: 0.1,
+                  max: 30,
+                  onChanged: (newWidth) {
+                    setState(() {
+                      width = newWidth;
+                    });
+                    widget.onWidthChange(newWidth);
+                  }),
+            ),
+            FloatingActionButton(
+              heroTag: EditingTool.SELECT,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    title: Text(S.of(context).selectColor),
+                    content: SingleChildScrollView(
+                      child: MaterialPicker(
+                        pickerColor: widget.color,
+                        onColorChanged: (color) {
+                          widget.onColorChange(color);
+                          Navigator.of(context).pop();
+                        },
+                        enableLabel: true, // only on portrait mode
+                      ),
+                    ),
+                    /*actions: <Widget>[
+                      FlatButton(
+                        child: const Text('Save'),
+                        onPressed: () {
+                          setState(() => currentColor = pickerColor);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],*/
+                  ),
+                );
+              },
+              child: Icon(Icons.color_lens),
+              tooltip: S.of(context).color,
+              elevation: 6,
+              backgroundColor: widget.color,
             ),
           ],
           shrinkWrap: true,

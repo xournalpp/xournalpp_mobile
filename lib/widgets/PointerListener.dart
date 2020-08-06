@@ -17,6 +17,10 @@ class PointerListener extends StatefulWidget {
   final Map<PointerDeviceKind, EditingTool> toolData;
   @required
   final Matrix4 translationMatrix;
+  @required
+  final double strokeWidth;
+  @required
+  final Color color;
 
   const PointerListener(
       {Key key,
@@ -24,7 +28,9 @@ class PointerListener extends StatefulWidget {
       this.child,
       this.toolData = const {},
       this.translationMatrix,
-      this.onDeviceChange})
+      this.onDeviceChange,
+      this.strokeWidth,
+      this.color})
       : super(key: key);
 
   @override
@@ -40,7 +46,9 @@ class PointerListenerState extends State<PointerListener> {
       onHover: (event) {
         widget.onDeviceChange(device: event.device, kind: event.kind);
       },
+      opaque: false,
       child: Listener(
+        behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
           if (!isPen(data)) return;
@@ -48,8 +56,9 @@ class PointerListenerState extends State<PointerListener> {
             points.add(XppStrokePoint(
                 x: data.localPosition.dx,
                 y: data.localPosition.dy,
-                width: (data.pressure == 0 ? 5 : data.pressure * 10) *
-                    widget.translationMatrix.getTranslation().z));
+                width: (data.pressure == 0
+                    ? widget.strokeWidth
+                    : data.pressure * widget.strokeWidth)));
           });
         },
         onPointerDown: (data) {
@@ -73,7 +82,7 @@ class PointerListenerState extends State<PointerListener> {
                 /*size: Size(
         bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),*/
                 foregroundPainter: XppStrokePainter(
-                    points: points, color: Colors.green, topLeft: Offset(0, 0)),
+                    points: points, color: widget.color, topLeft: Offset(0, 0)),
               ),
           ],
         ),
@@ -97,15 +106,18 @@ class PointerListenerState extends State<PointerListener> {
     if (points.isNotEmpty) {
       XppStroke stroke = XppStroke(
           tool: XppStrokeTool.PEN,
-          color: Colors.green,
+          color: widget.color,
           points: List.from(points));
       widget.onNewContent(stroke);
     }
   }
 
-  bool isPen(PointerMoveEvent data) =>
-      (widget.toolData.keys.contains(data.kind) &&
-          widget.toolData[data.kind] == EditingTool.STYLUS) ||
-      (!widget.toolData.keys.contains(data.kind) &&
-          data.kind == PointerDeviceKind.stylus);
+  bool isPen(PointerMoveEvent data) {
+    return (widget.toolData.keys.contains(data.kind) &&
+            widget.toolData[data.kind] == EditingTool.STYLUS) ||
+        (!widget.toolData.keys.contains(data.kind) &&
+            data.kind == PointerDeviceKind.stylus) ||
+        (widget.toolData.keys.contains(data.kind) &&
+            widget.toolData[data.kind] == EditingTool.HIGHLIGHT);
+  }
 }

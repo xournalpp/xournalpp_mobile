@@ -39,5 +39,17 @@
   "opening": "Opening",
   "background": "Background",
   "abort": "Abort",
-  "home": "Home"
+  "home": "Home",
+  "tool": "Tool",
+  "pen": "Pen",
+  "highlighterNotImplemented": "Highlighter (not implemented)",
+  "move": "Move",
+  "textNotImplemented": "Text (not implemented)",
+  "latexNotImplemented": "LaTeX (not implemented)",
+  "eraserNotImplemented": "Eraser (not implemented)",
+  "selectNotImplemented": "Select (not implemented)",
+  "strokeWidth": "Stroke width:",
+  "selectColor": "Select color",
+  "color": "Color",
+  "whiteoutEraserNotImplemented": "Whiteout eraser (not implemented)"
 }
