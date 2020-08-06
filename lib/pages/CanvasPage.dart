@@ -7,7 +7,6 @@ import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/widgets/EditingToolbar.dart';
-import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 import 'package:xournalpp/widgets/XppPageStack.dart';
@@ -68,66 +67,73 @@ class _CanvasPageState extends State<CanvasPage> {
                       () => _toolData = newDeviceMap,
                     ))),
       ),
-      drawer: MainDrawer(),
+      //drawer: MainDrawer(),
       body: Stack(fit: StackFit.expand, children: [
         Hero(
           tag: 'ZoomArea',
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.surface.withOpacity(.5),
-                BlendMode.darken),
-            child: ZoomableWidget(
-              enabled: _toolData[_currentDevice] == null ||
-                  _toolData[_currentDevice] == EditingTool.MOVE,
-              controller: _zoomController,
-              child: Center(
-                child: PointerListener(
-                  key: _pointerListenerKey,
-                  translationMatrix: _zoomController.value,
-                  toolData: _toolData,
-                  onDeviceChange: ({int device, PointerDeviceKind kind}) {
-                    //_currentDevice = device;
-                    setDefaultDeviceIfNotSet(kind: kind);
-                    _currentDevice = kind;
-                    _editingToolbarKey.currentState.setState(() {
-                      _editingToolbarKey.currentState.currentDevice = kind;
-                    });
-                  },
-                  onNewContent: (newContent) {
-                    setState(() {
-                      /// TODO: manage layers
-                      _file.pages[currentPage].layers[0].content =
-                          new List.from(
-                              _file.pages[currentPage].layers[0].content)
-                            ..add(newContent);
-                      _file.pages[currentPage].layers[0].content
-                          .forEach((content) {
-                        if (content.runtimeType is XppStroke)
-                          (content as XppStroke)
-                              .points
-                              .toList()
-                              .forEach((element) {
-                            //print(element.x);
-                            //print(element.y);
-                            //print(element.width);
-                          });
+          child: Builder(
+            builder: (context) {
+              final child = ZoomableWidget(
+                enabled: _toolData[_currentDevice] == null ||
+                    _toolData[_currentDevice] == EditingTool.MOVE,
+                controller: _zoomController,
+                child: Center(
+                  child: PointerListener(
+                    key: _pointerListenerKey,
+                    translationMatrix: _zoomController.value,
+                    toolData: _toolData,
+                    onDeviceChange: ({int device, PointerDeviceKind kind}) {
+                      //_currentDevice = device;
+                      setDefaultDeviceIfNotSet(kind: kind);
+                      _currentDevice = kind;
+                      _editingToolbarKey.currentState.setState(() {
+                        _editingToolbarKey.currentState.currentDevice = kind;
                       });
-                    });
-                    _pageStackKey.currentState
-                        .setPageData(_file.pages[currentPage]);
-                  },
-                  child: Card(
-                    elevation: 12,
-                    color: Colors.white,
-                    child: XppPageStack(
-                      /// to communicate from [PointerListener] to [XppPageStack]
-                      key: _pageStackKey,
-                      page: _file.pages[currentPage],
+                    },
+                    onNewContent: (newContent) {
+                      setState(() {
+                        /// TODO: manage layers
+                        _file.pages[currentPage].layers[0].content =
+                            new List.from(
+                                _file.pages[currentPage].layers[0].content)
+                              ..add(newContent);
+                        _file.pages[currentPage].layers[0].content
+                            .forEach((content) {
+                          if (content.runtimeType is XppStroke)
+                            (content as XppStroke)
+                                .points
+                                .toList()
+                                .forEach((element) {
+                              //print(element.x);
+                              //print(element.y);
+                              //print(element.width);
+                            });
+                        });
+                      });
+                      _pageStackKey.currentState
+                          .setPageData(_file.pages[currentPage]);
+                    },
+                    child: Card(
+                      elevation: 12,
+                      color: Colors.white,
+                      child: XppPageStack(
+                        /// to communicate from [PointerListener] to [XppPageStack]
+                        key: _pageStackKey,
+                        page: _file.pages[currentPage],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+              return (kIsWeb
+                  ? child
+                  : ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.surface.withOpacity(.5),
+                          BlendMode.darken),
+                      child: child,
+                    ));
+            },
           ),
         ),
         Positioned(
@@ -202,7 +208,8 @@ class _CanvasPageState extends State<CanvasPage> {
                 ),
                 context: context,
                 builder: (context) => ToolBoxBottomSheet(
-                    /*tool: _currentTool,
+                    /*
+                    tool: _currentTool,
                           onToolChange: (newTool) {
                             print(newTool);
                             setState(() => _currentTool = newTool);

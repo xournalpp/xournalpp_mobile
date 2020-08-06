@@ -18,7 +18,7 @@ dependencies:
   # for Windows
   url_launcher_fde:
     git:
-      url: git://github.com/google/flutter-desktop-embedding.git
+      url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/flutter_plugins/url_launcher_fde
       ref: master
   transparent_image: ^1.0.0
@@ -30,6 +30,7 @@ dependencies:
   flutter_absolute_path: 1.0.6
   matrix_gesture_detector: ^0.1.0
   vector_math: ^2.0.8
+  dwds: ^5.1.0
 
 dev_dependencies:
   flutter_test:
