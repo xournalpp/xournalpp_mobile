@@ -9,7 +9,7 @@ grade: stable
 
 apps:
   xournalpp-mobile:
-    command: xournalpp_mobile
+    command: xournalpp-mobile
     extensions: [flutter-master] # Where "master" defines which Flutter channel to use for the build
     plugs:
     - network
