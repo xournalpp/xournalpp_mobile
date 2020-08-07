@@ -94,10 +94,11 @@ build:snap:
     - echo $SNAPCRAFT_LOGIN_FILE | base64 --decode --ignore-garbage > snapcraft.login
     - snapcraft login --with snapcraft.login
     - snapcraft
-    - snapcraft push *.snap --release=stable
+    - mv *.snap xournalpp-mobile.snap
+    - snapcraft push xournalpp-mobile.snap --release=stable
   artifacts:
     paths:
-      - *.snap
+      - xournalpp-mobile.snap
 
 
 pages:
