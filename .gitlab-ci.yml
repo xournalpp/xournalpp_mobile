@@ -83,6 +83,23 @@ build:linux:
     paths:
       - xournalpp-mobile
 
+build:snap:
+  stage: build
+  image: snapcore/snapcraft
+  script:
+    - sudo snap install multipass --classic
+    - sudo snap install lxd
+    - sudo snap start lxd
+    - sudo snap start multipass.multipassd
+    - echo $SNAPCRAFT_LOGIN_FILE | base64 --decode --ignore-garbage > snapcraft.login
+    - snapcraft login --with snapcraft.login
+    - snapcraft
+    - snapcraft push *.snap --release=stable
+  artifacts:
+    paths:
+      - *.snap
+
+
 pages:
   stage: deploy
   script:
