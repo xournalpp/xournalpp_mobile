@@ -89,6 +89,8 @@ build:snap:
   before_script:
   - ''
   script:
+    - sudo apt update -qq
+    - sudo apt install -y -qq snapd
     - sudo snap install multipass --classic
     - sudo snap install lxd
     - sudo snap start lxd
