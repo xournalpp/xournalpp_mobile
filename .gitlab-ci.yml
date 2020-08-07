@@ -91,6 +91,7 @@ build:snap:
   script:
     - sudo apt update -qq
     - sudo apt install -y -qq snapd
+    - sudo service snapd start
     - sudo snap install multipass --classic
     - sudo snap install lxd
     - sudo snap start lxd
