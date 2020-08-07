@@ -85,13 +85,14 @@ build:linux:
 
 build:snap:
   stage: build
-  image: snapcore/snapcraft
+  image: ubuntu:focal
   before_script:
   - ''
   script:
     - sudo apt update -qq
     - sudo apt install -y -qq snapd
     - sudo service snapd start
+    - sudo snap install snapcraft --classic
     - sudo snap install multipass --classic
     - sudo snap install lxd
     - sudo snap start lxd
