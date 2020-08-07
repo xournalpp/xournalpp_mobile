@@ -86,6 +86,8 @@ build:linux:
 build:snap:
   stage: build
   image: snapcore/snapcraft
+  before_script:
+  - ''
   script:
     - sudo snap install multipass --classic
     - sudo snap install lxd
