@@ -99,7 +99,7 @@ build:snap:
     - flutter config --enable-linux-desktop
     - flutter pub get
     - set +o pipefail
-    - snapcraft snap --provider host --destructive-mode -o xournalpp-mobile.snap
+    - snapcraft snap --provider host --destructive-mode -o xournalpp-mobile.snap .
     - snapcraft push xournalpp-mobile.snap --release=stable
   artifacts:
     paths:
