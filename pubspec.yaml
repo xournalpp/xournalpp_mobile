@@ -1,7 +1,7 @@
 name: xournalpp
 description: A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
-version: 1.0.8+8
+version: 1.0.9+9
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
