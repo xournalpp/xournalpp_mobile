@@ -85,22 +85,21 @@ build:linux:
 
 build:snap:
   stage: build
-  image: ubuntu:focal
+  image: snapcore/snapcraft
   before_script:
   - ''
   script:
     - sudo apt update -qq
-    - sudo apt install -y -qq snapd
-    #- sudo service snapd start
-    - sudo snap install snapcraft --classic
-    - sudo snap install multipass --classic
-    - sudo snap install lxd
-    - sudo snap start lxd
-    - sudo snap start multipass.multipassd
+    - sudo apt install -y -qq wget tar unzip zip lib32stdc++6 lib32z1 git clang cmake ninja-build pkg-config libgtk-3-dev
+    # flutter sdk setup
+    - git clone -b master https://github.com/flutter/flutter.git /flutter
+    - export PATH=$PATH:/flutter/bin
     - echo $SNAPCRAFT_LOGIN_FILE | base64 --decode --ignore-garbage > snapcraft.login
     - snapcraft login --with snapcraft.login
-    - snapcraft
-    - mv *.snap xournalpp-mobile.snap
+    - flutter config --enable-linux-desktop
+    - flutter pub get
+    - set +o pipefail
+    - snapcraft snap --provider host --destructive-mode -o xournalpp-mobile.snap
     - snapcraft push xournalpp-mobile.snap --release=stable
   artifacts:
     paths:
