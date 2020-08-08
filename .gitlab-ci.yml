@@ -88,7 +88,7 @@ build:snap:
   image: snapcore/snapcraft:edge
   before_script:
   - ''
-  script: |
+  script: >
     export VERSION=$(cat pubspec.yaml | grep version | awk '{ print $2 }' | cut -f1 -d "+")
     # required to upgrade ubuntu base due to incompatible libraries
     sed -i "s/xenial/focal/g" /etc/apt/sources.list
