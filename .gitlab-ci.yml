@@ -99,17 +99,20 @@ build:snap:
     - git clone -b master https://github.com/flutter/flutter.git /flutter
     - export PATH=$PATH:/flutter/bin
     # ignore current snap version and set to pubspec version
-    - sed -i "s/version\\:\\W\\d+\\.\\d+\\.\\d+/$VERSION/g" snap/snapcraft.yaml
+    - sed -i "s/version\:\W\+[0-9]\+\.[0-9]\+\.[0-9]\+/version: $VERSION/g" snap/snapcraft.yaml
     - echo $SNAPCRAFT_LOGIN_FILE | base64 --decode --ignore-garbage > snapcraft.login
     - snapcraft login --with snapcraft.login
     - set +o pipefail
     - snapcraft
     - mv *.snap xournalpp-mobile.snap
-    - snapcraft push xournalpp-mobile.snap --release=stable
+    - snapcraft upload xournalpp-mobile.snap --release=stable
   artifacts:
     paths:
       - xournalpp-mobile.snap
-
+  only:
+      - tags
+    except:
+      - branches
 
 pages:
   stage: deploy
