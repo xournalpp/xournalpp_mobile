@@ -18,4 +18,3 @@ Alternatively, you can download pre-build binaries for **Linux** and **Android**
 - [x] Smooth fade in after thumbnail rendering
 - [x] Render images on the canvas
 - [x] Render text on the canvas
-- [x] Strokes (lots of errors remaining)
