@@ -65,7 +65,7 @@ build:web:
     - flutter config --enable-web
     - flutter pub get
     - set +o pipefail
-    - flutter build --dart-define=FLUTTER_WEB_USE_SKIA=true web
+    - flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
   artifacts:
     paths:
       - build/web/
