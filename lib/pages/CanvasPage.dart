@@ -51,62 +51,68 @@ class _CanvasPageState extends State<CanvasPage> {
 
   @override
   Widget build(BuildContext context) {
-    final child = ZoomableWidget(
-        key: _zoomableKey,
-        controller: _zoomController,
-        onInteractionUpdate: (details) {
-          setState(() => pageScale = details.scale);
-        },
-        child: Center(
-          child: Card(
-            elevation: 12,
-            color: Colors.white,
-            child: PointerListener(
-              key: _pointerListenerKey,
-              translationMatrix: _zoomController.value,
-              toolData: _toolData,
-              strokeWidth: toolWidth,
-              color: toolColor,
-              onDeviceChange: ({int device, PointerDeviceKind kind}) {
-                //_currentDevice = device;
-                setDefaultDeviceIfNotSet(kind: kind);
-                _currentDevice = kind;
-                _editingToolbarKey.currentState.setState(() {
-                  _editingToolbarKey.currentState.currentDevice = kind;
-                  _setZoomableState();
-                });
-              },
-              onNewContent: (newContent) {
-                setState(() {
-                  /// TODO: manage layers
-                  _file.pages[currentPage].layers[0].content =
-                      new List.from(_file.pages[currentPage].layers[0].content)
-                        ..add(newContent);
-                });
-                _pageStackKey.currentState
-                    .setPageData(_file.pages[currentPage]);
-              },
-              child: XppPageStack(
-                /// to communicate from [PointerListener] to [XppPageStack]
-                key: _pageStackKey,
-                page: _file.pages[currentPage],
-              ),
-            ),
-          ),
-        ));
     return Scaffold(
       drawer: MainDrawer(),
       body: Stack(fit: StackFit.expand, children: [
         Hero(
           tag: 'ZoomArea',
-          child: (kIsWeb
-              ? child
-              : ColorFiltered(
+          child: ZoomableWidget(
+              key: _zoomableKey,
+              controller: _zoomController,
+              onInteractionUpdate: (details) {
+                setState(() => pageScale = details.scale);
+              },
+              child: Center(
+                child: Card(
+                  elevation: 12,
+                  color: Colors.white,
+                  child: AspectRatio(
+                    aspectRatio: _file.pages[currentPage].pageSize.ratio,
+                    child: FittedBox(
+                      child: PointerListener(
+                        key: _pointerListenerKey,
+                        translationMatrix: _zoomController.value,
+                        toolData: _toolData,
+                        strokeWidth: toolWidth,
+                        color: toolColor,
+                        onDeviceChange: ({int device, PointerDeviceKind kind}) {
+                          //_currentDevice = device;
+                          setDefaultDeviceIfNotSet(kind: kind);
+                          _currentDevice = kind;
+                          _editingToolbarKey.currentState.setState(() {
+                            _editingToolbarKey.currentState.currentDevice =
+                                kind;
+                            _setZoomableState();
+                          });
+                        },
+                        onNewContent: (newContent) {
+                          setState(() {
+                            /// TODO: manage layers
+                            _file.pages[currentPage].layers[0].content =
+                                new List.from(
+                                    _file.pages[currentPage].layers[0].content)
+                                  ..add(newContent);
+                          });
+                          _pageStackKey.currentState
+                              .setPageData(_file.pages[currentPage]);
+                        },
+                        child: XppPageStack(
+                          /// to communicate from [PointerListener] to [XppPageStack]
+                          key: _pageStackKey,
+                          page: _file.pages[currentPage],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ))
+          /*ColorFiltered(
                   colorFilter: ColorFilter.mode(
                       Theme.of(context).colorScheme.surface.withOpacity(.5),
                       BlendMode.darken),
                   child: child,
-                )),
+                )*/
+          ,
         ),
         Positioned(
           bottom: 16,
@@ -121,7 +127,7 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.add),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        pageScale *= 1.1;
+                        pageScale += 0.1;
                         if (pageScale > 5) pageScale = 5;
                         _zoomController.value =
                             _zoomController.value.scaled(pageScale);
@@ -148,7 +154,7 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.remove),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        pageScale /= 1.1;
+                        pageScale -= 0.1;
                         if (pageScale < .1) pageScale = .1;
                         _zoomController.value =
                             _zoomController.value.scaled(pageScale);

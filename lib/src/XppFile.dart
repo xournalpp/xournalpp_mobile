@@ -14,6 +14,7 @@ import 'package:xournalpp/layer_contents/XppTexImage.dart';
 import 'package:xournalpp/layer_contents/XppText.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
 import 'package:xournalpp/src/HexColor.dart';
+import 'package:xournalpp/src/XppBackground.dart';
 
 import 'XppLayer.dart';
 import 'XppPage.dart';
@@ -108,6 +109,9 @@ class XppFile {
     Iterable<XmlElement> pageElements = documentTree.findElements('page');
     pageElements.forEach((XmlElement pageElement) {
       pageIndex++;
+      XppPageSize pageSize = XppPageSize(
+          width: double.parse(pageElement.getAttribute('width')),
+          height: double.parse(pageElement.getAttribute('height')));
       XppBackground background;
       if (pageElement.findElements('background').isNotEmpty) {
         XmlElement backgroundElement =
@@ -118,8 +122,19 @@ class XppFile {
                 filename: backgroundElement.getAttribute('filename'));
             break;
           case "solid":
-            background = XppBackgroundImage(
-                filename: backgroundElement.getAttribute('filename'));
+            switch (backgroundElement.getAttribute('style')) {
+              case 'lined':
+              case 'ruled':
+                background = XppBackgroundSolidLined(
+                    size: pageSize,
+                    color: parseColor(backgroundElement.getAttribute('color')));
+                break;
+              case 'plain':
+                background = XppBackgroundSolidPlain(
+                    size: pageSize,
+                    color: parseColor(backgroundElement.getAttribute('color')));
+                break;
+            }
             break;
           default:
             background = XppBackground.none;
@@ -166,48 +181,8 @@ class XppFile {
 
         /// processing all texts
         layer.findElements('text').forEach((textElement) {
-          Color color = Colors.black;
-          if (textElement.getAttribute('color') != null) {
-            switch (textElement.getAttribute('color')) {
-              case "black":
-                break;
-              case "blue":
-                color = Colors.blue;
-                break;
-              case "red":
-                color = Colors.red;
-                break;
-              case "green":
-                color = Colors.green;
-                break;
-              case "gray":
-              case "grey":
-                color = Colors.grey;
-                break;
-              case "lightblue":
-                color = Colors.lightBlue;
-                break;
-              case "lightgreen":
-                color = Colors.lightGreen;
-                break;
-              case "magenta":
-                color = Colors.purpleAccent;
-                break;
-              case "orange":
-                color = Colors.orange;
-                break;
-              case "yellow":
-                color = Colors.yellow;
-                break;
-              case "white":
-                color = Colors.white;
-                break;
-              default:
-                final colorString = textElement.getAttribute('color');
-                color = HexColor(colorString);
-                break;
-            }
-          }
+          Color color = parseColor(textElement.getAttribute('color'));
+
           content[int.parse(textElement.getAttribute('counter'))] = XppText(
               color: color,
               // note: not trimming
@@ -262,48 +237,7 @@ class XppFile {
                   strokeElement.getAttribute('tool'));
               break;
           }
-          Color color = Colors.black;
-          if (strokeElement.getAttribute('color') != null) {
-            switch (strokeElement.getAttribute('color')) {
-              case "black":
-                break;
-              case "blue":
-                color = Colors.blue;
-                break;
-              case "red":
-                color = Colors.red;
-                break;
-              case "green":
-                color = Colors.green;
-                break;
-              case "gray":
-              case "grey":
-                color = Colors.grey;
-                break;
-              case "lightblue":
-                color = Colors.lightBlue;
-                break;
-              case "lightgreen":
-                color = Colors.lightGreen;
-                break;
-              case "magenta":
-                color = Colors.purpleAccent;
-                break;
-              case "orange":
-                color = Colors.orange;
-                break;
-              case "yellow":
-                color = Colors.yellow;
-                break;
-              case "white":
-                color = Colors.white;
-                break;
-              default:
-                final colorString = strokeElement.getAttribute('color');
-                color = HexColor(colorString);
-                break;
-            }
-          }
+          Color color = parseColor(strokeElement.getAttribute('color'));
           List<XppStrokePoint> points = [];
           List<String> rawWidth =
               strokeElement.getAttribute('width').split(' ');
@@ -332,12 +266,8 @@ class XppFile {
           percentageCallback(percentCompleted);
         } catch (e) {}
       });
-      pages.add(XppPage(
-          background: background,
-          layers: layers,
-          pageSize: XppPageSize(
-              width: double.parse(pageElement.getAttribute('width')),
-              height: double.parse(pageElement.getAttribute('height')))));
+      pages.add(
+          XppPage(background: background, layers: layers, pageSize: pageSize));
     });
 
     XppFile file =
@@ -382,4 +312,49 @@ class XppFile {
     return GZipEncoder()
         .encode(utf8.encode(toXmlDocument().toXmlString(pretty: true)));
   }
+}
+
+Color parseColor(String colorString) {
+  Color color = Colors.black;
+  if (colorString != null) {
+    switch (colorString) {
+      case "black":
+        break;
+      case "blue":
+        color = Colors.blue;
+        break;
+      case "red":
+        color = Colors.red;
+        break;
+      case "green":
+        color = Colors.green;
+        break;
+      case "gray":
+      case "grey":
+        color = Colors.grey;
+        break;
+      case "lightblue":
+        color = Colors.lightBlue;
+        break;
+      case "lightgreen":
+        color = Colors.lightGreen;
+        break;
+      case "magenta":
+        color = Colors.purpleAccent;
+        break;
+      case "orange":
+        color = Colors.orange;
+        break;
+      case "yellow":
+        color = Colors.yellow;
+        break;
+      case "white":
+        color = Colors.white;
+        break;
+      default:
+        color = HexColor(colorString);
+        break;
+    }
+  }
+  return color;
 }

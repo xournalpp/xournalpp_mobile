@@ -27,8 +27,9 @@ class XppPageStackState extends State<XppPageStack> {
       width: widget.page.pageSize.width,
       height: widget.page.pageSize.height,
       child: (Stack(
-          children: List.generate(widget.page.layers.length, (index) {
-        XppLayer currentLayer = widget.page.layers[index];
+          children: List.generate(widget.page.layers.length + 1, (index) {
+        if (index == 0) return widget.page.background.render();
+        XppLayer currentLayer = widget.page.layers[index - 1];
         return Stack(
           children: List.generate(currentLayer.content.length, (n) {
             XppContent currentContent = currentLayer.content[n];

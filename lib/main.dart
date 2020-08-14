@@ -68,7 +68,7 @@ class XournalppMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: kIsWeb ? 'Xournal++ Web' : 'Xournal++ - mobile edition',
+      title: kIsWeb ? 'Xournal++ Web' : 'Xournal++ Mobile',
       localizationsDelegates: [S.delegate],
       supportedLocales: [Locale('en')],
       theme: ThemeData(

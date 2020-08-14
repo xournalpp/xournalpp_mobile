@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 
 class XppPage {
@@ -34,37 +33,6 @@ class XppPageSize {
 
   /// Ratio of width / height
   double get ratio => width / height;
+
+  Size toSize() => Size(width, height);
 }
-
-abstract class XppBackground {
-  XppBackgroundType type;
-
-  static XppBackground get none =>
-      _NoXppBackground()..type = XppBackgroundType.NONE;
-}
-
-/// page background for a [XppPage] made from an image URI. I am sure it will be hard to implement for web.
-/// TODO: implement background for web
-class XppBackgroundImage extends XppBackground {
-  final String filename;
-  final XppBackgroundImageDomain domain;
-
-  XppBackgroundImage(
-      {this.filename, this.domain = XppBackgroundImageDomain.ABSOLUTE});
-}
-
-/// page background for a [XppPage] made from a color and a style
-class XppBackgroundSolid extends XppBackground {
-  final Color color;
-  final XppBackgroundStyle style;
-
-  XppBackgroundSolid({this.color, this.style});
-}
-
-class XppBackgroundStyle {}
-
-class _NoXppBackground extends XppBackground {}
-
-enum XppBackgroundImageDomain { ABSOLUTE }
-
-enum XppBackgroundType { NONE, SOLID, PIXMAP }
