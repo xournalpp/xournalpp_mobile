@@ -27,7 +27,13 @@ class XppFile {
   static XppFile empty({String title, XppPageSize pageSize}) {
     return XppFile(title: title, pages: [
       XppPage(
-          pageSize: pageSize ?? XppPageSize.a4, layers: [XppLayer(content: [])])
+          background: XppBackground.none,
+          pageSize: pageSize ?? XppPageSize.a4,
+          layers: [
+            XppLayer(
+              content: [],
+            )
+          ])
     ]);
   }
 
@@ -134,6 +140,8 @@ class XppFile {
                     size: pageSize,
                     color: parseColor(backgroundElement.getAttribute('color')));
                 break;
+              default:
+                background = XppBackground.none;
             }
             break;
           default:
