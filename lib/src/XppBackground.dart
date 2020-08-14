@@ -4,6 +4,7 @@ import 'package:xournalpp/src/XppPage.dart';
 
 abstract class XppBackground {
   XppBackgroundType type;
+  XppPageSize size;
 
   static XppBackground get none => _NoXppBackground();
 
@@ -30,42 +31,31 @@ class XppBackgroundImage extends XppBackground {
 
 /// page background for a [XppPage] made from a color and a style
 abstract class XppBackgroundSolid extends XppBackground {
-  final Color color;
-  final XppPageSize size;
+  Color color;
+  XppPageSize size;
   XppBackgroundType type = XppBackgroundType.SOLID;
-
-  XppBackgroundSolid({this.color, this.size});
 }
 
 class XppBackgroundSolidLined extends XppBackgroundSolid {
-  final Color color;
-  final XppPageSize size;
+  Color color;
+  XppPageSize size;
 
-  XppBackgroundSolidLined({this.color, this.size});
+  XppBackgroundSolidLined({this.color = Colors.white, this.size});
   @override
   Widget render() {
-    return CustomPaint(
-      painter: _LinePainter(color: color),
-      size: size.toSize(),
-    );
-    /*int lineCount = (size.height / 24).round();
-    return (Container(
-      width: size.width,
-      height: size.height,
+    return Container(
       color: color,
-      child: Column(
-        children: List.generate(
-            lineCount * 2,
-            (index) =>
-                (lineCount.toDouble() % 2 == 0) ? Container() : Divider()),
+      child: CustomPaint(
+        painter: _LinePainter(color: color),
+        size: size.toSize(),
       ),
-    ));*/
+    );
   }
 }
 
 class XppBackgroundSolidPlain extends XppBackgroundSolid {
-  final Color color;
-  final XppPageSize size;
+  Color color;
+  XppPageSize size;
 
   XppBackgroundSolidPlain({this.color, this.size});
   @override
@@ -79,6 +69,7 @@ class XppBackgroundSolidPlain extends XppBackgroundSolid {
 }
 
 class _NoXppBackground extends XppBackground {
+  XppPageSize size = XppPageSize(width: 0, height: 0);
   XppBackgroundType type = XppBackgroundType.NONE;
 
   @override

@@ -224,12 +224,12 @@ class _CanvasPageState extends State<CanvasPage> {
                 ),
                 context: context,
                 builder: (context) => ToolBoxBottomSheet(
-                    /*
-                    tool: _currentTool,
-                          onToolChange: (newTool) {
-                            print(newTool);
-                            setState(() => _currentTool = newTool);
-                          },*/
+                      onBackgroundChange: (newBackground) {
+                        newBackground.size = _file.pages[currentPage].pageSize;
+                        print(newBackground.size.width);
+                        setState(() => _file.pages[currentPage].background =
+                            newBackground);
+                      },
                     ));
           },
           tooltip: S.of(context).tools,
