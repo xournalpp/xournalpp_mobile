@@ -50,7 +50,7 @@ sudo snap install xournalpp-mobile
 
 > You would like to contribute? Please check out issues to solve [here](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/issues) or get our `// TODO:`s [here](https://gitlab.com/search?search=TODO&project_id=20056916)!
 
-*The **GitHub** respository is only a mirrored repsoitory. Please only contribute to the [original repository on **GitLab*](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile).*
+*The **GitHub** respository is only a mirrored repsoitory. Please only contribute to the [original repository on **GitLab**](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile).*
 
 Get your information about the `.xopp` file format at http://www-math.mit.edu/~auroux/software/xournal/manual.html#file-format .
 
