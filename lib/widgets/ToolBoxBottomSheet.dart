@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppPage.dart';
 
@@ -28,7 +27,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
           Navigator.of(context).pop();
         },
         elevation: 16,
-        backgroundColor: Theme.of(context).backgroundColor,
+//        backgroundColor: Theme.of(context).backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16), topRight: Radius.circular(16)),

@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "about" : MessageLookupByLibrary.simpleMessage("About"),
     "aboutXournal" : MessageLookupByLibrary.simpleMessage("About Xournal++"),
     "aboutXournalMobileEdition" : MessageLookupByLibrary.simpleMessage("About Xournal++ Mobile"),
+    "addPage" : MessageLookupByLibrary.simpleMessage("Add page"),
     "apply" : MessageLookupByLibrary.simpleMessage("Apply"),
     "areYouSureIHaveThePermissionAndAreYou" : MessageLookupByLibrary.simpleMessage(". Are you sure I have the permission? And are you sure it is a Xournal++ file?"),
     "background" : MessageLookupByLibrary.simpleMessage("Background"),

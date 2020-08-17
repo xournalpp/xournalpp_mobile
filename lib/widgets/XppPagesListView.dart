@@ -8,10 +8,10 @@ class XppPagesListView extends StatefulWidget {
   final List<XppPage> pages;
   @required
   final Function(int pageNumber) onPageChange;
-  final int initialPage;
+  final int currentPage;
 
   const XppPagesListView(
-      {Key key, this.pages, this.onPageChange, this.initialPage = 0})
+      {Key key, this.pages, this.onPageChange, this.currentPage = 0})
       : super(key: key);
 
   @override
@@ -19,14 +19,6 @@ class XppPagesListView extends StatefulWidget {
 }
 
 class _XppPagesListViewState extends State<XppPagesListView> {
-  int currentPage;
-
-  @override
-  void initState() {
-    currentPage = widget.initialPage;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -37,14 +29,14 @@ class _XppPagesListViewState extends State<XppPagesListView> {
           child: Center(
             child: GestureDetector(
               onTap: () {
-                setState(() => currentPage = i);
+                //setState(() => widget.currentPage = i);
                 widget.onPageChange(i);
               },
               child: Card(
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      border: (currentPage == i)
+                      border: (widget.currentPage == i)
                           ? Border.all(color: Colors.red)
                           : Border.all(color: Color.fromARGB(1, 0, 0, 0)),
                       borderRadius: BorderRadius.circular(4)),
@@ -65,6 +57,8 @@ class _XppPagesListViewState extends State<XppPagesListView> {
       itemCount: widget.pages.length,
       scrollDirection: Axis.horizontal,
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      primary: false,
     );
   }
 }

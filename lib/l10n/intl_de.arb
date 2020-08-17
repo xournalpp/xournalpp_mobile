@@ -51,5 +51,6 @@
   "strokeWidth": "Stiftstärke:",
   "selectColor": "Farbe wählen",
   "color": "Farbe",
-  "whiteoutEraserNotImplemented": "Killer (nicht implementiert)"
+  "whiteoutEraserNotImplemented": "Killer (nicht implementiert)",
+  "addPage": "Seite einfügen"
 }

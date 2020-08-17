@@ -51,5 +51,6 @@
   "strokeWidth": "Stroke width:",
   "selectColor": "Select color",
   "color": "Color",
-  "whiteoutEraserNotImplemented": "Whiteout eraser (not implemented)"
+  "whiteoutEraserNotImplemented": "Whiteout eraser (not implemented)",
+  "addPage": "Add page"
 }

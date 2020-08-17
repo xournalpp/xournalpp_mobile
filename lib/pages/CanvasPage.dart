@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
+import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/XppPage.dart';
 import 'package:xournalpp/widgets/EditingToolbar.dart';
 import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
@@ -203,9 +205,32 @@ class _CanvasPageState extends State<CanvasPage> {
         child: Container(
             color: Theme.of(context).colorScheme.surface,
             constraints: BoxConstraints(maxHeight: 100),
-            child: XppPagesListView(
-              pages: _file.pages,
-              onPageChange: (newPage) => setState(() => currentPage = newPage),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                XppPagesListView(
+                    pages: _file.pages,
+                    onPageChange: (newPage) =>
+                        setState(() => currentPage = newPage),
+                    currentPage: currentPage),
+                FloatingActionButton(
+                  heroTag: 'AddXppPage',
+                  onPressed: () => setState(() {
+                    currentPage++;
+                    _file.pages.insert(
+                        currentPage,
+                        XppPage(
+                            pageSize: XppPageSize.a4,
+                            background: _file.pages[currentPage - 1].background,
+                            layers: [XppLayer(content: [])]));
+
+                    _pageStackKey.currentState
+                        .setPageData(_file.pages[currentPage]);
+                  }),
+                  child: Icon(Icons.add),
+                  tooltip: S.of(context).addPage,
+                )
+              ],
             )),
       ),
       floatingActionButtonLocation: kIsWeb
@@ -226,7 +251,6 @@ class _CanvasPageState extends State<CanvasPage> {
                 builder: (context) => ToolBoxBottomSheet(
                       onBackgroundChange: (newBackground) {
                         newBackground.size = _file.pages[currentPage].pageSize;
-                        print(newBackground.size.width);
                         setState(() => _file.pages[currentPage].background =
                             newBackground);
                       },
