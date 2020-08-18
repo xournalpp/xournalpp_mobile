@@ -68,6 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "strokeWidth" : MessageLookupByLibrary.simpleMessage("Stiftstärke:"),
     "textNotImplemented" : MessageLookupByLibrary.simpleMessage("Text (nicht implementiert)"),
     "theFollowingErrorWasDetected" : MessageLookupByLibrary.simpleMessage("Folgender Fehler ist aufgetreten:"),
+    "thereWereNoMorePagesWeAddedOne" : MessageLookupByLibrary.simpleMessage("Es waren keine Seiten mehr übrig. Wir haben eine hinzugefügt."),
     "tool" : MessageLookupByLibrary.simpleMessage("Werkzeug"),
     "toolboxNotImplementedYet" : MessageLookupByLibrary.simpleMessage("Werkzeugkasten noch nicht implementiert."),
     "tools" : MessageLookupByLibrary.simpleMessage("Werkzeuge"),

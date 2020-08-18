@@ -25,16 +25,7 @@ class XppFile {
 
   /// create an empty [XppFile]
   static XppFile empty({String title, XppPageSize pageSize}) {
-    return XppFile(title: title, pages: [
-      XppPage(
-          background: XppBackground.none,
-          pageSize: pageSize ?? XppPageSize.a4,
-          layers: [
-            XppLayer(
-              content: [],
-            )
-          ])
-    ]);
+    return XppFile(title: title, pages: [XppPage.empty()]);
   }
 
   /// showing a [open] dialog and pushes a [CanvasPage] to the provided [BuildContext]'s [Navigator]

@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
-import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPage.dart';
 import 'package:xournalpp/widgets/EditingToolbar.dart';
 import 'package:xournalpp/widgets/MainDrawer.dart';
@@ -208,21 +207,31 @@ class _CanvasPageState extends State<CanvasPage> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                XppPagesListView(
-                    pages: _file.pages,
-                    onPageChange: (newPage) =>
-                        setState(() => currentPage = newPage),
-                    currentPage: currentPage),
+                Builder(
+                  builder: (context) => XppPagesListView(
+                      pages: _file.pages,
+                      onPageChange: (newPage) =>
+                          setState(() => currentPage = newPage),
+                      onPageDelete: (deletedIndex) => setState(() {
+                            _file.pages.removeAt(deletedIndex);
+                            if (_file.pages.length >= currentPage)
+                              currentPage = _file.pages.length - 1;
+                            if (_file.pages.isEmpty) {
+                              _file.pages.add(XppPage.empty());
+                              currentPage = 0;
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(S
+                                      .of(context)
+                                      .thereWereNoMorePagesWeAddedOne)));
+                            }
+                          }),
+                      currentPage: currentPage),
+                ),
                 FloatingActionButton(
                   heroTag: 'AddXppPage',
                   onPressed: () => setState(() {
                     currentPage++;
-                    _file.pages.insert(
-                        currentPage,
-                        XppPage(
-                            pageSize: XppPageSize.a4,
-                            background: _file.pages[currentPage - 1].background,
-                            layers: [XppLayer(content: [])]));
+                    _file.pages.insert(currentPage, XppPage.empty());
 
                     _pageStackKey.currentState
                         .setPageData(_file.pages[currentPage]);

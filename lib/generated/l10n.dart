@@ -512,6 +512,15 @@ class S {
       args: [],
     );
   }
+
+  String get thereWereNoMorePagesWeAddedOne {
+    return Intl.message(
+      'There were no more pages. We added one.',
+      name: 'thereWereNoMorePagesWeAddedOne',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

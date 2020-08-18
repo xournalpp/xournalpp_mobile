@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xournalpp/src/XppPage.dart';
+import 'package:xournalpp/widgets/ContextualBottomSheet.dart';
 
 import 'XppPageStack.dart';
 
@@ -8,10 +9,15 @@ class XppPagesListView extends StatefulWidget {
   final List<XppPage> pages;
   @required
   final Function(int pageNumber) onPageChange;
+  final Function(int pageNumber) onPageDelete;
   final int currentPage;
 
   const XppPagesListView(
-      {Key key, this.pages, this.onPageChange, this.currentPage = 0})
+      {Key key,
+      this.pages,
+      this.onPageChange,
+      this.currentPage = 0,
+      this.onPageDelete})
       : super(key: key);
 
   @override
@@ -32,6 +38,21 @@ class _XppPagesListViewState extends State<XppPagesListView> {
                 //setState(() => widget.currentPage = i);
                 widget.onPageChange(i);
               },
+              onSecondaryTap: () => showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => ContextualBottomSheet(
+                        children: [
+                          ListTile(
+                            title: Text('Delete page'),
+                            leading: Icon(Icons.delete_forever),
+                            onTap: () {
+                              widget.onPageDelete(i);
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      )),
               child: Card(
                 child: Container(
                   decoration: BoxDecoration(

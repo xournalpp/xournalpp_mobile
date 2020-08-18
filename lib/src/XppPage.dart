@@ -5,6 +5,12 @@ import 'package:xournalpp/src/XppLayer.dart';
 class XppPage {
   XppPage({this.pageSize, this.background, this.layers});
 
+  /// create an empty page
+  static XppPage empty() => XppPage(
+      pageSize: XppPageSize.a4,
+      background: XppBackgroundSolidLined(size: XppPageSize.a4),
+      layers: [XppLayer.empty()]);
+
   XppPageSize pageSize;
   XppBackground background;
   @required

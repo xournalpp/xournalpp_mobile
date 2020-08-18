@@ -52,5 +52,6 @@
   "selectColor": "Select color",
   "color": "Color",
   "whiteoutEraserNotImplemented": "Whiteout eraser (not implemented)",
-  "addPage": "Add page"
+  "addPage": "Add page",
+  "thereWereNoMorePagesWeAddedOne": "There were no more pages. We added one."
 }
