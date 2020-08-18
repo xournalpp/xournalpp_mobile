@@ -225,6 +225,11 @@ class _CanvasPageState extends State<CanvasPage> {
                                       .thereWereNoMorePagesWeAddedOne)));
                             }
                           }),
+                      onPageMove: (initialIndex, movedTo) => setState(() {
+                            final page = _file.pages[initialIndex];
+                            _file.pages.removeAt(initialIndex);
+                            _file.pages.insert(movedTo - 1, page);
+                          }),
                       currentPage: currentPage),
                 ),
                 FloatingActionButton(

@@ -128,7 +128,7 @@ class S {
 
   String get notImplemented {
     return Intl.message(
-      'Not implemented',
+      ' (not implemented)',
       name: 'notImplemented',
       desc: '',
       args: [],
@@ -517,6 +517,105 @@ class S {
     return Intl.message(
       'There were no more pages. We added one.',
       name: 'thereWereNoMorePagesWeAddedOne',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get pdf {
+    return Intl.message(
+      'PDF',
+      name: 'pdf',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get image {
+    return Intl.message(
+      'Image',
+      name: 'image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get dotted {
+    return Intl.message(
+      'Dotted',
+      name: 'dotted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get ruled {
+    return Intl.message(
+      'Ruled',
+      name: 'ruled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get graph {
+    return Intl.message(
+      'Graph',
+      name: 'graph',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get pageBackground {
+    return Intl.message(
+      'Page background',
+      name: 'pageBackground',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get lined {
+    return Intl.message(
+      'Lined',
+      name: 'lined',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get deletePage {
+    return Intl.message(
+      'Delete page',
+      name: 'deletePage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get movePage {
+    return Intl.message(
+      'Move page',
+      name: 'movePage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get newPageIndex {
+    return Intl.message(
+      'New page index',
+      name: 'newPageIndex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get between1And {
+    return Intl.message(
+      'Between 1 and',
+      name: 'between1And',
       desc: '',
       args: [],
     );

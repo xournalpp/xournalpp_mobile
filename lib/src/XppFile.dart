@@ -121,8 +121,17 @@ class XppFile {
           case "solid":
             switch (backgroundElement.getAttribute('style')) {
               case 'lined':
-              case 'ruled':
                 background = XppBackgroundSolidLined(
+                    size: pageSize,
+                    color: parseColor(backgroundElement.getAttribute('color')));
+                break;
+              case 'ruled':
+                background = XppBackgroundSolidRuled(
+                    size: pageSize,
+                    color: parseColor(backgroundElement.getAttribute('color')));
+                break;
+              case 'graph':
+                background = XppBackgroundSolidGraph(
                     size: pageSize,
                     color: parseColor(backgroundElement.getAttribute('color')));
                 break;

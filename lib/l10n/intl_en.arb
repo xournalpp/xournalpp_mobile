@@ -10,7 +10,7 @@
   "open": "Open",
   "newFile": "New",
   "save": "Save",
-  "notImplemented": "Not implemented",
+  "notImplemented": " (not implemented)",
   "about": "About",
   "aboutXournalMobileEdition": "About Xournal++ Mobile",
   "xournalMobileEditionIsAnUnofficialProjectTryingToMake": "Xournal++ Mobile is a project trying to make Xournal++ files and features available on different devices.",
@@ -53,5 +53,16 @@
   "color": "Color",
   "whiteoutEraserNotImplemented": "Whiteout eraser (not implemented)",
   "addPage": "Add page",
-  "thereWereNoMorePagesWeAddedOne": "There were no more pages. We added one."
+  "thereWereNoMorePagesWeAddedOne": "There were no more pages. We added one.",
+  "pdf": "PDF",
+  "image": "Image",
+  "dotted": "Dotted",
+  "ruled": "Ruled",
+  "graph": "Graph",
+  "pageBackground": "Page background",
+  "lined": "Lined",
+  "deletePage": "Delete page",
+  "movePage": "Move page",
+  "newPageIndex": "New page index",
+  "between1And": "Between 1 and"
 }

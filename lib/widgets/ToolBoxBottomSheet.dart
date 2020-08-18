@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppPage.dart';
 
@@ -39,7 +40,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                 shrinkWrap: true,
                 children: [
                   Text(
-                    'Page background',
+                    S.of(context).pageBackground,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   Container(
@@ -49,30 +50,30 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                       children: [
                         AspectRatio(
                           aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                child: Card(
+                          child: GestureDetector(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Card(
                                   child: SizedBox(
                                       width: 96,
                                       height: 96,
                                       child: XppBackground.none.render()),
                                 ),
-                                onTap: () => widget
-                                    .onBackgroundChange(XppBackground.none),
-                              ),
-                              Text('None')
-                            ],
+                                Text('None')
+                              ],
+                            ),
+                            onTap: () =>
+                                widget.onBackgroundChange(XppBackground.none),
                           ),
                         ),
                         AspectRatio(
                           aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                child: Card(
+                          child: GestureDetector(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Card(
                                   child: XppBackgroundSolidPlain(
                                           size: XppPageSize(
                                               width: 96, height: 96),
@@ -81,31 +82,104 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                                               .secondary)
                                       .render(),
                                 ),
-                                onTap: () async => widget.onBackgroundChange(
-                                    XppBackgroundSolidPlain(
-                                        color: await pickBackgroundColor())),
-                              ),
-                              Text('Color')
-                            ],
+                                Text(S.of(context).color)
+                              ],
+                            ),
+                            onTap: () async => widget.onBackgroundChange(
+                                XppBackgroundSolidPlain(
+                                    color: await pickBackgroundColor())),
                           ),
                         ),
                         AspectRatio(
                           aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                child: Card(
+                          child: GestureDetector(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Card(
                                   child: XppBackgroundSolidLined(
                                           size: XppPageSize(
                                               width: 96, height: 96))
                                       .render(),
                                 ),
-                                onTap: () async => widget.onBackgroundChange(
-                                    XppBackgroundSolidLined(
-                                        color: await pickBackgroundColor())),
+                                Text(S.of(context).lined)
+                              ],
+                            ),
+                            onTap: () async => widget.onBackgroundChange(
+                                XppBackgroundSolidLined(
+                                    color: await pickBackgroundColor())),
+                          ),
+                        ),
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: GestureDetector(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: XppBackgroundSolidRuled(
+                                          size: XppPageSize(
+                                              width: 96, height: 96))
+                                      .render(),
+                                ),
+                                Text(S.of(context).ruled)
+                              ],
+                            ),
+                            onTap: () async => widget.onBackgroundChange(
+                                XppBackgroundSolidRuled(
+                                    color: await pickBackgroundColor())),
+                          ),
+                        ),
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: GestureDetector(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: XppBackgroundSolidGraph(
+                                          size: XppPageSize(
+                                              width: 96, height: 96))
+                                      .render(),
+                                ),
+                                Text(S.of(context).graph)
+                              ],
+                            ),
+                            onTap: () async => widget.onBackgroundChange(
+                                XppBackgroundSolidGraph(
+                                    color: await pickBackgroundColor())),
+                          ),
+                        ),
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: GestureDetector(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Card(
+                                  child: XppBackgroundSolidDot(
+                                          size: XppPageSize(
+                                              width: 96, height: 96))
+                                      .render(),
+                                ),
+                                Text(S.of(context).dotted)
+                              ],
+                            ),
+                            onTap: () async => widget.onBackgroundChange(
+                                XppBackgroundSolidDot(
+                                    color: await pickBackgroundColor())),
+                          ),
+                        ),
+                        AspectRatio(
+                          aspectRatio: 1,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Card(
+                                child: XppBackground.none.render(),
                               ),
-                              Text('Lined')
+                              Text(S.of(context).pdf +
+                                  S.of(context).notImplemented)
                             ],
                           ),
                         ),
@@ -117,43 +191,8 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                               Card(
                                 child: XppBackground.none.render(),
                               ),
-                              Text('Ruled' + ' (not implemented)')
-                            ],
-                          ),
-                        ),
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: XppBackground.none.render(),
-                              ),
-                              Text('Math' + ' (not implemented)')
-                            ],
-                          ),
-                        ),
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: XppBackground.none.render(),
-                              ),
-                              Text('PDF' + ' (not implemented)')
-                            ],
-                          ),
-                        ),
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Card(
-                                child: XppBackground.none.render(),
-                              ),
-                              Text('Image' + ' (not implemented)')
+                              Text(S.of(context).image +
+                                  S.of(context).notImplemented)
                             ],
                           ),
                         ),
