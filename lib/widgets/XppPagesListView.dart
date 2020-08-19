@@ -41,65 +41,8 @@ class _XppPagesListViewState extends State<XppPagesListView> {
                 //setState(() => widget.currentPage = i);
                 widget.onPageChange(i);
               },
-              onSecondaryTap: () => showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  context: context,
-                  builder: (context) => ContextualBottomSheet(
-                        children: [
-                          ListTile(
-                            title: Text(S.of(context).deletePage),
-                            leading: Icon(Icons.delete_forever),
-                            onTap: () {
-                              widget.onPageDelete(i);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          ListTile(
-                            title: Text(S.of(context).movePage + '...'),
-                            leading: Icon(Icons.open_with),
-                            onTap: () async {
-                              int newIndex = i;
-                              if (await showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: Text(
-                                            S.of(context).movePage + ' $i'),
-                                        content: TextField(
-                                          onChanged: (string) =>
-                                              newIndex = int.parse(string),
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                              labelText:
-                                                  S.of(context).newPageIndex,
-                                              helperText: S
-                                                      .of(context)
-                                                      .between1And +
-                                                  '${widget.pages.length}.'),
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                            child: Text(S.of(context).cancel),
-                                            onPressed: () =>
-                                                Navigator.of(context)
-                                                    .pop(false),
-                                          ),
-                                          FlatButton(
-                                            child: Text(S.of(context).okay),
-                                            onPressed: () {
-                                              if (newIndex <=
-                                                  widget.pages.length)
-                                                Navigator.of(context).pop(true);
-                                            },
-                                          ),
-                                        ],
-                                      ))) {
-                                widget.onPageMove(i, newIndex);
-                              }
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      )),
+              onSecondaryTap: () => showContext(i),
+              onLongPress: () => showContext(i),
               child: Card(
                 child: Container(
                   decoration: BoxDecoration(
@@ -129,4 +72,58 @@ class _XppPagesListViewState extends State<XppPagesListView> {
       primary: false,
     );
   }
+
+  showContext(int i) => showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => ContextualBottomSheet(
+            children: [
+              ListTile(
+                title: Text(S.of(context).deletePage),
+                leading: Icon(Icons.delete_forever),
+                onTap: () {
+                  widget.onPageDelete(i);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text(S.of(context).movePage + '...'),
+                leading: Icon(Icons.open_with),
+                onTap: () async {
+                  int newIndex = i;
+                  if (await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text(S.of(context).movePage + ' $i'),
+                            content: TextField(
+                              onChanged: (string) =>
+                                  newIndex = int.parse(string),
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                  labelText: S.of(context).newPageIndex,
+                                  helperText: S.of(context).between1And +
+                                      ' ${widget.pages.length}.'),
+                            ),
+                            actions: [
+                              FlatButton(
+                                child: Text(S.of(context).cancel),
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                              ),
+                              FlatButton(
+                                child: Text(S.of(context).okay),
+                                onPressed: () {
+                                  if (newIndex <= widget.pages.length)
+                                    Navigator.of(context).pop(true);
+                                },
+                              ),
+                            ],
+                          ))) {
+                    widget.onPageMove(i, newIndex);
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ));
 }

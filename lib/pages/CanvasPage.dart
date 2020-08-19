@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -43,6 +44,8 @@ class _CanvasPageState extends State<CanvasPage> {
   final GlobalKey<ZoomableWidgetState> _zoomableKey = GlobalKey();
 
   double pageScale = 1;
+
+  Completer<BuildContext> scaffoldCompleter = Completer();
 
   @override
   void initState() {
@@ -172,7 +175,14 @@ class _CanvasPageState extends State<CanvasPage> {
           message: S.of(context).doubleTapToChange,
           child: GestureDetector(
             onDoubleTap: _showTitleDialog,
-            child: Text(widget.file?.title ?? S.of(context).newDocument),
+            child: Builder(
+              /// just need a builder here to provide a valid context for background tasks
+              builder: (context) {
+                if (!scaffoldCompleter.isCompleted)
+                  scaffoldCompleter.complete(context);
+                return Text(widget.file?.title ?? S.of(context).newDocument);
+              },
+            ),
           ),
         ),
         bottom: PreferredSize(
@@ -207,31 +217,30 @@ class _CanvasPageState extends State<CanvasPage> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                Builder(
-                  builder: (context) => XppPagesListView(
-                      pages: _file.pages,
-                      onPageChange: (newPage) =>
-                          setState(() => currentPage = newPage),
-                      onPageDelete: (deletedIndex) => setState(() {
-                            _file.pages.removeAt(deletedIndex);
-                            if (_file.pages.length >= currentPage)
-                              currentPage = _file.pages.length - 1;
-                            if (_file.pages.isEmpty) {
-                              _file.pages.add(XppPage.empty());
-                              currentPage = 0;
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text(S
-                                      .of(context)
-                                      .thereWereNoMorePagesWeAddedOne)));
-                            }
-                          }),
-                      onPageMove: (initialIndex, movedTo) => setState(() {
-                            final page = _file.pages[initialIndex];
-                            _file.pages.removeAt(initialIndex);
-                            _file.pages.insert(movedTo - 1, page);
-                          }),
-                      currentPage: currentPage),
-                ),
+                XppPagesListView(
+                    pages: _file.pages,
+                    onPageChange: (newPage) =>
+                        setState(() => currentPage = newPage),
+                    onPageDelete: (deletedIndex) => setState(() {
+                          _file.pages.removeAt(deletedIndex);
+                          if (_file.pages.length >= currentPage)
+                            currentPage = _file.pages.length - 1;
+                          if (_file.pages.isEmpty) {
+                            _file.pages.add(XppPage.empty());
+                            currentPage = 0;
+                            scaffoldCompleter.future.then((scaffoldContext) =>
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text(S
+                                        .of(context)
+                                        .thereWereNoMorePagesWeAddedOne))));
+                          }
+                        }),
+                    onPageMove: (initialIndex, movedTo) => setState(() {
+                          final page = _file.pages[initialIndex];
+                          _file.pages.removeAt(initialIndex);
+                          _file.pages.insert(movedTo - 1, page);
+                        }),
+                    currentPage: currentPage),
                 FloatingActionButton(
                   heroTag: 'AddXppPage',
                   onPressed: () => setState(() {
@@ -250,29 +259,27 @@ class _CanvasPageState extends State<CanvasPage> {
       floatingActionButtonLocation: kIsWeb
           ? FloatingActionButtonLocation.centerFloat
           : FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-                elevation: 16,
-                backgroundColor: Theme.of(context).backgroundColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16)),
-                ),
-                context: context,
-                builder: (context) => ToolBoxBottomSheet(
-                      onBackgroundChange: (newBackground) {
-                        newBackground.size = _file.pages[currentPage].pageSize;
-                        setState(() => _file.pages[currentPage].background =
-                            newBackground);
-                      },
-                    ));
-          },
-          tooltip: S.of(context).tools,
-          child: Icon(Icons.format_paint),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+              elevation: 16,
+              backgroundColor: Theme.of(context).backgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16)),
+              ),
+              context: context,
+              builder: (context) => ToolBoxBottomSheet(
+                    onBackgroundChange: (newBackground) {
+                      newBackground.size = _file.pages[currentPage].pageSize;
+                      setState(() =>
+                          _file.pages[currentPage].background = newBackground);
+                    },
+                  ));
+        },
+        tooltip: S.of(context).tools,
+        child: Icon(Icons.format_paint),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

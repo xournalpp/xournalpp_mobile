@@ -34,8 +34,7 @@ class XppFile {
     ScaffoldFeatureController snackBarController = Scaffold.of(context)
         .showSnackBar(SnackBar(
             duration: Duration(days: 999),
-            content: Builder(
-                builder: (context) => Text(S.of(context).loadingFile))));
+            content: Text(S.of(context).loadingFile)));
     XppFile file;
     try {
       file = await open((percentage) => null);

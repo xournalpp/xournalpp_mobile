@@ -39,9 +39,7 @@ class XppPageStackState extends State<XppPageStack> {
               return (Container());
             }
             return Positioned(
-              child: Builder(
-                  builder: (c) =>
-                      currentContent.render() ?? Text(S.of(context).error)),
+              child: currentContent.render() ?? Text(S.of(context).error),
               top: currentContent.getOffset()?.dy ?? 0,
               left: currentContent.getOffset()?.dx ?? 0,
             );
