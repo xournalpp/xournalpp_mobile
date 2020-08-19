@@ -278,36 +278,67 @@ Iterable<Widget> generateRecentFileList(Set files, BuildContext context) {
   return List.generate(files.length > 0 ? files.length : 1, (index) {
     if (files.length > 0) {
       Map fileInfo = files.toList()[index];
-      return ListTile(
-        isThreeLine: true,
-        title: Container(),
-        leading: AspectRatio(
-          aspectRatio: 1,
-          child: Container(
-            alignment: Alignment.center,
-            constraints: BoxConstraints(maxHeight: 256, minHeight: 128),
-            child: Image.memory(base64Decode(fileInfo['preview'])),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+      return Builder(
+        builder: (context) => ListTile(
+          isThreeLine: true,
+          title: Container(),
+          leading: AspectRatio(
+            aspectRatio: 1,
+            child: Container(
+              alignment: Alignment.center,
+              constraints: BoxConstraints(maxHeight: 256, minHeight: 128),
+              child: Image.memory(base64Decode(fileInfo['preview'])),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            ),
           ),
-        ),
-        subtitle: Text(
-          fileInfo['name'],
-          style: Theme.of(context).textTheme.headline3.copyWith(
-              color: Theme.of(context).textTheme.bodyText1.color,
-              fontSize: kEmphasisFontSize * kFontSizeDivision),
-        ),
-        trailing: Tooltip(
-          child: Icon(
-            Icons.info_outline,
+          subtitle: Text(
+            fileInfo['name'],
+            style: Theme.of(context).textTheme.headline3.copyWith(
+                color: Theme.of(context).textTheme.bodyText1.color,
+                fontSize: kEmphasisFontSize * kFontSizeDivision),
           ),
-          message: fileInfo['path'],
+          trailing: Tooltip(
+            child: Icon(
+              Icons.info_outline,
+            ),
+            message: fileInfo['path'],
+          ),
+          onTap: () async {
+            ScaffoldFeatureController snackBarController = Scaffold.of(context)
+                .showSnackBar(SnackBar(
+                    duration: Duration(days: 999),
+                    content: Text(S.of(context).loadingFile)));
+            XppFile file;
+            try {
+              XppFile file = await XppFile.fromFilePickerCross(
+                  openFileByUri(fileInfo['path']), (percent) {});
+              snackBarController.close();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CanvasPage(
+                        file: file,
+                      )));
+            } catch (e) {
+              snackBarController.close();
+              showDialog(
+                  context: context,
+                  builder: (c) => AlertDialog(
+                        title: Text(S.of(context).errorOpeningFile),
+                        content: SelectableText(
+                            S.of(context).imVerySorryButICouldntReadTheFile +
+                                fileInfo['path'] +
+                                S
+                                    .of(context)
+                                    .areYouSureIHaveThePermissionAndAreYou +
+                                '\n${e.toString()}'),
+                        actions: [
+                          FlatButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text(S.of(context).close))
+                        ],
+                      ));
+            }
+          },
         ),
-        onTap: () async {
-          XppFile file = await XppFile.fromFilePickerCross(
-              openFileByUri(fileInfo['path']), (percent) {});
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => CanvasPage(file: file)));
-        },
       );
     } else {
       return ListTile(

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -15,6 +17,7 @@ import 'package:xournalpp/layer_contents/XppTexImage.dart';
 import 'package:xournalpp/layer_contents/XppText.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
 import 'package:xournalpp/src/HexColor.dart';
+import 'package:xournalpp/src/Isolates.dart';
 import 'package:xournalpp/src/XppBackground.dart';
 
 import 'XppLayer.dart';
@@ -41,7 +44,7 @@ class XppFile {
       file = await open((percentage) => null);
 
       snackBarController.close();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
+      Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => CanvasPage(
                 file: file,
               )));
@@ -73,7 +76,7 @@ class XppFile {
     return file;
   }
 
-  /// decoding and parsing a [FilePickerCross] to [XppFile]
+  /// decoding and parsing a [FilePickerCross] to [XppFile] using a separate [Isolate]
   static Future<XppFile> fromFilePickerCross(
       FilePickerCross rawFile, Function(double) percentageCallback) async {
     /// for potential progress indicator and a better UX we provide feedback about
@@ -86,11 +89,7 @@ class XppFile {
     String title = rawFile.path.substring(
         rawFile.path.lastIndexOf('/') + 1, rawFile.path.lastIndexOf('.'));
 
-    /// decoding file bytes from GZip to a UTF-8 [Uint8List]
-    List<int> bytes = GZipDecoder().decodeBytes(rawFile.toUint8List().toList());
-
-    /// decoding the [Uint8List] to a [String]
-    String fileText = utf8.decode(bytes);
+    String fileText = await decodeGzip(rawFile.toUint8List().toList());
     //Clipboard.setData(ClipboardData(text: fileText));
 
     /// parsing the [String] to a [XmlDocument]
@@ -295,6 +294,7 @@ class XppFile {
       prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
     });
 
+    print('Finished parsing');
     return file;
   }
 
