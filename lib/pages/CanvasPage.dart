@@ -54,6 +54,12 @@ class _CanvasPageState extends State<CanvasPage> {
   }
 
   @override
+  void dispose() {
+    _file = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MainDrawer(),

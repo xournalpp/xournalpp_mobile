@@ -305,7 +305,7 @@ Iterable<Widget> generateRecentFileList(Set files, BuildContext context) {
         onTap: () async {
           XppFile file = await XppFile.fromFilePickerCross(
               openFileByUri(fileInfo['path']), (percent) {});
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => CanvasPage(file: file)));
         },
       );
