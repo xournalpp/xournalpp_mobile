@@ -12,7 +12,8 @@ class XppPageStack extends StatefulWidget {
   XppPageStackState createState() => XppPageStackState();
 }
 
-class XppPageStackState extends State<XppPageStack> {
+class XppPageStackState extends State<XppPageStack>
+    with AutomaticKeepAliveClientMixin {
   XppPage page;
 
   @override
@@ -52,4 +53,7 @@ class XppPageStackState extends State<XppPageStack> {
   void setPageData(XppPage pageData) {
     setState(() => page = pageData);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
