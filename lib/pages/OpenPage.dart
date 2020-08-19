@@ -142,7 +142,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
             padding: const EdgeInsets.all(8.0),
             child: Builder(
               builder: (context) => GestureDetector(
-                onTap: () => XppFile.openAndEdit(context: context),
+                onTap: () async => XppFile.openAndEdit(context: context),
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: Card(

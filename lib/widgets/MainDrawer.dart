@@ -40,7 +40,7 @@ class _MainDrawerState extends State<MainDrawer> {
             ListTile(
                 leading: Icon(Icons.folder),
                 title: Text(S.of(context).open),
-                onTap: () => XppFile.openAndEdit(context: context)),
+                onTap: () async => XppFile.openAndEdit(context: context)),
             ListTile(
               leading: Icon(Icons.insert_drive_file),
               title: Text(S.of(context).newFile),
