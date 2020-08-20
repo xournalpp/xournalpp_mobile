@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
@@ -11,6 +12,14 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
+  PackageInfo info;
+
+  @override
+  void initState() {
+    PackageInfo.fromPlatform().then((value) => info = value);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -57,50 +66,34 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.info),
-              title: Text(S.of(context).about),
-              onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text(S.of(context).aboutXournalMobileEdition),
-                        content: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                spacing: 4,
-                                runSpacing: 4,
-                                children: [
-                                  Image.asset('assets/xournalpp.png', scale: 6),
-                                  Image.asset('assets/feature-banner.png',
-                                      scale: 4),
-                                ],
-                              ),
-                              Text(S
-                                  .of(context)
-                                  .xournalMobileEditionIsAnUnofficialProjectTryingToMake),
-                              Wrap(spacing: 4, runSpacing: 4, children: [
-                                OutlineButton(
-                                    onPressed: () => launch(Uri.encodeFull(
-                                        'https://github.com/xournalpp/xournalpp')),
-                                    child: Text(S.of(context).aboutXournal)),
-                                OutlineButton(
-                                    onPressed: () => launch(Uri.encodeFull(
-                                        'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
-                                    child: Text(S.of(context).sourceCode))
-                              ]),
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          FlatButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text(S.of(context).okay))
-                        ],
-                      )),
-            )
+                leading: Icon(Icons.info),
+                title: Text(S.of(context).about),
+                onTap: () => showAboutDialog(
+                      context: context,
+                      applicationName: S.of(context).aboutXournalMobileEdition,
+                      applicationVersion:
+                          'Version ${info?.version} build ${info?.buildNumber}' ??
+                              'unknown',
+                      applicationIcon:
+                          Image.asset('assets/xournalpp.png', scale: 8),
+                      applicationLegalese: 'Powered by TestApp.schule',
+                      children: [
+                        Image.asset('assets/feature-banner.png', scale: 2),
+                        RaisedButton.icon(
+                            onPressed: () =>
+                                launch('https://buymeacoff.ee/braid'),
+                            icon: Icon(Icons.emoji_food_beverage),
+                            label: Text('Buy me a cup of tea')),
+                        OutlineButton(
+                            onPressed: () => launch(Uri.encodeFull(
+                                'https://github.com/xournalpp/xournalpp')),
+                            child: Text(S.of(context).aboutXournal)),
+                        OutlineButton(
+                            onPressed: () => launch(Uri.encodeFull(
+                                'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
+                            child: Text(S.of(context).sourceCode))
+                      ],
+                    ))
           ],
         ),
       ),

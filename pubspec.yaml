@@ -32,6 +32,7 @@ dependencies:
   vector_math: ^2.0.8
   dwds: ^5.1.0
   flutter_colorpicker: ^0.3.4
+  package_info: ^0.4.1
 
 dev_dependencies:
   flutter_test:
