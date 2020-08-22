@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:xournalpp/src/XppPage.dart';
+import 'package:xml/xml.dart';
+import 'package:xournalpp/src/HexColor.dart';
+
+import 'XppPage.dart';
 
 abstract class XppBackground {
   XppBackgroundType type;
@@ -9,6 +12,8 @@ abstract class XppBackground {
   static XppBackground get none => _NoXppBackground();
 
   Widget render();
+
+  XmlElement toXmlElement();
 }
 
 /// page background for a [XppPage] made from an image URI. I am sure it will be hard to implement for web.
@@ -27,6 +32,28 @@ class XppBackgroundImage extends XppBackground {
   Widget render() {
     return (Container());
   }
+
+  @override
+  XmlElement toXmlElement() {
+    String domainString;
+    switch (domain) {
+      case XppBackgroundImageDomain.ABSOLUTE:
+        domainString = 'absolute';
+        break;
+      case XppBackgroundImageDomain.ATTACH:
+        domainString = 'attach';
+        break;
+      case XppBackgroundImageDomain.CLONE:
+        domainString = 'clone';
+        break;
+    }
+    XmlElement node = XmlElement(XmlName('background'), [
+      XmlAttribute(XmlName('type'), 'pixmap'),
+      XmlAttribute(XmlName('domain'), domainString),
+      XmlAttribute(XmlName('filename'), filename),
+    ]);
+    return (node);
+  }
 }
 
 /// page background for a [XppPage] made from a color and a style
@@ -34,6 +61,15 @@ abstract class XppBackgroundSolid extends XppBackground {
   Color color;
   XppPageSize size;
   XppBackgroundType type = XppBackgroundType.SOLID;
+
+  XmlElement generateXmlElement(String style) {
+    XmlElement node = XmlElement(XmlName('background'), [
+      XmlAttribute(XmlName('type'), 'solid'),
+      XmlAttribute(XmlName('color'), color.toHexTriplet()),
+      XmlAttribute(XmlName('style'), style),
+    ]);
+    return (node);
+  }
 }
 
 class XppBackgroundSolidLined extends XppBackgroundSolid {
@@ -51,6 +87,9 @@ class XppBackgroundSolidLined extends XppBackgroundSolid {
       ),
     );
   }
+
+  @override
+  XmlElement toXmlElement() => generateXmlElement('lined');
 }
 
 class XppBackgroundSolidRuled extends XppBackgroundSolid {
@@ -68,6 +107,9 @@ class XppBackgroundSolidRuled extends XppBackgroundSolid {
       ),
     );
   }
+
+  @override
+  XmlElement toXmlElement() => generateXmlElement('ruled');
 }
 
 class XppBackgroundSolidGraph extends XppBackgroundSolid {
@@ -85,6 +127,9 @@ class XppBackgroundSolidGraph extends XppBackgroundSolid {
       ),
     );
   }
+
+  @override
+  XmlElement toXmlElement() => generateXmlElement('graph');
 }
 
 class XppBackgroundSolidDot extends XppBackgroundSolid {
@@ -102,6 +147,9 @@ class XppBackgroundSolidDot extends XppBackgroundSolid {
       ),
     );
   }
+
+  @override
+  XmlElement toXmlElement() => generateXmlElement('dotted');
 }
 
 class XppBackgroundSolidPlain extends XppBackgroundSolid {
@@ -117,6 +165,9 @@ class XppBackgroundSolidPlain extends XppBackgroundSolid {
       color: color,
     ));
   }
+
+  @override
+  XmlElement toXmlElement() => generateXmlElement('plain');
 }
 
 class _NoXppBackground extends XppBackground {
@@ -125,6 +176,16 @@ class _NoXppBackground extends XppBackground {
 
   @override
   Widget render() => Container();
+
+  @override
+  XmlElement toXmlElement() {
+    XmlElement node = XmlElement(XmlName('background'), [
+      XmlAttribute(XmlName('type'), 'solid'),
+      XmlAttribute(XmlName('color'), 'white'),
+      XmlAttribute(XmlName('style'), 'plain'),
+    ]);
+    return (node);
+  }
 }
 
 class _LinePainter extends CustomPainter {
@@ -218,6 +279,6 @@ class _DotPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-enum XppBackgroundImageDomain { ABSOLUTE, RELATIVE }
+enum XppBackgroundImageDomain { ABSOLUTE, ATTACH, CLONE }
 
 enum XppBackgroundType { NONE, SOLID, PIXMAP }

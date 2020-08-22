@@ -59,11 +59,6 @@ class _MainDrawerState extends State<MainDrawer> {
                             file: XppFile.empty(),
                           ))),
             ),
-            ListTile(
-              leading: Icon(Icons.save),
-              title: Text(S.of(context).save),
-              subtitle: Text(S.of(context).notImplemented),
-            ),
             Divider(),
             ListTile(
                 leading: Icon(Icons.info),

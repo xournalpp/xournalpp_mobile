@@ -692,6 +692,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Saving file...`
+  String get savingFile {
+    return Intl.message(
+      'Saving file...',
+      name: 'savingFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unfortunately, there was an error saving this file.`
+  String get unfortunatelyThereWasAnErrorSavingThisFile {
+    return Intl.message(
+      'Unfortunately, there was an error saving this file.',
+      name: 'unfortunatelyThereWasAnErrorSavingThisFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully saved.`
+  String get successfullySaved {
+    return Intl.message(
+      'Successfully saved.',
+      name: 'successfullySaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save as...`
+  String get saveAs {
+    return Intl.message(
+      'Save as...',
+      name: 'saveAs',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

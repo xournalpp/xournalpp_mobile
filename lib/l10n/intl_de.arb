@@ -64,5 +64,9 @@
   "deletePage": "Delete page",
   "movePage": "Move page",
   "newPageIndex": "New page index",
-  "between1And": "Between 1 and"
+  "between1And": "Between 1 and",
+  "savingFile": "Saving file...",
+  "unfortunatelyThereWasAnErrorSavingThisFile": "Unfortunately, there was an error saving this file.",
+  "successfullySaved": "Successfully saved.",
+  "saveAs": "Save as..."
 }

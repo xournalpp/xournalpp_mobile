@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,9 @@ import 'package:vector_math/vector_math_64.dart' show Vector4;
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/src/XppPage.dart';
+import 'package:xournalpp/src/conditional/save_to_path/save_to_path_stub.dart'
+    if (dart.library.html) 'package:xournalpp/src/conditional/save_to_path/save_to_path_web.dart'
+    if (dart.library.io) 'package:xournalpp/src/conditional/save_to_path/save_to_path_io.dart';
 import 'package:xournalpp/widgets/EditingToolbar.dart';
 import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
@@ -18,9 +22,10 @@ import 'package:xournalpp/widgets/XppPagesListView.dart';
 import 'package:xournalpp/widgets/ZoomableWidget.dart';
 
 class CanvasPage extends StatefulWidget {
-  CanvasPage({Key key, this.file}) : super(key: key);
+  CanvasPage({Key key, this.file, this.filePath}) : super(key: key);
 
   final XppFile file;
+  final String filePath;
 
   @override
   _CanvasPageState createState() => _CanvasPageState();
@@ -28,6 +33,7 @@ class CanvasPage extends StatefulWidget {
 
 class _CanvasPageState extends State<CanvasPage> {
   XppFile _file;
+  String filePath;
 
   int currentPage = 0;
 
@@ -48,6 +54,8 @@ class _CanvasPageState extends State<CanvasPage> {
   double pageScale = 1;
 
   Completer<BuildContext> scaffoldCompleter = Completer();
+
+  bool savingFile = false;
 
   @override
   void initState() {
@@ -177,6 +185,39 @@ class _CanvasPageState extends State<CanvasPage> {
             ),
           ),
         ),
+        actions: [
+          savingFile
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  icon: Icon(Icons.save),
+                  onPressed: saveFile,
+                  tooltip: S.of(context).save,
+                ),
+          PopupMenuButton<String>(
+            onSelected: (item) async {
+              if (item == S.of(context).saveAs)
+                filePath = (await FilePickerCross.save(
+                        type: FileTypeCross.custom, fileExtension: 'xopp'))
+                    .path;
+            },
+            itemBuilder: (BuildContext context) {
+              return {S.of(context).saveAs}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
         bottom: PreferredSize(
             preferredSize: Size.fromHeight(64),
             child: EditingToolBar(
@@ -278,6 +319,7 @@ class _CanvasPageState extends State<CanvasPage> {
 
   void _setMetadata() {
     _file = widget.file ?? XppFile.empty();
+    if (widget.filePath != null) filePath = widget.filePath;
   }
 
   void _showTitleDialog() {
@@ -352,6 +394,46 @@ class _CanvasPageState extends State<CanvasPage> {
       pageScale = newZoom;
       _zoomController.value.setDiagonal(Vector4(newZoom, newZoom, 1, 1));
       setState(() {});
+    }
+  }
+
+  void saveFile() async {
+    setState(() {
+      savingFile = true;
+    });
+    ScaffoldFeatureController snackBarController =
+        Scaffold.of(await scaffoldCompleter.future).showSnackBar(
+      SnackBar(
+        content: Text(S.of(context).savingFile),
+        duration: Duration(days: 999),
+      ),
+    );
+    try {
+      if (filePath == null)
+        filePath = (await FilePickerCross.save(
+                type: FileTypeCross.custom, fileExtension: 'xopp'))
+            .path;
+      await saveToPath(filePath, _file.toUint8List());
+      snackBarController.close();
+      setState(() {
+        savingFile = false;
+      });
+      Scaffold.of(await scaffoldCompleter.future).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).successfullySaved),
+        ),
+      );
+    } catch (e) {
+      snackBarController.close();
+      setState(() {
+        savingFile = false;
+      });
+      Scaffold.of(await scaffoldCompleter.future).showSnackBar(
+        SnackBar(
+          content:
+              Text(S.of(context).unfortunatelyThereWasAnErrorSavingThisFile),
+        ),
+      );
     }
   }
 }

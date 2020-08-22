@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xml/xml.dart';
 import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 
@@ -15,6 +16,14 @@ class XppPage {
   XppBackground background;
   @required
   List<XppLayer> layers;
+
+  XmlElement toXmlElement() => XmlElement(
+      XmlName('page'),
+      [
+        XmlAttribute(XmlName('width'), pageSize.width.toString()),
+        XmlAttribute(XmlName('height'), pageSize.height.toString())
+      ],
+      [background.toXmlElement()]..addAll(layers.map((e) => e.toXmlElement())));
 }
 
 class XppPageSize {

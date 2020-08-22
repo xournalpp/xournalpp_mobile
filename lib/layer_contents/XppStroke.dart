@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:xml/xml.dart';
+import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 
 class XppStroke extends XppContent {
@@ -55,6 +57,32 @@ class XppStroke extends XppContent {
       foregroundPainter: XppStrokePainter(
           points: points, color: colorToUse, topLeft: getOffset()),
     );
+  }
+
+  @override
+  XmlElement toXmlElement() {
+    String toolString;
+    switch (tool) {
+      case XppStrokeTool.PEN:
+        toolString = 'pen';
+        break;
+      case XppStrokeTool.HIGHLIGHTER:
+        toolString = 'highlighter';
+        break;
+      case XppStrokeTool.ERASER:
+        toolString = 'eraser';
+        break;
+    }
+    XmlElement node = XmlElement(XmlName('stroke'), [
+      XmlAttribute(XmlName('tool'), toolString),
+      XmlAttribute(XmlName('color'), color.toHexTriplet()),
+      XmlAttribute(
+          XmlName('width'), points.map((e) => e.width.toString()).join(' ')),
+    ], [
+      XmlText(
+          points.map((e) => e.x.toString() + ' ' + e.y.toString()).join(' '))
+    ]);
+    return node;
   }
 }
 

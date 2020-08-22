@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:xml/src/xml/nodes/element.dart';
+import 'package:xml/xml.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 
 class XppImage extends XppContent {
@@ -49,4 +52,14 @@ class XppImage extends XppContent {
 
   @override
   Offset getOffset() => topLeft;
+
+  @override
+  XmlElement toXmlElement() => XmlElement(XmlName('image'), [
+        XmlAttribute(XmlName('left'), topLeft.dx.toString()),
+        XmlAttribute(XmlName('right'), bottomRight.dx.toString()),
+        XmlAttribute(XmlName('top'), topLeft.dy.toString()),
+        XmlAttribute(XmlName('bottom'), bottomRight.dy.toString()),
+      ], [
+        XmlText(base64Encode(data))
+      ]);
 }
