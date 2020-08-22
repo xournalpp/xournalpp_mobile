@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector4;
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/src/XppPage.dart';
@@ -64,7 +66,7 @@ class _CanvasPageState extends State<CanvasPage> {
               key: _zoomableKey,
               controller: _zoomController,
               onInteractionUpdate: (details) {
-                setState(() => pageScale = details.scale);
+                setState(() => pageScale = _zoomController.value.entry(0, 0));
               },
               child: Center(
                 child: Card(
@@ -131,11 +133,7 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.add),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        pageScale += 0.1;
-                        if (pageScale > 5) pageScale = 5;
-                        _zoomController.value =
-                            _zoomController.value.scaled(pageScale);
-                        setState(() {});
+                        this._setScale(pageScale + 0.1);
                       }),
                   SizedBox(
                     height: 128,
@@ -147,9 +145,7 @@ class _CanvasPageState extends State<CanvasPage> {
                         label: '${(pageScale * 100).round()} %',
                         value: pageScale,
                         onChanged: (newZoom) {
-                          pageScale = newZoom;
-                          _zoomController.value.scaled(pageScale);
-                          setState(() {});
+                          this._setScale(newZoom);
                         },
                       ),
                     ),
@@ -158,11 +154,7 @@ class _CanvasPageState extends State<CanvasPage> {
                       icon: Icon(Icons.remove),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        pageScale -= 0.1;
-                        if (pageScale < .1) pageScale = .1;
-                        _zoomController.value =
-                            _zoomController.value.scaled(pageScale);
-                        setState(() {});
+                        this._setScale(pageScale - 0.1);
                       }),
                 ],
               ),
@@ -352,5 +344,14 @@ class _CanvasPageState extends State<CanvasPage> {
     _zoomableKey.currentState.setState(() => _zoomableKey.currentState.enabled =
         _toolData[_currentDevice] == null ||
             _toolData[_currentDevice] == EditingTool.MOVE);
+  }
+
+  void _setScale(double newZoom) {
+    newZoom = max(.1, min(5, newZoom));
+    if (newZoom != pageScale) {
+      pageScale = newZoom;
+      _zoomController.value.setDiagonal(Vector4(newZoom, newZoom, 1, 1));
+      setState(() {});
+    }
   }
 }
