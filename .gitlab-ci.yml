@@ -1,29 +1,6 @@
-image: openjdk:8-jdk
-
-variables:
-  ANDROID_COMPILE_SDK: "28"
-  ANDROID_BUILD_TOOLS: "28.0.2"
-  ANDROID_SDK_TOOLS:   "4333796"
+image: cirrusci/flutter
 
 before_script:
-  - apt-get --quiet update --yes
-  - apt-get --quiet install --yes wget tar unzip zip lib32stdc++6 lib32z1 git
-  - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
-  - unzip -d android-sdk-linux android-sdk.zip
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" >/dev/null
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "platform-tools" >/dev/null
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}" >/dev/null
-  - export ANDROID_HOME=$PWD/android-sdk-linux
-  - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
-  # temporarily disable checking for EPIPE error and use yes to accept all licenses
-  - set +o pipefail
-  - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
-  - set -o pipefail
-  # flutter sdk setup
-  - git clone -b master https://github.com/flutter/flutter.git /flutter
-  - export PATH=$PATH:/flutter/bin
-  - echo flutter.sdk=$PWD/flutter > android/local.properties
-  - chmod +x ./android/gradlew
   - echo "$keybase64" > ./keybase64
   - mkdir -p /builds/testapp-system/testapp-flutter/android/app/android/app/
   - base64 -d ./keybase64 > /builds/testapp-system/testapp-flutter/android/app/android/app/key.jks
@@ -65,23 +42,10 @@ build:web:
     - flutter config --enable-web
     - flutter pub get
     - set +o pipefail
-    - flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
+    - flutter build web #--dart-define=FLUTTER_WEB_USE_SKIA=true
   artifacts:
     paths:
       - build/web/
-
-build:linux:
-  stage: build
-  script:
-    - apt-get install -qq -yy clang cmake ninja-build pkg-config libgtk-3-dev
-    - flutter config --enable-linux-desktop
-    - flutter pub get
-    - set +o pipefail
-    - flutter build linux
-    - mv build/linux/release/bundle xournalpp-mobile
-  artifacts:
-    paths:
-      - xournalpp-mobile
 
 build:snap:
   stage: build
@@ -107,9 +71,12 @@ build:snap:
     snapcraft
     mv *.snap xournalpp-mobile.snap
     snapcraft upload xournalpp-mobile.snap --release=stable
+    flutter build linux
+    mv build/linux/release/bundle xournalpp-mobile
   artifacts:
     paths:
       - xournalpp-mobile.snap
+      - xournalpp-mobile
   only:
       - tags
   except:
@@ -117,6 +84,7 @@ build:snap:
 
 pages:
   stage: deploy
+  image: alpine:latest
   script:
     - mkdir public
     - cp -r build/web/* public/
