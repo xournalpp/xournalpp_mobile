@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:archive/archive.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/layer_contents/XppImage.dart';
@@ -18,7 +18,6 @@ import 'package:xournalpp/src/XppBackground.dart';
 
 import 'XppLayer.dart';
 import 'XppPage.dart';
-import 'globals.dart';
 
 class XppFile {
   XppFile({this.title, this.pages, this.previewImage});
@@ -63,7 +62,7 @@ class XppFile {
   /// showing a file picker, decoding and parsing to [XppFile]
   static Future<XppFile> open(Function(double) percentageCallback) async {
     /// showing a [FilePickerCross]
-    FilePickerCross rawFile = await FilePickerCross.pick(
+    FilePickerCross rawFile = await FilePickerCross.importFromStorage(
         type: FileTypeCross.custom, fileExtension: 'xopp');
 
     /// decoding by [fromFilePickerCross]
@@ -97,8 +96,13 @@ class XppFile {
         XmlDocument.parse(fileText).findElements('xournal').toList()[0];
 
     /// decoding the preview image from base64 [String] to [Uint8List] of bytes
-    Uint8List previewImage = base64Decode(
-        documentTree.findElements('preview').toList()[0].innerText);
+    Uint8List previewImage;
+    try {
+      previewImage = base64Decode(
+          documentTree.findElements('preview').toList()[0].innerText);
+    } catch (e) {
+      previewImage = kTransparentImage;
+    }
 
     List<XppPage> pages = [];
     int pageIndex = 0;
@@ -189,7 +193,6 @@ class XppFile {
         /// processing all texts
         layer.findElements('text').forEach((textElement) {
           Color color = parseColor(textElement.getAttribute('color'));
-
           content[int.parse(textElement.getAttribute('counter'))] = XppText(
               color: color,
               // note: not trimming
@@ -280,7 +283,7 @@ class XppFile {
     XppFile file =
         XppFile(title: title, previewImage: previewImage, pages: pages);
 
-    /// starting async task to save recent files list
+    /*/// starting async task to save recent files list
     SharedPreferences.getInstance().then((prefs) {
       String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
       Set files = (jsonDecode(jsonData) as Iterable).toSet();
@@ -292,7 +295,7 @@ class XppFile {
         });
       jsonData = jsonEncode(files.toList());
       prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
-    });
+    });*/
 
     return file;
   }

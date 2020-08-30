@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
@@ -6,13 +7,13 @@ import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector4;
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/src/XppPage.dart';
-import 'package:xournalpp/src/conditional/save_to_path/save_to_path_stub.dart'
-    if (dart.library.html) 'package:xournalpp/src/conditional/save_to_path/save_to_path_web.dart'
-    if (dart.library.io) 'package:xournalpp/src/conditional/save_to_path/save_to_path_io.dart';
+import 'package:xournalpp/src/globals.dart';
 import 'package:xournalpp/widgets/EditingToolbar.dart';
 import 'package:xournalpp/widgets/MainDrawer.dart';
 import 'package:xournalpp/widgets/PointerListener.dart';
@@ -33,7 +34,6 @@ class CanvasPage extends StatefulWidget {
 
 class _CanvasPageState extends State<CanvasPage> {
   XppFile _file;
-  String filePath;
 
   int currentPage = 0;
 
@@ -203,10 +203,7 @@ class _CanvasPageState extends State<CanvasPage> {
                 ),
           PopupMenuButton<String>(
             onSelected: (item) async {
-              if (item == S.of(context).saveAs)
-                filePath = (await FilePickerCross.save(
-                        type: FileTypeCross.custom, fileExtension: 'xopp'))
-                    .path;
+              if (item == S.of(context).saveAs) saveFile(export: true);
             },
             itemBuilder: (BuildContext context) {
               return {S.of(context).saveAs}.map((String choice) {
@@ -319,11 +316,11 @@ class _CanvasPageState extends State<CanvasPage> {
 
   void _setMetadata() {
     _file = widget.file ?? XppFile.empty();
-    if (widget.filePath != null) filePath = widget.filePath;
+    //if (widget.filePath != null) filePath = widget.filePath;
   }
 
-  void _showTitleDialog() {
-    showDialog(
+  Future _showTitleDialog() {
+    return showDialog(
         context: context,
         builder: (context) {
           TextEditingController titleController =
@@ -397,7 +394,7 @@ class _CanvasPageState extends State<CanvasPage> {
     }
   }
 
-  void saveFile() async {
+  void saveFile({bool export = false}) async {
     setState(() {
       savingFile = true;
     });
@@ -409,11 +406,28 @@ class _CanvasPageState extends State<CanvasPage> {
       ),
     );
     try {
-      if (filePath == null)
-        filePath = (await FilePickerCross.save(
-                type: FileTypeCross.custom, fileExtension: 'xopp'))
-            .path;
-      await saveToPath(filePath, _file.toUint8List());
+      if (_file.title == null) await _showTitleDialog();
+      String path = _file.title + '.xopp';
+      FilePickerCross file = FilePickerCross(_file.toUint8List(),
+          type: FileTypeCross.custom, fileExtension: 'xopp', path: path);
+      if (export)
+        file.exportToStorage();
+      else
+        file.saveToPath(path: path);
+
+      /// starting async task to save recent files list
+      SharedPreferences.getInstance().then((prefs) {
+        String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
+        Set files = (jsonDecode(jsonData) as Iterable).toSet();
+        if (files.where((element) => element['path'] == path).length < 1)
+          files.add({
+            'preview': base64Encode(kTransparentImage),
+            'name': _file.title,
+            'path': path
+          });
+        jsonData = jsonEncode(files.toList());
+        prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
+      });
       snackBarController.close();
       setState(() {
         savingFile = false;
@@ -424,6 +438,7 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       );
     } catch (e) {
+      print(e);
       snackBarController.close();
       setState(() {
         savingFile = false;

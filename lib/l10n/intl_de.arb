@@ -68,5 +68,8 @@
   "savingFile": "Saving file...",
   "unfortunatelyThereWasAnErrorSavingThisFile": "Unfortunately, there was an error saving this file.",
   "successfullySaved": "Successfully saved.",
-  "saveAs": "Save as..."
+  "saveAs": "Save as...",
+  "confirmDelete": "Confirm delete",
+  "areYouSureToDeleteTheSelectedFileThisCannot": "Are you sure to delete the selected file? This cannot be undone.",
+  "delete": "Delete"
 }

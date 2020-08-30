@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:xml/src/xml/nodes/element.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 
@@ -20,7 +19,7 @@ class XppImage extends XppContent {
 
   static Future<XppImage> open({Offset topLeft}) async {
     FilePickerCross image =
-        await FilePickerCross.pick(type: FileTypeCross.image);
+        await FilePickerCross.importFromStorage(type: FileTypeCross.image);
 
     /// rendering the [Uint8List] into an image to determinate the height and width
     MemoryImage memoryImage = MemoryImage(image.toUint8List());

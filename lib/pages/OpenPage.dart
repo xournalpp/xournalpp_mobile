@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
+import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -272,54 +273,86 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
       print('Unsupported runtimeType: ${data.runtimeType.toString()}');
     }
   }
-}
 
-Iterable<Widget> generateRecentFileList(Set files, BuildContext context) {
-  return List.generate(files.length > 0 ? files.length : 1, (index) {
-    if (files.length > 0) {
-      Map fileInfo = files.toList()[index];
-      return ListTile(
-        isThreeLine: true,
-        title: Container(),
-        leading: AspectRatio(
-          aspectRatio: 1,
-          child: Container(
-            alignment: Alignment.center,
-            constraints: BoxConstraints(maxHeight: 256, minHeight: 128),
-            child: Image.memory(base64Decode(fileInfo['preview'])),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+  Iterable<Widget> generateRecentFileList(Set files, BuildContext context) {
+    return List.generate(files.length > 0 ? files.length : 1, (index) {
+      if (files.length > 0) {
+        Map fileInfo = files.toList()[index];
+        return ListTile(
+          isThreeLine: true,
+          title: Container(),
+          leading: AspectRatio(
+            aspectRatio: 1,
+            child: Container(
+              alignment: Alignment.center,
+              constraints: BoxConstraints(maxHeight: 256, minHeight: 128),
+              child: Image.memory(base64Decode(fileInfo['preview'])),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            ),
           ),
-        ),
-        subtitle: Text(
-          fileInfo['name'],
-          style: Theme.of(context).textTheme.headline3.copyWith(
-              color: Theme.of(context).textTheme.bodyText1.color,
-              fontSize: kEmphasisFontSize * kFontSizeDivision),
-        ),
-        trailing: Tooltip(
-          child: Icon(
-            Icons.info_outline,
+          subtitle: Text(
+            fileInfo['name'],
+            style: Theme.of(context).textTheme.headline3.copyWith(
+                color: Theme.of(context).textTheme.bodyText1.color,
+                fontSize: kEmphasisFontSize * kFontSizeDivision),
           ),
-          message: fileInfo['path'],
-        ),
-        onTap: () async {
-          XppFile file = await XppFile.fromFilePickerCross(
-              openFileByUri(fileInfo['path']), (percent) {});
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => CanvasPage(file: file)));
-        },
-      );
-    } else {
-      return ListTile(
-        leading: Icon(Icons.info),
-        title: Text(S.of(context).noRecentFiles),
-        trailing: IconButton(
-          icon: Icon(Icons.note_add),
-          tooltip: S.of(context).newNotebook,
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => CanvasPage())),
-        ),
-      );
-    }
-  });
+          trailing: Tooltip(
+            child: Icon(
+              Icons.info_outline,
+            ),
+            message: fileInfo['path'],
+          ),
+          onLongPress: () => showDeleteDialog(fileInfo['path']),
+          onTap: () async {
+            XppFile file = await XppFile.fromFilePickerCross(
+                await FilePickerCross.fromInternalPath(path: fileInfo['path']),
+                (percent) {});
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CanvasPage(file: file)));
+          },
+        );
+      } else {
+        return ListTile(
+          leading: Icon(Icons.info),
+          title: Text(S.of(context).noRecentFiles),
+          trailing: IconButton(
+            icon: Icon(Icons.note_add),
+            tooltip: S.of(context).newNotebook,
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => CanvasPage())),
+          ),
+        );
+      }
+    });
+  }
+
+  showDeleteDialog(path) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(S.of(context).confirmDelete),
+              content: Text(
+                  S.of(context).areYouSureToDeleteTheSelectedFileThisCannot),
+              actions: [
+                FlatButton(
+                    onPressed: Navigator.of(context).pop,
+                    child: Text(S.of(context).cancel)),
+                FlatButton(
+                    onPressed: () async {
+                      FilePickerCross.delete(path: path);
+                      setState(() {
+                        recentFiles
+                            .removeWhere((element) => element['path'] == path);
+                      });
+
+                      Navigator.of(context).pop();
+                      SharedPreferences.getInstance().then((prefs) {
+                        prefs.setString(PreferencesKeys.kRecentFiles,
+                            jsonEncode(recentFiles.toList()));
+                      });
+                    },
+                    child: Text(S.of(context).delete)),
+              ],
+            ));
+  }
 }

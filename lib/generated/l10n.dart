@@ -732,6 +732,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Confirm delete`
+  String get confirmDelete {
+    return Intl.message(
+      'Confirm delete',
+      name: 'confirmDelete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure to delete the selected file? This cannot be undone.`
+  String get areYouSureToDeleteTheSelectedFileThisCannot {
+    return Intl.message(
+      'Are you sure to delete the selected file? This cannot be undone.',
+      name: 'areYouSureToDeleteTheSelectedFileThisCannot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

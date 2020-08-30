@@ -24,6 +24,7 @@ class XppPageStackState extends State<XppPageStack>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SizedBox(
       width: widget.page.pageSize.width,
       height: widget.page.pageSize.height,

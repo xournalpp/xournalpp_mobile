@@ -51,7 +51,7 @@ class XppTexImage extends XppContent {
   Offset getOffset() => topLeft;
 
   @override
-  XmlElement toXmlElement() => XmlElement(XmlName('text'), [
+  XmlElement toXmlElement() => XmlElement(XmlName('teximage'), [
         XmlAttribute(XmlName('text'), text),
         XmlAttribute(XmlName('left'), topLeft.dx.toString()),
         XmlAttribute(XmlName('right'), bottomRight.dx.toString()),
