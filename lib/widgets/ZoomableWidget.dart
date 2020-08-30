@@ -7,9 +7,10 @@ class ZoomableWidget extends StatefulWidget {
   final TransformationController controller;
   @required
   final GestureScaleUpdateCallback onInteractionUpdate;
+  final GestureScaleStartCallback onInteractionStart;
 
   const ZoomableWidget(
-      {Key key, this.child, this.controller, this.onInteractionUpdate})
+      {Key key, this.child, this.controller, this.onInteractionUpdate, this.onInteractionStart})
       : super(key: key);
 
   @override
@@ -23,6 +24,7 @@ class ZoomableWidgetState extends State<ZoomableWidget> {
   Widget build(BuildContext context) {
     return InteractiveViewer(
       boundaryMargin: const EdgeInsets.all(16),
+      onInteractionStart: widget.onInteractionStart,
       onInteractionUpdate: widget.onInteractionUpdate,
       panEnabled: enabled,
       scaleEnabled: enabled,
