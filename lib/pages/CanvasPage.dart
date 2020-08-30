@@ -50,6 +50,7 @@ class _CanvasPageState extends State<CanvasPage> {
   final GlobalKey<EditingToolBarState> _editingToolbarKey = GlobalKey();
   final GlobalKey<PointerListenerState> _pointerListenerKey = GlobalKey();
   final GlobalKey<ZoomableWidgetState> _zoomableKey = GlobalKey();
+  final GlobalKey<XppPagesListViewState> pageListViewKey = GlobalKey();
 
   double pageScale = 1;
 
@@ -248,6 +249,7 @@ class _CanvasPageState extends State<CanvasPage> {
               scrollDirection: Axis.horizontal,
               children: [
                 XppPagesListView(
+                    key: pageListViewKey,
                     pages: _file.pages,
                     onPageChange: (newPage) =>
                         setState(() => currentPage = newPage),
@@ -319,8 +321,8 @@ class _CanvasPageState extends State<CanvasPage> {
     //if (widget.filePath != null) filePath = widget.filePath;
   }
 
-  Future _showTitleDialog() {
-    return showDialog(
+  Future<void> _showTitleDialog() async {
+    await showDialog(
         context: context,
         builder: (context) {
           TextEditingController titleController =
@@ -408,8 +410,10 @@ class _CanvasPageState extends State<CanvasPage> {
     try {
       if (_file.title == null) await _showTitleDialog();
       String path = _file.title + '.xopp';
-      FilePickerCross file = FilePickerCross(_file.toUint8List(),
-          type: FileTypeCross.custom, fileExtension: 'xopp', path: path);
+      _file.previewImage = kIsWeb
+          ? kTransparentImage
+          : await pageListViewKey.currentState.getPng(0);
+      FilePickerCross file = _file.toFilePickerCross(filePath: path);
       if (export)
         file.exportToStorage();
       else
@@ -419,12 +423,12 @@ class _CanvasPageState extends State<CanvasPage> {
       SharedPreferences.getInstance().then((prefs) {
         String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
         Set files = (jsonDecode(jsonData) as Iterable).toSet();
-        if (files.where((element) => element['path'] == path).length < 1)
-          files.add({
-            'preview': base64Encode(kTransparentImage),
-            'name': _file.title,
-            'path': path
-          });
+        files.removeWhere((element) => element['path'] == path);
+        files.add({
+          'preview': base64Encode(_file.previewImage),
+          'name': _file.title,
+          'path': path
+        });
         jsonData = jsonEncode(files.toList());
         prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
       });
@@ -438,7 +442,6 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       );
     } catch (e) {
-      print(e);
       snackBarController.close();
       setState(() {
         savingFile = false;

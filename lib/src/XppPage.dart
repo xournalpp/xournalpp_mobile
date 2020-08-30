@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppLayer.dart';

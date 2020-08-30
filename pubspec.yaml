@@ -1,7 +1,7 @@
 name: xournalpp
 description: A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
-version: 1.0.15+15
+version: 1.0.16+16
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -30,7 +30,7 @@ dependencies:
   flutter_absolute_path: 1.0.6
   matrix_gesture_detector: ^0.1.0
   vector_math: ^2.0.8
-  dwds: ^5.1.0
+  dwds: ^6.0.0
   flutter_colorpicker: ^0.3.4
   package_info: ^0.4.1
 
