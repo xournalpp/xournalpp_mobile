@@ -71,5 +71,8 @@
   "saveAs": "Save as...",
   "confirmDelete": "Confirm delete",
   "areYouSureToDeleteTheSelectedFileThisCannot": "Are you sure to delete the selected file? This cannot be undone.",
-  "delete": "Delete"
+  "delete": "Delete",
+  "quota": "Speicher",
+  "used": "verwendet",
+  "mb": "MB"
 }
