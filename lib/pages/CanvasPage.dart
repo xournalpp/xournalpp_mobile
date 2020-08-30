@@ -32,7 +32,7 @@ class CanvasPage extends StatefulWidget {
   _CanvasPageState createState() => _CanvasPageState();
 }
 
-class _CanvasPageState extends State<CanvasPage> {
+class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
   XppFile _file;
 
   int currentPage = 0;
@@ -58,10 +58,17 @@ class _CanvasPageState extends State<CanvasPage> {
 
   bool savingFile = false;
 
+  Animation<Matrix4> _animationReset;
+  AnimationController _controllerReset;
+
   @override
   void initState() {
     _setMetadata();
     super.initState();
+    _controllerReset = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
   }
 
   @override
@@ -74,6 +81,7 @@ class _CanvasPageState extends State<CanvasPage> {
           child: ZoomableWidget(
               key: _zoomableKey,
               controller: _zoomController,
+              onInteractionStart: _onInteractionStart,
               onInteractionUpdate: (details) {
                 setState(() => pageScale = _zoomController.value.entry(0, 0));
               },
@@ -154,7 +162,7 @@ class _CanvasPageState extends State<CanvasPage> {
                         label: '${(pageScale * 100).round()} %',
                         value: pageScale,
                         onChanged: (newZoom) {
-                          this._setScale(newZoom);
+                          this._setScale(newZoom, animate: false);
                         },
                       ),
                     ),
@@ -387,11 +395,20 @@ class _CanvasPageState extends State<CanvasPage> {
             _toolData[_currentDevice] == EditingTool.MOVE);
   }
 
-  void _setScale(double newZoom) {
+  void _setScale(double newZoom, {animate = true}) {
     newZoom = max(.1, min(5, newZoom));
     if (newZoom != pageScale) {
+      // final translation =
+      //     _zoomController.value.getTranslation() * newZoom / pageScale;
       pageScale = newZoom;
-      _zoomController.value.setDiagonal(Vector4(newZoom, newZoom, 1, 1));
+      if (animate) {
+        _animateTransformation(_zoomController.value.clone()
+          ..setDiagonal(Vector4(newZoom, newZoom, 1, 1)));
+        // ..setTranslation(translation));
+      } else {
+        _zoomController.value.setDiagonal(Vector4(newZoom, newZoom, 1, 1));
+        // _zoomController.value.setTranslation(translation);
+      }
       setState(() {});
     }
   }
@@ -453,5 +470,42 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       );
     }
+  }
+
+  void _onAnimationReset() {
+    _zoomController.value = _animationReset.value;
+    if (!_controllerReset.isAnimating) {
+      _animationReset?.removeListener(_onAnimationReset);
+      _animationReset = null;
+      _controllerReset.reset();
+    }
+  }
+
+  void _animateTransformation(Matrix4 animateTo) {
+    _controllerReset.reset();
+    _animationReset = Matrix4Tween(
+      begin: _zoomController.value,
+      end: animateTo,
+    ).animate(_controllerReset);
+    _animationReset.addListener(_onAnimationReset);
+    _controllerReset.forward();
+  }
+
+  void _onInteractionStart(ScaleStartDetails details) {
+    // If the user tries to cause a transformation while the reset animation is
+    // running, cancel the reset animation.
+    if (_controllerReset.status == AnimationStatus.forward) {
+      _controllerReset.stop();
+      _animationReset?.removeListener(_onAnimationReset);
+      _animationReset = null;
+      // assign animateTo value to skip to end
+      // _zoomController.value = _animateTo;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controllerReset.dispose();
+    super.dispose();
   }
 }
