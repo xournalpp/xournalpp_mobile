@@ -43,6 +43,8 @@ build:web:
     - flutter config --enable-web
     - flutter pub get
     - set +o pipefail
+    - ls -avli
+    - cat /etc/passwd
     - flutter build web #--dart-define=FLUTTER_WEB_USE_SKIA=true
     - cp -r build/web xournalpp-web-$VERSION
   artifacts:
@@ -62,6 +64,7 @@ build:linux:
     # flutter sdk setup
     git clone -b master https://github.com/flutter/flutter.git /flutter
     export PATH=$PATH:/flutter/bin
+    flutter config --enable-linux-desktop
     flutter build linux
     mv build/linux/release/bundle xournalpp-mobile-$VERSION
   artifacts:
@@ -81,6 +84,7 @@ build:snap:
     # flutter sdk setup
     git clone -b master https://github.com/flutter/flutter.git /flutter
     export PATH=$PATH:/flutter/bin
+    flutter config --enable-linux-desktop
     # ignore current snap version and set to pubspec version
     # "s/version\:\W\+[0-9]\+\.[0-9]\+\.[0-9]\+/version: $VERSION/g" or "s/[0-9]\+\.[0-9]\+\.[0-9]\+/$VERSION/g"
     sed -i "s/version\:\W\+[0-9]\+\.[0-9]\+\.[0-9]\+/version: $VERSION/g" snap/snapcraft.yaml
