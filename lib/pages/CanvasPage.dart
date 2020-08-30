@@ -67,7 +67,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
     super.initState();
     _controllerReset = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 250),
     );
   }
 
