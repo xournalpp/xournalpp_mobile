@@ -53,8 +53,6 @@ build:web:
 build:linux:
   stage: build
   image: snapcore/snapcraft:edge
-  before_script:
-    - ''
   script: |
     # required to upgrade ubuntu base due to incompatible libraries
     sed -i "s/xenial/focal/g" /etc/apt/sources.list
@@ -73,8 +71,6 @@ build:linux:
 build:snap:
   stage: build
   image: snapcore/snapcraft:edge
-  before_script:
-    - ''
   script: |
     # required to upgrade ubuntu base due to incompatible libraries
     sed -i "s/xenial/focal/g" /etc/apt/sources.list
