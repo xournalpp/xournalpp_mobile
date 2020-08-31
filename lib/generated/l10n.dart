@@ -762,6 +762,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Quota`
+  String get quota {
+    return Intl.message(
+      'Quota',
+      name: 'quota',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `used`
+  String get used {
+    return Intl.message(
+      'used',
+      name: 'used',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `MB`
+  String get mb {
+    return Intl.message(
+      'MB',
+      name: 'mb',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

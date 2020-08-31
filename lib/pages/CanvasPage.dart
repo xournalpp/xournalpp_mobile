@@ -32,7 +32,7 @@ class CanvasPage extends StatefulWidget {
   _CanvasPageState createState() => _CanvasPageState();
 }
 
-class _CanvasPageState extends State<CanvasPage> {
+class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
   XppFile _file;
 
   int currentPage = 0;
@@ -50,6 +50,7 @@ class _CanvasPageState extends State<CanvasPage> {
   final GlobalKey<EditingToolBarState> _editingToolbarKey = GlobalKey();
   final GlobalKey<PointerListenerState> _pointerListenerKey = GlobalKey();
   final GlobalKey<ZoomableWidgetState> _zoomableKey = GlobalKey();
+  final GlobalKey<XppPagesListViewState> pageListViewKey = GlobalKey();
 
   double pageScale = 1;
 
@@ -57,10 +58,17 @@ class _CanvasPageState extends State<CanvasPage> {
 
   bool savingFile = false;
 
+  Animation<Matrix4> _animationReset;
+  AnimationController _controllerReset;
+
   @override
   void initState() {
     _setMetadata();
     super.initState();
+    _controllerReset = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
   }
 
   @override
@@ -73,6 +81,7 @@ class _CanvasPageState extends State<CanvasPage> {
           child: ZoomableWidget(
               key: _zoomableKey,
               controller: _zoomController,
+              onInteractionStart: _onInteractionStart,
               onInteractionUpdate: (details) {
                 setState(() => pageScale = _zoomController.value.entry(0, 0));
               },
@@ -153,7 +162,7 @@ class _CanvasPageState extends State<CanvasPage> {
                         label: '${(pageScale * 100).round()} %',
                         value: pageScale,
                         onChanged: (newZoom) {
-                          this._setScale(newZoom);
+                          this._setScale(newZoom, animate: false);
                         },
                       ),
                     ),
@@ -248,6 +257,7 @@ class _CanvasPageState extends State<CanvasPage> {
               scrollDirection: Axis.horizontal,
               children: [
                 XppPagesListView(
+                    key: pageListViewKey,
                     pages: _file.pages,
                     onPageChange: (newPage) =>
                         setState(() => currentPage = newPage),
@@ -319,8 +329,8 @@ class _CanvasPageState extends State<CanvasPage> {
     //if (widget.filePath != null) filePath = widget.filePath;
   }
 
-  Future _showTitleDialog() {
-    return showDialog(
+  Future<void> _showTitleDialog() async {
+    await showDialog(
         context: context,
         builder: (context) {
           TextEditingController titleController =
@@ -385,11 +395,20 @@ class _CanvasPageState extends State<CanvasPage> {
             _toolData[_currentDevice] == EditingTool.MOVE);
   }
 
-  void _setScale(double newZoom) {
+  void _setScale(double newZoom, {animate = true}) {
     newZoom = max(.1, min(5, newZoom));
     if (newZoom != pageScale) {
+      // final translation =
+      //     _zoomController.value.getTranslation() * newZoom / pageScale;
       pageScale = newZoom;
-      _zoomController.value.setDiagonal(Vector4(newZoom, newZoom, 1, 1));
+      if (animate) {
+        _animateTransformation(_zoomController.value.clone()
+          ..setDiagonal(Vector4(newZoom, newZoom, 1, 1)));
+        // ..setTranslation(translation));
+      } else {
+        _zoomController.value.setDiagonal(Vector4(newZoom, newZoom, 1, 1));
+        // _zoomController.value.setTranslation(translation);
+      }
       setState(() {});
     }
   }
@@ -408,8 +427,10 @@ class _CanvasPageState extends State<CanvasPage> {
     try {
       if (_file.title == null) await _showTitleDialog();
       String path = _file.title + '.xopp';
-      FilePickerCross file = FilePickerCross(_file.toUint8List(),
-          type: FileTypeCross.custom, fileExtension: 'xopp', path: path);
+      _file.previewImage = kIsWeb
+          ? kTransparentImage
+          : await pageListViewKey.currentState.getPng(0);
+      FilePickerCross file = _file.toFilePickerCross(filePath: path);
       if (export)
         file.exportToStorage();
       else
@@ -419,12 +440,12 @@ class _CanvasPageState extends State<CanvasPage> {
       SharedPreferences.getInstance().then((prefs) {
         String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
         Set files = (jsonDecode(jsonData) as Iterable).toSet();
-        if (files.where((element) => element['path'] == path).length < 1)
-          files.add({
-            'preview': base64Encode(kTransparentImage),
-            'name': _file.title,
-            'path': path
-          });
+        files.removeWhere((element) => element['path'] == path);
+        files.add({
+          'preview': base64Encode(_file.previewImage),
+          'name': _file.title,
+          'path': path
+        });
         jsonData = jsonEncode(files.toList());
         prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
       });
@@ -438,7 +459,6 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       );
     } catch (e) {
-      print(e);
       snackBarController.close();
       setState(() {
         savingFile = false;
@@ -450,5 +470,42 @@ class _CanvasPageState extends State<CanvasPage> {
         ),
       );
     }
+  }
+
+  void _onAnimationReset() {
+    _zoomController.value = _animationReset.value;
+    if (!_controllerReset.isAnimating) {
+      _animationReset?.removeListener(_onAnimationReset);
+      _animationReset = null;
+      _controllerReset.reset();
+    }
+  }
+
+  void _animateTransformation(Matrix4 animateTo) {
+    _controllerReset.reset();
+    _animationReset = Matrix4Tween(
+      begin: _zoomController.value,
+      end: animateTo,
+    ).animate(_controllerReset);
+    _animationReset.addListener(_onAnimationReset);
+    _controllerReset.forward();
+  }
+
+  void _onInteractionStart(ScaleStartDetails details) {
+    // If the user tries to cause a transformation while the reset animation is
+    // running, cancel the reset animation.
+    if (_controllerReset.status == AnimationStatus.forward) {
+      _controllerReset.stop();
+      _animationReset?.removeListener(_onAnimationReset);
+      _animationReset = null;
+      // assign animateTo value to skip to end
+      // _zoomController.value = _animateTo;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controllerReset.dispose();
+    super.dispose();
   }
 }

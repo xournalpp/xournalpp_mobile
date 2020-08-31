@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppPage.dart';
@@ -24,14 +26,17 @@ class XppPagesListView extends StatefulWidget {
       : super(key: key);
 
   @override
-  _XppPagesListViewState createState() => _XppPagesListViewState();
+  XppPagesListViewState createState() => XppPagesListViewState();
 }
 
-class _XppPagesListViewState extends State<XppPagesListView> {
+class XppPagesListViewState extends State<XppPagesListView> {
+  Map<int, GlobalKey<XppPageStackState>> pageKeys = {};
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (c, i) {
+        if (!pageKeys.keys.contains(i)) pageKeys[i] = GlobalKey();
         final page = widget.pages[i];
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -55,6 +60,7 @@ class _XppPagesListViewState extends State<XppPagesListView> {
                     aspectRatio: page.pageSize.ratio,
                     child: FittedBox(
                       child: XppPageStack(
+                        key: pageKeys[i],
                         page: page,
                       ),
                     ),
@@ -71,6 +77,10 @@ class _XppPagesListViewState extends State<XppPagesListView> {
       physics: NeverScrollableScrollPhysics(),
       primary: false,
     );
+  }
+
+  Future<Uint8List> getPng(int i) {
+    return pageKeys[i].currentState.toPng();
   }
 
   showContext(int i) => showModalBottomSheet(

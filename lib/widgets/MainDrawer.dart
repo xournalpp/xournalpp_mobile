@@ -5,6 +5,7 @@ import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
 import 'package:xournalpp/pages/OpenPage.dart';
 import 'package:xournalpp/src/XppFile.dart';
+import 'package:xournalpp/widgets/QuotaTile.dart';
 
 class MainDrawer extends StatefulWidget {
   @override
@@ -40,6 +41,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 currentAccountPicture: Image.asset('assets/xournalpp.png'),
               ),
             ),
+            QuotaTile(),
             ListTile(
               leading: Icon(Icons.home),
               title: Text(S.of(context).home),
