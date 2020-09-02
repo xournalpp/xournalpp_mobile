@@ -74,5 +74,7 @@
   "delete": "Delete",
   "quota": "Quota",
   "used": "used",
-  "mb": "MB"
+  "mb": "MB",
+  "sharePage": "Share page...",
+  "successfullyShared": "Successfully shared"
 }

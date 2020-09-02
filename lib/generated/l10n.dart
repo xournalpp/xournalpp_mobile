@@ -792,6 +792,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Share page...`
+  String get sharePage {
+    return Intl.message(
+      'Share page...',
+      name: 'sharePage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Successfully shared`
+  String get successfullyShared {
+    return Intl.message(
+      'Successfully shared',
+      name: 'successfullyShared',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

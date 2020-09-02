@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:file_picker_cross/file_picker_cross.dart';
@@ -213,9 +214,13 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
           PopupMenuButton<String>(
             onSelected: (item) async {
               if (item == S.of(context).saveAs) saveFile(export: true);
+              if (item == S.of(context).sharePage) shareScreenshot();
             },
             itemBuilder: (BuildContext context) {
-              return {S.of(context).saveAs}.map((String choice) {
+              return {
+                S.of(context).saveAs,
+                if (!kIsWeb) S.of(context).sharePage
+              }.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -411,6 +416,21 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       }
       setState(() {});
     }
+  }
+
+  void shareScreenshot() async {
+    Uint8List imageBytes =
+        await pageListViewKey.currentState.getPng(currentPage);
+    String fileName = await FilePickerCross(imageBytes,
+            fileExtension: '.png',
+            path: '/export/' +
+                (_file?.title ?? S.of(context).newFile) +
+                ' ${currentPage + 1}' +
+                '.png')
+        .exportToStorage();
+    final c = await scaffoldCompleter.future;
+    Scaffold.of(c).showSnackBar(SnackBar(
+        content: Text(S.of(context).successfullyShared + ' ' + fileName)));
   }
 
   void saveFile({bool export = false}) async {

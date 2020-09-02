@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  file_picker_cross: ^4.1.0
+  file_picker_cross: ^4.1.1
   katex_flutter: ^4.0.0
   intl: ^0.16.1
   archive: ^2.0.13
