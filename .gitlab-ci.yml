@@ -15,7 +15,7 @@ stages:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - build/web/
+    - xournalpp-web-*
 
 build:apk:
   stage: build
@@ -102,7 +102,7 @@ pages:
   image: alpine:latest
   script:
     - mkdir public
-    - cp -r build/web/* public/
+    - cp -r xournalpp-web-$VERSION/* public/
   artifacts:
     paths:
       - public
