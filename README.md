@@ -14,7 +14,7 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
 
 [Open web app](https://xournal.online/)
 
-[Access via TOR](xournaltdtf7ygqxg3qik4tdg476smkukogil74t6oxqiwdnumy53hqd.onion)
+[Access via TOR](http://xournaltdtf7ygqxg3qik4tdg476smkukogil74t6oxqiwdnumy53hqd.onion/)
 
 [Download in Google Play](https://play.google.com/store/apps/details?id=online.xournal.mobile)
 
