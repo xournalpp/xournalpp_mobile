@@ -76,11 +76,15 @@ class _MainDrawerState extends State<MainDrawer> {
                       applicationLegalese: 'Powered by TestApp.schule',
                       children: [
                         Image.asset('assets/feature-banner.png', scale: 2),
-                        RaisedButton.icon(
-                            onPressed: () =>
-                                launch('https://buymeacoff.ee/braid'),
-                            icon: Icon(Icons.emoji_food_beverage),
-                            label: Text('Buy me a cup of tea')),
+                        if (!Theme.of(context).targetPlatform ==
+                                TargetPlatfrom.iOS &&
+                            !Theme.of(context).targetPlatform ==
+                                TargetPlatfrom.macos)
+                          RaisedButton.icon(
+                              onPressed: () =>
+                                  launch('https://buymeacoff.ee/braid'),
+                              icon: Icon(Icons.emoji_food_beverage),
+                              label: Text('Buy me a cup of tea')),
                         OutlineButton(
                             onPressed: () => launch(Uri.encodeFull(
                                 'https://github.com/xournalpp/xournalpp')),

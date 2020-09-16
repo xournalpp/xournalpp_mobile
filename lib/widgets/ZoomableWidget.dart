@@ -10,7 +10,11 @@ class ZoomableWidget extends StatefulWidget {
   final GestureScaleStartCallback onInteractionStart;
 
   const ZoomableWidget(
-      {Key key, this.child, this.controller, this.onInteractionUpdate, this.onInteractionStart})
+      {Key key,
+      this.child,
+      this.controller,
+      this.onInteractionUpdate,
+      this.onInteractionStart})
       : super(key: key);
 
   @override
