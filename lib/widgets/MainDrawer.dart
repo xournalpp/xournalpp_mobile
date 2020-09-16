@@ -76,10 +76,10 @@ class _MainDrawerState extends State<MainDrawer> {
                       applicationLegalese: 'Powered by TestApp.schule',
                       children: [
                         Image.asset('assets/feature-banner.png', scale: 2),
-                        if (!Theme.of(context).targetPlatform ==
-                                TargetPlatfrom.iOS &&
-                            !Theme.of(context).targetPlatform ==
-                                TargetPlatfrom.macos)
+                        if (!(Theme.of(context).platform ==
+                                TargetPlatform.iOS) &&
+                            !(Theme.of(context).platform ==
+                                TargetPlatform.macOS))
                           RaisedButton.icon(
                               onPressed: () =>
                                   launch('https://buymeacoff.ee/braid'),
