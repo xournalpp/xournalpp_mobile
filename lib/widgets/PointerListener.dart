@@ -21,6 +21,8 @@ class PointerListener extends StatefulWidget {
   final double strokeWidth;
   @required
   final Color color;
+  @required
+  final Function({Offset coordinates, double radius}) filterEraser;
 
   const PointerListener(
       {Key key,
@@ -30,7 +32,8 @@ class PointerListener extends StatefulWidget {
       this.translationMatrix,
       this.onDeviceChange,
       this.strokeWidth,
-      this.color})
+      this.color,
+      this.filterEraser})
       : super(key: key);
 
   @override
@@ -51,15 +54,20 @@ class PointerListenerState extends State<PointerListener> {
         behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
-          if (!isPen(data)) return;
-          setState(() {
-            points.add(XppStrokePoint(
-                x: data.localPosition.dx,
-                y: data.localPosition.dy,
-                width: (data.pressure == 0
-                    ? widget.strokeWidth
-                    : data.pressure * widget.strokeWidth)));
-          });
+          if (isPen(data))
+            setState(() {
+              points.add(XppStrokePoint(
+                  x: data.localPosition.dx,
+                  y: data.localPosition.dy,
+                  width: (data.pressure == 0
+                      ? widget.strokeWidth
+                      : data.pressure * widget.strokeWidth)));
+            });
+          if (isEraser(data))
+            widget.filterEraser(
+                coordinates:
+                    Offset(data.localPosition.dx, data.localPosition.dy),
+                radius: widget.strokeWidth);
         },
         onPointerDown: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
@@ -119,5 +127,12 @@ class PointerListenerState extends State<PointerListener> {
             data.kind == PointerDeviceKind.stylus) ||
         (widget.toolData.keys.contains(data.kind) &&
             widget.toolData[data.kind] == EditingTool.HIGHLIGHT);
+  }
+
+  bool isEraser(PointerMoveEvent data) {
+    return (widget.toolData.keys.contains(data.kind) &&
+            widget.toolData[data.kind] == EditingTool.ERASER) ||
+        (!widget.toolData.keys.contains(data.kind) &&
+            data.kind == PointerDeviceKind.invertedStylus);
   }
 }

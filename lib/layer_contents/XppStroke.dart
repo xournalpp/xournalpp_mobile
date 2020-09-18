@@ -84,6 +84,41 @@ class XppStroke extends XppContent {
     ]);
     return node;
   }
+
+  bool shouldErase({Offset coordinates, double radius}) {
+    bool erase = false;
+    points.forEach((element) {
+      if (_shouldRemovePoint(element, coordinates, radius)) erase = true;
+    });
+    if (erase) print(erase);
+    return (erase);
+  }
+
+  List<XppStroke> eraseWhere({Offset coordinates, double radius}) {
+    print('Erasing at ' + coordinates.toString());
+    List<XppStroke> newStrokes = [];
+    bool lastPointRemoved = true;
+    for (int i = 0; i < points.length; i++) {
+      if (_shouldRemovePoint(points[i], coordinates, radius)) {
+        lastPointRemoved = true;
+      } else {
+        if (lastPointRemoved) {
+          newStrokes
+              .add(XppStroke(tool: tool, color: color, points: [points[i]]));
+        } else {
+          newStrokes.last.points.add(points[i]);
+        }
+        lastPointRemoved = false;
+      }
+    }
+    return newStrokes;
+  }
+
+  bool _shouldRemovePoint(
+      XppStrokePoint element, Offset coordinates, double radius) {
+    return ((element.x - coordinates.dx).abs() < (element.width + radius) / 2 &&
+        (element.y - coordinates.dy).abs() < (element.width + radius) / 2);
+  }
 }
 
 class XppStrokePainter extends CustomPainter {

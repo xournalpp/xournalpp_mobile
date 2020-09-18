@@ -463,11 +463,11 @@ class S {
     );
   }
 
-  /// `Highlighter (not implemented)`
-  String get highlighterNotImplemented {
+  /// `Highlighter`
+  String get highlighter {
     return Intl.message(
-      'Highlighter (not implemented)',
-      name: 'highlighterNotImplemented',
+      'Highlighter',
+      name: 'highlighter',
       desc: '',
       args: [],
     );
@@ -503,11 +503,11 @@ class S {
     );
   }
 
-  /// `Eraser (not implemented)`
-  String get eraserNotImplemented {
+  /// `Eraser`
+  String get eraser {
     return Intl.message(
-      'Eraser (not implemented)',
-      name: 'eraserNotImplemented',
+      'Eraser',
+      name: 'eraser',
       desc: '',
       args: [],
     );

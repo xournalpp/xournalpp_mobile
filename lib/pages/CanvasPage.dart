@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector4;
 import 'package:xournalpp/generated/l10n.dart';
+import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/src/XppPage.dart';
 import 'package:xournalpp/src/globals.dart';
@@ -108,6 +109,34 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                                 kind;
                             _setZoomableState();
                           });
+                        },
+                        filterEraser: ({Offset coordinates, double radius}) {
+                          // if we would execute the removal instantly, we would destroy the order of the strokes
+                          List<Function> removalFunctions = [];
+                          _file.pages[currentPage].layers[0].content
+                              .forEach((stroke) {
+                            if (!(stroke is XppStroke) ||
+                                !(stroke as XppStroke).shouldErase(
+                                    coordinates: coordinates,
+                                    radius: radius)) return;
+                            removalFunctions.add(() {
+                              final int index = _file
+                                  .pages[currentPage].layers[0].content
+                                  .indexOf(stroke);
+                              _file.pages[currentPage].layers[0].content
+                                  .removeAt(index);
+                              _file.pages[currentPage].layers[0].content
+                                  .insertAll(
+                                      index,
+                                      (stroke as XppStroke).eraseWhere(
+                                          coordinates: coordinates,
+                                          radius: radius));
+                            });
+                          });
+                          if (removalFunctions.isNotEmpty)
+                            removalFunctions.forEach((element) {
+                              element();
+                            });
                         },
                         onNewContent: (newContent) {
                           setState(() {

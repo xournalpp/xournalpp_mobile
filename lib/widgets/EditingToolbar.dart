@@ -64,7 +64,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.brush),
-              tooltip: S.of(context).highlighterNotImplemented,
+              tooltip: S.of(context).highlighter,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.HIGHLIGHT
@@ -124,7 +124,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                 saveDeviceTable();
               },
               child: Icon(Icons.backspace),
-              tooltip: S.of(context).eraserNotImplemented,
+              tooltip: S.of(context).eraser,
               elevation: 6,
               backgroundColor:
                   widget.deviceMap[currentDevice] == EditingTool.ERASER
