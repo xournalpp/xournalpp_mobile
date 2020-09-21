@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/circleInterserction.dart';
 
 class XppStroke extends XppContent {
   XppStroke({this.tool = XppStrokeTool.PEN, this.points, this.color});
@@ -87,24 +88,47 @@ class XppStroke extends XppContent {
 
   bool shouldErase({Offset coordinates, double radius}) {
     bool erase = false;
-    points.forEach((element) {
-      if (_shouldRemovePoint(element, coordinates, radius)) erase = true;
-    });
+    for (int i = 0; i < points.length; i++) {
+      if (_shouldRemovePoint(i, coordinates, radius)) erase = true;
+    }
     if (erase) print(erase);
     return (erase);
   }
 
   List<XppStroke> eraseWhere({Offset coordinates, double radius}) {
-    print('Erasing at ' + coordinates.toString());
     List<XppStroke> newStrokes = [];
     bool lastPointRemoved = true;
+    XppStrokePoint lastPointCircleIntersect;
+    XppStrokePoint nextPointCircleIntersect;
     for (int i = 0; i < points.length; i++) {
-      if (_shouldRemovePoint(points[i], coordinates, radius)) {
+      if (_shouldRemovePoint(i, coordinates, radius)) {
+        if (lastPointRemoved == false || i == 0) {
+          final List<Offset> intersectionPoints = circleIntersection(
+              a: points[i].offset,
+              b: points[(i == 0) ? i + 1 : i - 1].offset,
+              circle: coordinates,
+              radius: radius);
+          print('Intersection points: $intersectionPoints');
+          lastPointCircleIntersect = XppStrokePoint(
+              x: intersectionPoints[0].dx,
+              y: intersectionPoints[0].dy,
+              width: points[i].width);
+          nextPointCircleIntersect = XppStrokePoint(
+              x: intersectionPoints[1].dx,
+              y: intersectionPoints[1].dy,
+              width: points[i].width);
+        }
         lastPointRemoved = true;
       } else {
         if (lastPointRemoved) {
-          newStrokes
-              .add(XppStroke(tool: tool, color: color, points: [points[i]]));
+          print(lastPointCircleIntersect);
+          /*if (newStrokes.isNotEmpty)
+            newStrokes.last.points.add(lastPointCircleIntersect);*/
+          print('NextPoint: $nextPointCircleIntersect');
+          newStrokes.add(XppStroke(tool: tool, color: color, points: [
+            if (nextPointCircleIntersect != null) nextPointCircleIntersect,
+            points[i]
+          ]));
         } else {
           newStrokes.last.points.add(points[i]);
         }
@@ -114,10 +138,27 @@ class XppStroke extends XppContent {
     return newStrokes;
   }
 
-  bool _shouldRemovePoint(
-      XppStrokePoint element, Offset coordinates, double radius) {
-    return ((element.x - coordinates.dx).abs() < (element.width + radius) / 2 &&
-        (element.y - coordinates.dy).abs() < (element.width + radius) / 2);
+  bool _shouldRemovePoint(int offset, Offset coordinates, double radius) {
+    bool shouldRemove = false;
+    //print(offset);
+    //print(points[offset]);
+    final element = points[offset];
+    shouldRemove =
+        ((element.x - coordinates.dx).abs() < (element.width + radius) / 2 &&
+            (element.y - coordinates.dy).abs() < (element.width + radius) / 2);
+    // if not to be deleted anyway, checking whether any part between the point of the previous points
+    if (!shouldRemove && offset != 0) {
+      final previousElement = points[offset - 1];
+      List intersectionPoints = circleIntersection(
+          a: previousElement.offset,
+          b: element.offset,
+          circle: coordinates,
+          radius: radius);
+      print(intersectionPoints);
+      if (intersectionPoints.isNotEmpty) shouldRemove = true;
+    }
+    print('Should remove: $shouldRemove');
+    return (shouldRemove);
   }
 }
 
