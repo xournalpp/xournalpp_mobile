@@ -43,7 +43,6 @@ build:web:
     - flutter config --enable-web
     - flutter pub get
     - set +o pipefail
-    - sudo chown -R cirrus .
     - flutter build web #--dart-define=FLUTTER_WEB_USE_SKIA=true
     - cp -r build/web xournalpp-web-$VERSION
   artifacts:
