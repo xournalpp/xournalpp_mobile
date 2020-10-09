@@ -137,6 +137,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                             removalFunctions.forEach((element) {
                               element();
                             });
+                          setState(() {});
                         },
                         onNewContent: (newContent) {
                           setState(() {

@@ -121,12 +121,11 @@ class XppStroke extends XppContent {
         lastPointRemoved = true;
       } else {
         if (lastPointRemoved) {
-          print(lastPointCircleIntersect);
-          /*if (newStrokes.isNotEmpty)
-            newStrokes.last.points.add(lastPointCircleIntersect);*/
+          if (newStrokes.isNotEmpty && nextPointCircleIntersect != null)
+            newStrokes.last.points.add(nextPointCircleIntersect);
           print('NextPoint: $nextPointCircleIntersect');
           newStrokes.add(XppStroke(tool: tool, color: color, points: [
-            if (nextPointCircleIntersect != null) nextPointCircleIntersect,
+            if (lastPointCircleIntersect != null) lastPointCircleIntersect,
             points[i]
           ]));
         } else {
@@ -157,7 +156,7 @@ class XppStroke extends XppContent {
       print(intersectionPoints);
       if (intersectionPoints.isNotEmpty) shouldRemove = true;
     }
-    print('Should remove: $shouldRemove');
+    //print('Should remove: $shouldRemove');
     return (shouldRemove);
   }
 }
