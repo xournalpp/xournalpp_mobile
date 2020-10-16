@@ -54,15 +54,16 @@ class PointerListenerState extends State<PointerListener> {
         behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
-          if (isPen(data))
-            setState(() {
-              points.add(XppStrokePoint(
-                  x: data.localPosition.dx,
-                  y: data.localPosition.dy,
-                  width: (data.pressure == 0
-                      ? widget.strokeWidth
-                      : data.pressure * widget.strokeWidth)));
-            });
+          if (isPen(data)) {
+            points.add(XppStrokePoint(
+                x: data.localPosition.dx,
+                y: data.localPosition.dy,
+                width: (data.pressure == 0
+                    ? widget.strokeWidth
+                    : data.pressure * widget.strokeWidth)));
+            setState(() {});
+          }
+
           if (isEraser(data))
             widget.filterEraser(
                 coordinates:

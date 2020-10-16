@@ -133,10 +133,12 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                                           radius: radius));
                             });
                           });
-                          if (removalFunctions.isNotEmpty)
+                          if (removalFunctions.isNotEmpty) {
                             removalFunctions.forEach((element) {
                               element();
                             });
+                            setState(() {});
+                          }
                         },
                         onNewContent: (newContent) {
                           setState(() {

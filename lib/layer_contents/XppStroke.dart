@@ -90,12 +90,10 @@ class XppStroke extends XppContent {
     points.forEach((element) {
       if (_shouldRemovePoint(element, coordinates, radius)) erase = true;
     });
-    if (erase) print(erase);
     return (erase);
   }
 
   List<XppStroke> eraseWhere({Offset coordinates, double radius}) {
-    print('Erasing at ' + coordinates.toString());
     List<XppStroke> newStrokes = [];
     bool lastPointRemoved = true;
     for (int i = 0; i < points.length; i++) {
