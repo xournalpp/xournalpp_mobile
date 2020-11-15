@@ -1,0 +1,6 @@
+build/linux/release/bundle/xournalpp-mobile opt/xournalpp-mobile/
+build/linux/release/bundle/lib/ opt/xournalpp-mobile/
+build/linux/release/bundle/data/ opt/xournalpp-mobile/
+linux/xournalpp-mobile usr/bin/
+linux/xournalpp-mobile.desktop usr/share/applications/
+assets/xournalpp-mobile.png usr/share/icons/hicolor/192x192/apps/

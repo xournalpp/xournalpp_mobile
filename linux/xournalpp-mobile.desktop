@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Xournal++ Mobile
+Comment=Infinitely take notes, sketch and learn
+Keywords=Tablet;Wacom;Pen Input;PDF Annotation;Markup
+Exec=xournalpp-mobile
+Terminal=false
+Icon=xournalpp-mobile
+Type=Application
+Categories=Office;GNOME;GTK;

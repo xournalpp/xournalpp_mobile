@@ -49,6 +49,25 @@ build:web:
     paths:
       - xournalpp-web-*
 
+build:debian:
+  stage: build
+  image: ubuntu
+  script: |
+    # required to upgrade ubuntu base due to incompatible libraries
+    apt update -qq
+    apt install -y -qq wget tar unzip zip lib32stdc++6 lib32z1 git clang cmake ninja-build pkg-config libgtk-3-dev curl dh-make
+    # flutter sdk setup
+    git clone -b master https://github.com/flutter/flutter.git /flutter
+    export PATH=$PATH:/flutter/bin
+    flutter config --enable-linux-desktop
+    sed -i "s/DATE/$(date -R)/g" debian/changelog
+    sed -i "s/VERSION/$VERSION/g" debian/changelog
+    dpkg-buildpackage
+    mv ../xournalpp-mobile_*.deb xournalpp-mobile-$VERSION.deb
+  artifacts:
+    paths:
+      - xournalpp-mobile-*.deb
+
 build:linux:
   stage: build
   image: snapcore/snapcraft:edge

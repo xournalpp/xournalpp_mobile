@@ -40,6 +40,23 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Debian
+debhelper-build-stamp
+.debhelper
+*.deb
+*.dsc
+*.build
+*.buildinfo
+*.changes
+*.tar.gz
+*.substvars
+/.vagrant
+debian/hello
+debian/files
+debian/xournalpp-mobile
+/*/hello
+/tutorial-1/packageroot/usr
+
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 *.snap

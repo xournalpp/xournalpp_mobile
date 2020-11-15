@@ -1,0 +1,12 @@
+Source: xournalpp-mobile
+Section: utils
+Priority: optional
+Maintainer: The One With The Braid <the-one@with-the-braid.cf>
+Build-Depends: debhelper (>=10), clang, cmake, meson, libgtk-3-dev, pkg-config
+Standards-Version: 4.3.0
+Homepage: https://xournal.online/
+
+Package: xournalpp-mobile
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, xdg-user-dirs
+Description: Infinitely take notes, sketch and learn
