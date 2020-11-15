@@ -6,31 +6,30 @@
 
 A port of the main features of Xournal++ to various Flutter platforms like Android, iOS and the Web.
 
-![feature banner](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/raw/master/assets/feature-banner.svg)
+![Feature banner](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/raw/master/assets/feature-banner.svg)
 
-# Try it out
+## Try it out
 
 ***Mission completed:** We can now render strokes, images and text and LaTeX!. We thereby support the full `.xopp` file format.* :tada:
 
-[Open web app](https://xournal.online/)
-
-[Access via TOR](http://xournaltdtf7ygqxg3qik4tdg476smkukogil74t6oxqiwdnumy53hqd.onion/)
-
-[Download in Google Play](https://play.google.com/store/apps/details?id=online.xournal.mobile)
-
-[Download APK](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Aapk)
-
-[Download from the Snap Store](https://snapcraft.io/xournalpp-mobile)
+- Web
+  - [Open web app](https://xournal.online/)
+  - [Access via TOR](http://xournaltdtf7ygqxg3qik4tdg476smkukogil74t6oxqiwdnumy53hqd.onion/)
+- Android
+  - [Download in Google Play](https://play.google.com/store/apps/details?id=online.xournal.mobile)
+  - [Download APK](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/browse?job=build%3Aapk)
+- Windows
+  - [Build for Windows](#desktop-support)
+- Linux
+  - [Download for Debian](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/browse?job=build%3Adebian)
+  - [Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
+  - [Download from the Snap Store](https://snapcraft.io/xournalpp-mobile)
 
 ```shell
-sudo snap install xournalpp-mobile
+    sudo snap install xournalpp-mobile
 ```
 
-[Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
-
-[Build for Windows](#desktop-support)
-
-### Visible parts already working:
+### Visible parts already working
 
 - [x] Read the document title
 - [x] Read and display the number of pages
@@ -43,7 +42,7 @@ sudo snap install xournalpp-mobile
 - [x] LaTeX
 - [x] Recent files list
 - [ ] Whiteout eraser
-- [ ] Saving
+- [x] Saving
 - [x] Basic editing
 
 ## Known issues
@@ -58,13 +57,13 @@ sudo snap install xournalpp-mobile
 
 > You would like to contribute? Please check out issues to solve [here](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/issues) or get our `// TODO:`s [here](https://gitlab.com/search?search=TODO&project_id=20056916)!
 
-*The **GitHub** respository is only a mirrored repsoitory. Please only contribute to the [original repository on **GitLab**](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile).*
+*The **GitHub** repository is only a mirrored repository. Please only contribute to the [original repository on **GitLab**](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile).*
 
 Get your information about the `.xopp` file format at http://www-math.mit.edu/~auroux/software/xournal/manual.html#file-format .
 
 Install Flutter first. See [flutter.dev](https://flutter.dev/docs/get-started/install) for more details.
 
-```
+```shell
 # Run Flutter doctor to check whether the installation was successful
 flutter doctor
 ```
@@ -73,7 +72,7 @@ flutter doctor
 
 Connect any Android or iOS device.
 
-```
+```shell
 git clone https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile.git
 cd xournalpp_mobile
 flutter run
@@ -83,7 +82,7 @@ flutter run
 
 If you want to test for the web, please run:
 
-```
+```shell
 flutter channel beta
 flutter upgrade
 flutter config --enable-web
@@ -92,13 +91,13 @@ flutter run -d web --release # unfortunately, the debug flavour will result an e
 
 ### Desktop support
 
-Linux is perfectly supported by Xournal++ Mobile and you can get prebuild binaries [above](#try-it-out) or install from [Snap Store](https://snapcraft.io/xournalpp-mobile).
+Linux is perfectly supported by Xournal++ Mobile and you can get prebuilt binaries [above](#try-it-out) or install from [Snap Store](https://snapcraft.io/xournalpp-mobile).
 
 Windows is supported and tested too, but there are unfortunately no prebuilt binaries available. Execute the following commands to build them yourself.
 
 If you want to test for Linux, Windows or macOS, please run:
 
-```
+```shell
 flutter channel master
 flutter upgrade
 flutter config --enable-linux-desktop # or --enable-macos-desktop or --enable-windows-desktop
@@ -127,17 +126,17 @@ The dark color is Material Blue Grey 900.
 
 ### Fonts
 
-* Display Text: Open Sans Extra Bold *(800)* `Apache 2.0`, *accent color* or *light color*
-* Title and Heading: Open Sans Regular *(400)* `Apache 2.0`, *light color*
-* Emphasis: Glacial Indifference Regular *(400)* `SIL Open Font License`, *light color*, *UPPERCASE*
-* Body: Open Sans Light *(300)* `Apache 2.0`, *light color*
+- Display Text: Open Sans Extra Bold *(800)* `Apache 2.0`, *accent color* or *light color*
+- Title and Heading: Open Sans Regular *(400)* `Apache 2.0`, *light color*
+- Emphasis: Glacial Indifference Regular *(400)* `SIL Open Font License`, *light color*, *UPPERCASE*
+- Body: Open Sans Light *(300)* `Apache 2.0`, *light color*
 
-# Misc
+## Misc
 
-This software is powered by the education software [TestApp](https://testapp.schule) - **Learning. Easily.**
+This software is powered by the education software [TestApp](https://testapp.schule) — **Learning. Easily.**
 
 [![TestApp banner](https://gitlab.com/testapp-system/testapp-flutter/-/raw/mobile/assets/Google%20Play%20EN.png)](https://testapp.schule)
 
 ## Legal notes
 
-This project is licensed under the terms and conditions of the EUPL-1.2 found in [LICENCE](LICENCE).
+This project is licensed under the terms and conditions of the EUPL-1.2 found in [LICENSE](LICENSE).
