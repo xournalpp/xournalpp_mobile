@@ -22,7 +22,7 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
   - [Build for Windows](#desktop-support)
 - Linux
   - [Download for Debian](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/browse?job=build%3Adebian)
-  - [Download for Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
+  - [Download for generic Linux](https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile/-/jobs/artifacts/master/download?job=build%3Alinux)
   - [Download from the Snap Store](https://snapcraft.io/xournalpp-mobile)
 
 ```shell
