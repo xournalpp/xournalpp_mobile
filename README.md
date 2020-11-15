@@ -26,7 +26,7 @@ A port of the main features of Xournal++ to various Flutter platforms like Andro
   - [Download from the Snap Store](https://snapcraft.io/xournalpp-mobile)
 
 ```shell
-    sudo snap install xournalpp-mobile
+sudo snap install xournalpp-mobile
 ```
 
 ### Visible parts already working
