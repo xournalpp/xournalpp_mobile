@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
@@ -31,7 +30,6 @@ class OpenPage extends StatefulWidget {
 class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   bool _loadedRecent = false;
   Set recentFiles = Set();
-  Completer<BuildContext> scaffoldCompleter = Completer();
 
   List<SharedMediaFile> _sharedFiles;
 
@@ -126,16 +124,7 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MainDrawer(),
-      appBar: AppBar(
-        title: Builder(
-          /// just need a builder here to provide a valid context for background tasks
-          builder: (context) {
-            if (!scaffoldCompleter.isCompleted)
-              scaffoldCompleter.complete(context);
-            return Text('Xournal++');
-          },
-        ),
-      ),
+      appBar: AppBar(title: Text('Xournal++')),
       body: ListView(
         children: [
           if (kIsWeb) DropFile(),
@@ -198,10 +187,9 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
     if (data is String) {
       /// checking if we were redirected from the web site
       if (data.startsWith('http')) {
-        scaffoldCompleter.future.then((scaffoldContext) =>
-            Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
-              content: Text(S.of(context).youveBeenRedirectedToTheLocalApp),
-            )));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(S.of(context).youveBeenRedirectedToTheLocalApp),
+        ));
         return;
       } else {
         /// seems to be an opened file
