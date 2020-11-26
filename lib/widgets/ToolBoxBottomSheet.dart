@@ -207,12 +207,12 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
 
   Future<Color> pickBackgroundColor() async => await showDialog(
       context: context,
-      child: AlertDialog(
-        content: MaterialPicker(
-          pickerColor: Colors.white,
-          onColorChanged: (newColor) => Navigator.of(context).pop(newColor),
-        ),
-      ));
+      builder: (c) => AlertDialog(
+            content: MaterialPicker(
+              pickerColor: Colors.white,
+              onColorChanged: (newColor) => Navigator.of(context).pop(newColor),
+            ),
+          ));
 }
 
 enum EditingTool {

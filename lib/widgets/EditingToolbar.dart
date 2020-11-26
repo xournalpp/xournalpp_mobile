@@ -197,7 +197,7 @@ class EditingToolBarState extends State<EditingToolBar> {
               onPressed: () {
                 showDialog(
                   context: context,
-                  child: AlertDialog(
+                  builder: (c) => AlertDialog(
                     title: Text(S.of(context).selectColor),
                     content: SingleChildScrollView(
                       child: MaterialPicker(

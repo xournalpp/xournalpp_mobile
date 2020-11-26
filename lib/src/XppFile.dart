@@ -30,7 +30,7 @@ class XppFile {
   /// showing a [open] dialog and pushes a [CanvasPage] to the provided [BuildContext]'s [Navigator]
   static void openAndEdit({BuildContext context}) async {
     //double percentage = 0;
-    ScaffoldFeatureController snackBarController = Scaffold.of(context)
+    ScaffoldFeatureController snackBarController = ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(
             duration: Duration(days: 999),
             content: Text(S.of(context).loadingFile)));

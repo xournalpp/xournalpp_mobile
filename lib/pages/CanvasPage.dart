@@ -56,8 +56,6 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
 
   double pageScale = 1;
 
-  Completer<BuildContext> scaffoldCompleter = Completer();
-
   bool savingFile = false;
 
   Animation<Matrix4> _animationReset;
@@ -141,13 +139,12 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                           }
                         },
                         onNewContent: (newContent) {
-                          setState(() {
-                            /// TODO: manage layers
-                            _file.pages[currentPage].layers[0].content =
-                                new List.from(
-                                    _file.pages[currentPage].layers[0].content)
-                                  ..add(newContent);
-                          });
+                          /// TODO: manage layers
+                          _file.pages[currentPage].layers[0].content =
+                              new List.from(
+                                  _file.pages[currentPage].layers[0].content)
+                                ..add(newContent);
+
                           _pageStackKey.currentState
                               .setPageData(_file.pages[currentPage]);
                         },
@@ -215,16 +212,8 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
         title: Tooltip(
           message: S.of(context).doubleTapToChange,
           child: GestureDetector(
-            onDoubleTap: _showTitleDialog,
-            child: Builder(
-              /// just need a builder here to provide a valid context for background tasks
-              builder: (context) {
-                if (!scaffoldCompleter.isCompleted)
-                  scaffoldCompleter.complete(context);
-                return Text(widget.file?.title ?? S.of(context).newDocument);
-              },
-            ),
-          ),
+              onDoubleTap: _showTitleDialog,
+              child: Text(widget.file?.title ?? S.of(context).newDocument)),
         ),
         actions: [
           savingFile
@@ -304,11 +293,11 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                           if (_file.pages.isEmpty) {
                             _file.pages.add(XppPage.empty());
                             currentPage = 0;
-                            scaffoldCompleter.future.then((scaffoldContext) =>
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(S
-                                        .of(context)
-                                        .thereWereNoMorePagesWeAddedOne))));
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(S
+                                    .of(context)
+                                    .thereWereNoMorePagesWeAddedOne)));
                           }
                         }),
                     onPageMove: (initialIndex, movedTo) => setState(() {
@@ -459,8 +448,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                 ' ${currentPage + 1}' +
                 '.png')
         .exportToStorage();
-    final c = await scaffoldCompleter.future;
-    Scaffold.of(c).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).successfullyShared + ' ' + fileName)));
   }
 
@@ -469,7 +457,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       savingFile = true;
     });
     ScaffoldFeatureController snackBarController =
-        Scaffold.of(await scaffoldCompleter.future).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.of(context).savingFile),
         duration: Duration(days: 999),
@@ -504,7 +492,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       setState(() {
         savingFile = false;
       });
-      Scaffold.of(await scaffoldCompleter.future).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).successfullySaved),
         ),
@@ -514,7 +502,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       setState(() {
         savingFile = false;
       });
-      Scaffold.of(await scaffoldCompleter.future).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
               Text(S.of(context).unfortunatelyThereWasAnErrorSavingThisFile),

@@ -37,7 +37,7 @@ class _DropFileState extends State<DropFile> {
 
                       _fileDropController.getFilename(file).then((filename) {
                         var controller =
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
                               S.of(context).openingFile + filename + ' ...'),
                           duration: Duration(days: 999),
