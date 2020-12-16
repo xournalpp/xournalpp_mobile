@@ -1,0 +1,4 @@
+include: package:flutter/analysis_options_user.yaml
+analyzer:
+ optional-checks:
+   chrome-os-manifest-checks
