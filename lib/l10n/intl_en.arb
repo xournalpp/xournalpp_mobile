@@ -72,7 +72,7 @@
   "confirmDelete": "Confirm delete",
   "areYouSureToDeleteTheSelectedFileThisCannot": "Are you sure to delete the selected file? This cannot be undone.",
   "delete": "Delete",
-  "quota": "Quota",
+  "quota": "Storage",
   "used": "used",
   "mb": "MB",
   "sharePage": "Share page...",

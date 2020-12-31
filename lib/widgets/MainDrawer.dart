@@ -26,75 +26,90 @@ class _MainDrawerState extends State<MainDrawer> {
     return Hero(
       tag: MainDrawer,
       child: Drawer(
-        child: ListView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Semantics(
-              // unnecessary information for screen readers etc.
-              hidden: true,
-              child: UserAccountsDrawerHeader(
-                accountName: Text(
-                  'Xournal++',
-                  style: Theme.of(context).textTheme.headline1,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Semantics(
+                  // unnecessary information for screen readers etc.
+                  hidden: true,
+                  child: UserAccountsDrawerHeader(
+                    accountName: Text(
+                      'Xournal++',
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                    accountEmail: Text(S.of(context).mobileEditionUnofficial,
+                        style: Theme.of(context).textTheme.headline6),
+                    currentAccountPicture: Image.asset('assets/xournalpp.png'),
+                  ),
                 ),
-                accountEmail: Text(S.of(context).mobileEditionUnofficial,
-                    style: Theme.of(context).textTheme.headline6),
-                currentAccountPicture: Image.asset('assets/xournalpp.png'),
-              ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text(S.of(context).home),
+                  onTap: () => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => OpenPage())),
+                ),
+                ListTile(
+                    leading: Icon(Icons.folder),
+                    title: Text(S.of(context).open),
+                    onTap: () => XppFile.openAndEdit(context: context)),
+                ListTile(
+                  leading: Icon(Icons.insert_drive_file),
+                  title: Text(S.of(context).newFile),
+                  onTap: () =>
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => CanvasPage(
+                                file: XppFile.empty(),
+                              ))),
+                ),
+                Divider(),
+              ],
             ),
-            QuotaTile(),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text(S.of(context).home),
-              onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => OpenPage())),
-            ),
-            ListTile(
-                leading: Icon(Icons.folder),
-                title: Text(S.of(context).open),
-                onTap: () => XppFile.openAndEdit(context: context)),
-            ListTile(
-              leading: Icon(Icons.insert_drive_file),
-              title: Text(S.of(context).newFile),
-              onTap: () =>
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => CanvasPage(
-                            file: XppFile.empty(),
-                          ))),
-            ),
-            Divider(),
-            ListTile(
-                leading: Icon(Icons.info),
-                title: Text(S.of(context).about),
-                onTap: () => showAboutDialog(
-                      context: context,
-                      applicationName: S.of(context).aboutXournalMobileEdition,
-                      applicationVersion:
-                          'Version ${info?.version} build ${info?.buildNumber}' ??
-                              'unknown',
-                      applicationIcon:
-                          Image.asset('assets/xournalpp.png', scale: 8),
-                      applicationLegalese: 'Powered by TestApp.schule',
-                      children: [
-                        Image.asset('assets/feature-banner.png', scale: 2),
-                        if (!(Theme.of(context).platform ==
-                                TargetPlatform.iOS) &&
-                            !(Theme.of(context).platform ==
-                                TargetPlatform.macOS))
-                          RaisedButton.icon(
-                              onPressed: () =>
-                                  launch('https://buymeacoff.ee/braid'),
-                              icon: Icon(Icons.emoji_food_beverage),
-                              label: Text('Buy me a cup of tea')),
-                        OutlineButton(
-                            onPressed: () => launch(Uri.encodeFull(
-                                'https://github.com/xournalpp/xournalpp')),
-                            child: Text(S.of(context).aboutXournal)),
-                        OutlineButton(
-                            onPressed: () => launch(Uri.encodeFull(
-                                'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
-                            child: Text(S.of(context).sourceCode))
-                      ],
-                    ))
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                QuotaTile(),
+                Divider(),
+                ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text(S.of(context).about),
+                    onTap: () => showAboutDialog(
+                          context: context,
+                          applicationName:
+                              S.of(context).aboutXournalMobileEdition,
+                          applicationVersion:
+                              'Version ${info?.version} build ${info?.buildNumber}' ??
+                                  'unknown',
+                          applicationIcon:
+                              Image.asset('assets/xournalpp.png', scale: 8),
+                          applicationLegalese: 'Powered by TestApp.schule',
+                          children: [
+                            Image.asset('assets/feature-banner.png', scale: 2),
+                            if (!(Theme.of(context).platform ==
+                                    TargetPlatform.iOS) &&
+                                !(Theme.of(context).platform ==
+                                    TargetPlatform.macOS))
+                              RaisedButton.icon(
+                                  onPressed: () =>
+                                      launch('https://buymeacoff.ee/braid'),
+                                  icon: Icon(Icons.emoji_food_beverage),
+                                  label: Text('Buy me a cup of tea')),
+                            OutlineButton(
+                                onPressed: () => launch(Uri.encodeFull(
+                                    'https://github.com/xournalpp/xournalpp')),
+                                child: Text(S.of(context).aboutXournal)),
+                            OutlineButton(
+                                onPressed: () => launch(Uri.encodeFull(
+                                    'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
+                                child: Text(S.of(context).sourceCode))
+                          ],
+                        )),
+              ],
+            )
           ],
         ),
       ),

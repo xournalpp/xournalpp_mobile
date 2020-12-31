@@ -765,10 +765,10 @@ class S {
     );
   }
 
-  /// `Quota`
+  /// `Storage`
   String get quota {
     return Intl.message(
-      'Quota',
+      'Storage',
       name: 'quota',
       desc: '',
       args: [],
@@ -823,6 +823,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'pt-br'),
     ];
   }
 

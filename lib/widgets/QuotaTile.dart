@@ -21,19 +21,20 @@ class _QuotaTileState extends State<QuotaTile> {
     if (kIsWeb ||
         [TargetPlatform.android, TargetPlatform.iOS]
             .contains(Theme.of(context).platform))
-      return (ListTile(
-        title: quota != null
-            ? Text(S.of(context).quota +
-                ': ${(quota.quota / 1e6).round()} ' +
-                S.of(context).mb +
-                ' - ' +
-                (quota.relative * 100).round().toString() +
-                '% ' +
-                S.of(context).used)
-            : Center(
-                child: CircularProgressIndicator(),
-              ),
-      ));
+      return (quota != null
+          ? Text(
+              S.of(context).quota +
+                  ': ${(quota.quota / 1e6).round()} ' +
+                  S.of(context).mb +
+                  ' - ' +
+                  (quota.relative * 100).round().toString() +
+                  '% ' +
+                  S.of(context).used,
+              style: Theme.of(context).textTheme.subtitle2,
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ));
     else
       return Container();
   }

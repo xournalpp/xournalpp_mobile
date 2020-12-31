@@ -73,7 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageBackground" : MessageLookupByLibrary.simpleMessage("Page background"),
     "pdf" : MessageLookupByLibrary.simpleMessage("PDF"),
     "pen" : MessageLookupByLibrary.simpleMessage("Pen"),
-    "quota" : MessageLookupByLibrary.simpleMessage("Quota"),
+    "quota" : MessageLookupByLibrary.simpleMessage("Storage"),
     "recentFiles" : MessageLookupByLibrary.simpleMessage("Recent files"),
     "ruled" : MessageLookupByLibrary.simpleMessage("Ruled"),
     "save" : MessageLookupByLibrary.simpleMessage("Save"),
