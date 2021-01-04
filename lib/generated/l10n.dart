@@ -814,6 +814,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Open navigation`
+  String get openNavigation {
+    return Intl.message(
+      'Open navigation',
+      name: 'openNavigation',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -823,7 +833,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'de'),
-      Locale.fromSubtags(languageCode: 'pt-br'),
+      Locale.fromSubtags(languageCode: 'pt'),
     ];
   }
 

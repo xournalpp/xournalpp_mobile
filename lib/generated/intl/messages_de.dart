@@ -68,6 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notWorkingYet" : MessageLookupByLibrary.simpleMessage("Funktioniert noch nicht."),
     "okay" : MessageLookupByLibrary.simpleMessage("Okay"),
     "open" : MessageLookupByLibrary.simpleMessage("Öffnen"),
+    "openNavigation" : MessageLookupByLibrary.simpleMessage("Navigation öffnen"),
     "opening" : MessageLookupByLibrary.simpleMessage("Öffne"),
     "openingFile" : MessageLookupByLibrary.simpleMessage("Öffne Datei"),
     "pageBackground" : MessageLookupByLibrary.simpleMessage("Hintergrund"),

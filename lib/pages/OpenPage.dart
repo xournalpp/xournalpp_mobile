@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -27,19 +28,32 @@ class OpenPage extends StatefulWidget {
   _OpenPageState createState() => _OpenPageState();
 }
 
-class _OpenPageState extends State<OpenPage> with AfterInitMixin {
+class _OpenPageState extends State<OpenPage>
+    with AfterInitMixin, TickerProviderStateMixin {
   bool _loadedRecent = false;
   Set recentFiles = Set();
+
+  AnimationController _animationController;
 
   List<SharedMediaFile> _sharedFiles;
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 250), value: 0)
+      ..addListener((() => setState(() {})));
+
     // trying to load fitting locale
 
     try {
-      if (['en', 'de'].contains(window?.locale?.languageCode ?? 'en'))
-        S.load(Locale(window.locale.languageCode));
+      if (['en', 'de', 'pt'].contains(window?.locale?.languageCode ?? 'en'))
+        S.load(Locale(window.locale.languageCode ?? 'en'));
 
       /// TODO: implement custom change of language
       // checking for locale override
@@ -123,8 +137,28 @@ class _OpenPageState extends State<OpenPage> with AfterInitMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      onDrawerChanged: (opened) {
+        _animationController.animateTo(opened ? 1 : 0);
+      },
       drawer: MainDrawer(),
-      appBar: AppBar(title: Text('Xournal++')),
+      appBar: AppBar(
+        title: Text('Xournal++'),
+        leading: Builder(
+          builder: (context) => IconButton(
+            onPressed: () {
+              if (!Scaffold.of(context).isDrawerOpen) {
+                Scaffold.of(context).openDrawer();
+                _animationController.animateTo(1);
+              }
+            },
+            tooltip: S.of(context).openNavigation,
+            icon: AnimatedIcon(
+              icon: AnimatedIcons.menu_arrow,
+              progress: _animationController,
+            ),
+          ),
+        ),
+      ),
       body: ListView(
         children: [
           if (kIsWeb) DropFile(),
