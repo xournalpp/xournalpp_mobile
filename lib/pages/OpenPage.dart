@@ -193,6 +193,18 @@ class _OpenPageState extends State<OpenPage>
             ),
           ),
           ListTile(
+            leading: Icon(Icons.picture_as_pdf),
+            onTap: () async {
+              final _file = await XppFile.importPdf(
+                  pdf: await FilePickerCross.importFromStorage(
+                      type: FileTypeCross.custom,
+                      fileExtension: 'pdf')); // TODO `.pdf`
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (c) => CanvasPage(file: _file)));
+            },
+            title: Text('Import PDF'),
+          ),
+          ListTile(
             title: Text(
               S.of(context).recentFiles,
               style: Theme.of(context).textTheme.headline3,
@@ -247,11 +259,11 @@ class _OpenPageState extends State<OpenPage>
                 content: Text(S.of(context).opening +
                     ' ${data[0].path.substring(data[0].path.lastIndexOf('/') + 1, data[0].path.lastIndexOf('.'))} ...'),
                 actions: [
-                  FlatButton(
+                  TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(S.of(context).background),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       _aborted = true;
@@ -262,34 +274,47 @@ class _OpenPageState extends State<OpenPage>
               ));
       try {
         XppFile file = await XppFile.fromFilePickerCross(
-            openFileByUri(_sharedFiles[0].path), (percentage) => null);
+            openFileByUri(_sharedFiles[0].path, 'xopp'),
+            (percentage) => null,
+            showMissingFileDialog);
         if (_aborted) return;
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => CanvasPage(
                   file: file,
                 )));
       } catch (e) {
-        Navigator.of(context).pop();
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text(S.of(context).errorOpeningFile),
-                  content: SelectableText(
-                      S.of(context).imVerySorryButICouldntReadTheFile +
-                          _sharedFiles[0].path +
-                          S.of(context).areYouSureIHaveThePermissionAndAreYou +
-                          '\n${e.toString()}'),
-                  actions: [
-                    FlatButton(
-                        onPressed: () => Clipboard.setData(
-                            ClipboardData(text: e.toString())),
-                        child: Text(S.of(context).copyErrorMessage)),
-                    FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(S.of(context).okay),
-                    ),
-                  ],
-                ));
+        try {
+          final file = await XppFile.importPdf(
+              pdf: openFileByUri(_sharedFiles[0].path, 'pdf'));
+          if (_aborted) return;
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => CanvasPage(
+                    file: file,
+                  )));
+        } catch (e) {
+          Navigator.of(context).pop();
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text(S.of(context).errorOpeningFile),
+                    content: SelectableText(S
+                            .of(context)
+                            .imVerySorryButICouldntReadTheFile +
+                        _sharedFiles[0].path +
+                        S.of(context).areYouSureIHaveThePermissionAndAreYou +
+                        '\n${e.toString()}'),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Clipboard.setData(
+                              ClipboardData(text: e.toString())),
+                          child: Text(S.of(context).copyErrorMessage)),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(S.of(context).okay),
+                      ),
+                    ],
+                  ));
+        }
       }
     } else {
       print('Unsupported runtimeType: ${data.runtimeType.toString()}');
@@ -328,7 +353,8 @@ class _OpenPageState extends State<OpenPage>
           onTap: () async {
             XppFile file = await XppFile.fromFilePickerCross(
                 await FilePickerCross.fromInternalPath(path: fileInfo['path']),
-                (percent) {});
+                (percent) {},
+                showMissingFileDialog);
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CanvasPage(file: file)));
           },
@@ -356,10 +382,10 @@ class _OpenPageState extends State<OpenPage>
               content: Text(
                   S.of(context).areYouSureToDeleteTheSelectedFileThisCannot),
               actions: [
-                FlatButton(
+                TextButton(
                     onPressed: Navigator.of(context).pop,
                     child: Text(S.of(context).cancel)),
-                FlatButton(
+                TextButton(
                     onPressed: () async {
                       FilePickerCross.delete(path: path);
                       setState(() {
@@ -377,4 +403,8 @@ class _OpenPageState extends State<OpenPage>
               ],
             ));
   }
+}
+
+Future<FilePickerCross> showMissingFileDialog(String path) {
+  throw ('Missing file!');
 }

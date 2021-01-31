@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/pages/CanvasPage.dart';
+import 'package:xournalpp/pages/OpenPage.dart';
 import 'package:xournalpp/src/XppFile.dart';
 
 class DropFile extends StatefulWidget {
@@ -48,7 +49,8 @@ class _DropFileState extends State<DropFile> {
                                       path: filename,
                                       type: FileTypeCross.custom,
                                       fileExtension: 'xopp'),
-                                  (percentage) {})
+                                  (percentage) {},
+                                  showMissingFileDialog)
                               .then((file) {
                             controller.close();
                             setState(() {
@@ -77,14 +79,14 @@ class _DropFileState extends State<DropFile> {
                                               .areYouSureIHaveThePermissionAndAreYou +
                                           '\n${e.toString()}'),
                                       actions: [
-                                        FlatButton(
+                                        TextButton(
                                             onPressed: () => Clipboard.setData(
                                                 ClipboardData(
                                                     text: e.toString())),
                                             child: Text(S
                                                 .of(context)
                                                 .copyErrorMessage)),
-                                        FlatButton(
+                                        TextButton(
                                           onPressed: () =>
                                               Navigator.of(context).pop(),
                                           child: Text(S.of(context).okay),
@@ -114,12 +116,12 @@ class _DropFileState extends State<DropFile> {
                           builder: (context) => AlertDialog(
                                 title: Text(S.of(context).errorLoadingFile),
                                 actions: [
-                                  FlatButton(
+                                  TextButton(
                                     onPressed: () => Clipboard.setData(
                                         ClipboardData(text: message)),
                                     child: Text(S.of(context).copyErrorMessage),
                                   ),
-                                  FlatButton(
+                                  TextButton(
                                       onPressed: () =>
                                           Navigator.of(context).pop(),
                                       child: Text(S.of(context).okay))

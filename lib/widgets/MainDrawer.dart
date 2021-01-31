@@ -93,16 +93,16 @@ class _MainDrawerState extends State<MainDrawer> {
                                     TargetPlatform.iOS) &&
                                 !(Theme.of(context).platform ==
                                     TargetPlatform.macOS))
-                              RaisedButton.icon(
+                              ElevatedButton.icon(
                                   onPressed: () =>
                                       launch('https://buymeacoff.ee/braid'),
                                   icon: Icon(Icons.emoji_food_beverage),
                                   label: Text('Buy me a cup of tea')),
-                            OutlineButton(
+                            OutlinedButton(
                                 onPressed: () => launch(Uri.encodeFull(
                                     'https://github.com/xournalpp/xournalpp')),
                                 child: Text(S.of(context).aboutXournal)),
-                            OutlineButton(
+                            OutlinedButton(
                                 onPressed: () => launch(Uri.encodeFull(
                                     'https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile')),
                                 child: Text(S.of(context).sourceCode))

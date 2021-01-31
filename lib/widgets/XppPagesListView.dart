@@ -115,12 +115,12 @@ class XppPagesListViewState extends State<XppPagesListView> {
                                       ' ${widget.pages.length}.'),
                             ),
                             actions: [
-                              FlatButton(
+                              TextButton(
                                 child: Text(S.of(context).cancel),
                                 onPressed: () =>
                                     Navigator.of(context).pop(false),
                               ),
-                              FlatButton(
+                              TextButton(
                                 child: Text(S.of(context).okay),
                                 onPressed: () {
                                   if (newIndex <= widget.pages.length)

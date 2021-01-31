@@ -29,10 +29,10 @@ class XppTexImage extends XppContent {
                 labelText: 'LaTeX code',
                 helperText: 'No delimiter required')),
         actions: [
-          FlatButton(
+          TextButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: Text('Cancel')),
-          FlatButton(
+          TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: Text('Okay'))
         ],

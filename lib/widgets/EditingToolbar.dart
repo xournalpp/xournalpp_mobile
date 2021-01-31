@@ -210,7 +210,7 @@ class EditingToolBarState extends State<EditingToolBar> {
                       ),
                     ),
                     /*actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         child: const Text('Save'),
                         onPressed: () {
                           setState(() => currentColor = pickerColor);

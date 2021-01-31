@@ -191,7 +191,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                         label: '${(pageScale * 100).round()} %',
                         value: pageScale,
                         onChanged: (newZoom) {
-                          this._setScale(newZoom, animate: false);
+                          _setScale(newZoom, animate: false);
                         },
                       ),
                     ),
@@ -372,11 +372,11 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                       labelText: S.of(context).newTitle)),
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(S.of(context).cancel),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   setState(() {
                     _file.title = titleController.text;
