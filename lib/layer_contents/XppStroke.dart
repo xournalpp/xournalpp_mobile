@@ -55,7 +55,10 @@ class XppStroke extends XppContent {
       size: Size(
           bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),
       foregroundPainter: XppStrokePainter(
-          points: points, color: colorToUse, topLeft: getOffset()),
+          points: points,
+          color: colorToUse,
+          topLeft: getOffset(),
+          smoothPressure: tool == XppStrokeTool.PEN),
     );
   }
 
@@ -126,8 +129,15 @@ class XppStrokePainter extends CustomPainter {
   final Color color;
   @required
   final Offset topLeft;
+  @required
+  final bool smoothPressure;
 
-  XppStrokePainter({this.points, this.color, this.topLeft});
+  XppStrokePainter({
+    this.points,
+    this.color,
+    this.topLeft,
+    this.smoothPressure,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -145,25 +155,45 @@ class XppStrokePainter extends CustomPainter {
       path.lineTo(offset.dx - topLeft.dx, offset.dy - topLeft.dy);
       canvas.drawPath(path, paint);
     }
-    for (int i = 1; i < points.length; i++) {
-      var paint = Paint()
-        ..color = color
-        ..strokeWidth = points[i]?.width ?? 5
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round;
+    if (smoothPressure) {
+      for (int i = 1; i < points.length; i++) {
+        var paint = Paint()
+          ..color = color
+          ..strokeWidth = points[i]?.width ?? 5
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round;
+
+        var path = Path();
+        path.moveTo(points[i - 1].offset.dx - topLeft.dx,
+            points[i - 1].offset.dy - topLeft.dy);
+        Offset offset = points[i].offset;
+        path.lineTo(offset.dx - topLeft.dx, offset.dy - topLeft.dy);
+        canvas.drawPath(path, paint);
+      }
+    } else {
+      double width = 0;
 
       var path = Path();
-      path.moveTo(points[i - 1].offset.dx - topLeft.dx,
-          points[i - 1].offset.dy - topLeft.dy);
-      Offset offset = points[i].offset;
-      path.lineTo(offset.dx - topLeft.dx, offset.dy - topLeft.dy);
+      path.moveTo(
+          points[0].offset.dx - topLeft.dx, points[0].offset.dy - topLeft.dy);
+      for (int i = 1; i < points.length; i++) {
+        Offset offset = points[i].offset;
+        path.lineTo(offset.dx - topLeft.dx, offset.dy - topLeft.dy);
+        width += points[i].width;
+      }
+      width /= points.length;
+      var paint = Paint()
+        ..color = color
+        ..strokeWidth = width
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
       canvas.drawPath(path, paint);
     }
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+    return true; //!((oldDelegate is XppStrokePainter) && oldDelegate.points == points);
   }
 }
 

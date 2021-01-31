@@ -43,8 +43,11 @@ class PointerListener extends StatefulWidget {
 class PointerListenerState extends State<PointerListener> {
   List<XppStrokePoint> points = [];
 
+  XppStrokeTool tool = XppStrokeTool.PEN;
+
   @override
   Widget build(BuildContext context) {
+    print(tool == XppStrokeTool.PEN);
     return MouseRegion(
       onHover: (event) {
         widget.onDeviceChange(device: event.device, kind: event.kind);
@@ -54,13 +57,15 @@ class PointerListenerState extends State<PointerListener> {
         behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
-          if (isPen(data)) {
+          if (tool == XppStrokeTool.PEN || tool == XppStrokeTool.HIGHLIGHTER) {
+            double width = (data.pressure == 0
+                ? widget.strokeWidth
+                : data.pressure * widget.strokeWidth);
+            if (tool == XppStrokeTool.HIGHLIGHTER) width *= 5;
             points.add(XppStrokePoint(
                 x: data.localPosition.dx,
                 y: data.localPosition.dy,
-                width: (data.pressure == 0
-                    ? widget.strokeWidth
-                    : data.pressure * widget.strokeWidth)));
+                width: width));
             setState(() {});
           }
 
@@ -71,16 +76,22 @@ class PointerListenerState extends State<PointerListener> {
                 radius: widget.strokeWidth);
         },
         onPointerDown: (data) {
+          setState(() {
+            tool = getToolFromPointer(data);
+          });
           widget.onDeviceChange(device: data.device, kind: data.kind);
         },
         onPointerUp: (data) {
-          saveStroke();
+          saveStroke(tool);
           points.clear();
         },
         onPointerCancel: (data) {
           points.clear();
         },
         onPointerSignal: (data) {
+          setState(() {
+            tool = getToolFromPointer(data);
+          });
           widget.onDeviceChange(device: data.device, kind: data.kind);
         },
         child: Stack(
@@ -91,7 +102,10 @@ class PointerListenerState extends State<PointerListener> {
                 /*size: Size(
         bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),*/
                 foregroundPainter: XppStrokePainter(
-                    points: points, color: widget.color, topLeft: Offset(0, 0)),
+                    points: points,
+                    color: widget.color,
+                    topLeft: Offset(0, 0),
+                    smoothPressure: tool == XppStrokeTool.PEN),
               ),
           ],
         ),
@@ -109,31 +123,38 @@ class PointerListenerState extends State<PointerListener> {
     });
   }
 
-  void saveStroke() {
-    /// TODO: different colors
-    /// TODO: different tools
+  void saveStroke(XppStrokeTool tool) {
     if (points.isNotEmpty) {
-      XppStroke stroke = XppStroke(
-          tool: XppStrokeTool.PEN,
-          color: widget.color,
-          points: List.from(points));
+      XppStroke stroke =
+          XppStroke(tool: tool, color: widget.color, points: List.from(points));
       widget.onNewContent(stroke);
     }
   }
 
-  bool isPen(PointerMoveEvent data) {
+  bool isPen(PointerEvent data) {
     return (widget.toolData.keys.contains(data.kind) &&
             widget.toolData[data.kind] == EditingTool.STYLUS) ||
         (!widget.toolData.keys.contains(data.kind) &&
-            data.kind == PointerDeviceKind.stylus) ||
-        (widget.toolData.keys.contains(data.kind) &&
-            widget.toolData[data.kind] == EditingTool.HIGHLIGHT);
+            data.kind == PointerDeviceKind.stylus);
   }
 
-  bool isEraser(PointerMoveEvent data) {
+  bool isHighlighter(PointerEvent data) {
+    return (widget.toolData.keys.contains(data.kind) &&
+        widget.toolData[data.kind] == EditingTool.HIGHLIGHT);
+  }
+
+  bool isEraser(PointerEvent data) {
     return (widget.toolData.keys.contains(data.kind) &&
             widget.toolData[data.kind] == EditingTool.ERASER) ||
         (!widget.toolData.keys.contains(data.kind) &&
             data.kind == PointerDeviceKind.invertedStylus);
+  }
+
+  XppStrokeTool getToolFromPointer(PointerEvent data) {
+    XppStrokeTool tool = XppStrokeTool.PEN;
+    if (isHighlighter(data))
+      tool = XppStrokeTool.HIGHLIGHTER;
+    else if (isEraser(data)) tool = XppStrokeTool.ERASER;
+    return tool;
   }
 }

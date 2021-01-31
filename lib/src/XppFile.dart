@@ -33,16 +33,18 @@ class XppFile {
   static Future<XppFile> importPdf({FilePickerCross pdf}) async {
     final pageCount = await pdfPageCount(pdf);
     pdf.saveToPath(path: pdf.path);
-    return XppFile.empty(title: pdf.fileName)
-      ..pages.clear()
-      ..pages.addAll(List.generate(
-          pageCount,
-          (index) => XppPage.empty()
-            ..background = XppBackgroundPdf(
-                onUnavailable: (p) =>
-                    throw ("$p is not available even though just imported"),
-                page: index,
-                filename: pdf.path)));
+    XppFile file = XppFile.empty(title: pdf.fileName)..pages.clear();
+    for (int i = 0; i < pageCount; i++) {
+      final size = await pdfPageSize(pdf, i);
+      file.pages.add(XppPage.empty()
+        ..pageSize = size
+        ..background = XppBackgroundPdf(
+            onUnavailable: (p) =>
+                throw ("$p is not available even though just imported"),
+            page: i,
+            filename: pdf.path));
+    }
+    return file;
   }
 
   /// showing a [open] dialog and pushes a [CanvasPage] to the provided [BuildContext]'s [Navigator]

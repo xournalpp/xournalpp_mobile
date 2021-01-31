@@ -242,9 +242,9 @@ packages:
   file_picker_cross:
     dependency: "direct main"
     description:
-      name: file_picker_cross
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../file_picker_cross"
+      relative: true
+    source: path
     version: "4.2.8"
   fixnum:
     dependency: transitive

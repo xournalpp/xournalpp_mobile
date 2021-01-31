@@ -109,8 +109,9 @@ class _PDfBackgroundWidgetState extends State<PDfBackgroundWidget>
         }).catchError((e) => widget.provider
                 .onUnavailable(widget.provider.filename)
                 .then((value) => pdfImage(value, widget.provider.page))),
-        builder: (context, snapshot) =>
-            (snapshot.hasData) ? Image.memory(snapshot.data) : Container());
+        builder: (context, snapshot) => (snapshot.hasData)
+            ? Image.memory(snapshot.data)
+            : Center(child: CircularProgressIndicator()));
   }
 
   @override
