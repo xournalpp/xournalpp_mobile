@@ -43,7 +43,7 @@ class PointerListener extends StatefulWidget {
 class PointerListenerState extends State<PointerListener> {
   List<XppStrokePoint> points = [];
 
-  XppStrokeTool tool = XppStrokeTool.PEN;
+  XppStrokeTool tool;
 
   @override
   Widget build(BuildContext context) {
