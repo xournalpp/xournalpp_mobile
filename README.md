@@ -44,6 +44,7 @@ sudo snap install xournalpp-mobile
 - [ ] Whiteout eraser
 - [x] Saving
 - [x] Basic editing
+- [x] Basic PDF rendering
 
 ## Known issues
 
