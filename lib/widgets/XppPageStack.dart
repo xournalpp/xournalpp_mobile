@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:xournalpp/generated/l10n.dart';
+import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPage.dart';
 
@@ -21,6 +22,9 @@ class XppPageStackState extends State<XppPageStack>
   GlobalKey pngKey = GlobalKey();
   XppPage page;
 
+  XppBackground _lastKnownBackground;
+  Widget background = Container();
+
   @override
   void initState() {
     page = widget.page;
@@ -30,32 +34,23 @@ class XppPageStackState extends State<XppPageStack>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    List<Widget> children = [];
+
+    if (page.background != null && _lastKnownBackground != page.background) {
+      _lastKnownBackground = page.background;
+      background = page.background.render();
+    }
+    children.add(background);
+
+    children.addAll(page.layers.map((e) => XppLayerStack(
+          layer: e,
+        )));
     return RepaintBoundary(
         key: pngKey,
         child: SizedBox(
-          width: widget.page.pageSize.width,
-          height: widget.page.pageSize.height,
-          child: (Stack(
-              children: List.generate(widget.page.layers.length + 1, (index) {
-            if (index == 0) return widget.page.background.render();
-            XppLayer currentLayer = widget.page.layers[index - 1];
-            return Stack(
-              children: List.generate(currentLayer.content.length, (n) {
-                XppContent currentContent = currentLayer.content[n];
-                if (currentContent == null ||
-                    currentContent.getOffset() == null ||
-                    currentContent.render() == null) {
-                  return (Container());
-                }
-                return Positioned(
-                  child: currentContent.render() ?? Text(S.of(context).error),
-                  top: currentContent.getOffset()?.dy ?? 0,
-                  left: currentContent.getOffset()?.dx ?? 0,
-                );
-              }),
-            );
-          }))),
-        ));
+            width: page.pageSize.width,
+            height: page.pageSize.height,
+            child: (Stack(children: children))));
   }
 
   void setPageData(XppPage pageData) {
@@ -72,4 +67,40 @@ class XppPageStackState extends State<XppPageStack>
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void didUpdateWidget(covariant XppPageStack oldWidget) {
+    setState(() {});
+    super.didUpdateWidget(oldWidget);
+  }
+}
+
+class XppLayerStack extends StatefulWidget {
+  final XppLayer layer;
+
+  const XppLayerStack({Key key, this.layer}) : super(key: key);
+  @override
+  _XppLayerStackState createState() => _XppLayerStackState();
+}
+
+class _XppLayerStackState extends State<XppLayerStack> {
+  Map<XppContent, Widget> renderedContent = {};
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = [];
+    widget.layer.content.forEach((element) {
+      if (element == null) return;
+      if (!renderedContent.keys.contains(element)) {
+        renderedContent[element] = Positioned(
+          child: element.render() ?? Text(S.of(context).error),
+          top: element.getOffset()?.dy ?? 0,
+          left: element.getOffset()?.dx ?? 0,
+        );
+      }
+      children.add(renderedContent[element]);
+    });
+    return Stack(
+      children: children,
+    );
+  }
 }

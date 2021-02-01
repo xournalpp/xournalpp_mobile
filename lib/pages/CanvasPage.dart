@@ -284,8 +284,11 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                 XppPagesListView(
                     key: pageListViewKey,
                     pages: _file.pages,
-                    onPageChange: (newPage) =>
-                        setState(() => currentPage = newPage),
+                    onPageChange: (newPage) {
+                      setState(() => currentPage = newPage);
+                      _pageStackKey.currentState
+                          .setPageData(_file.pages[currentPage]);
+                    },
                     onPageDelete: (deletedIndex) => setState(() {
                           _file.pages.removeAt(deletedIndex);
                           if (_file.pages.length >= currentPage)
@@ -415,9 +418,13 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
   }
 
   void _setZoomableState() {
-    _zoomableKey.currentState.setState(() => _zoomableKey.currentState.enabled =
-        _toolData[_currentDevice] == null ||
-            _toolData[_currentDevice] == EditingTool.MOVE);
+    final zoomEnabled = _toolData[_currentDevice] == null ||
+        _toolData[_currentDevice] == EditingTool.MOVE;
+    _zoomableKey.currentState
+        .setState(() => _zoomableKey.currentState.enabled = zoomEnabled);
+    _pointerListenerKey.currentState.setState(() {
+      _pointerListenerKey.currentState.drawingEnabled = !zoomEnabled;
+    });
   }
 
   void _setScale(double newZoom, {animate = true}) {

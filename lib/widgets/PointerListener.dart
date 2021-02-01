@@ -41,13 +41,14 @@ class PointerListener extends StatefulWidget {
 }
 
 class PointerListenerState extends State<PointerListener> {
+  bool drawingEnabled;
+
   List<XppStrokePoint> points = [];
 
   XppStrokeTool tool;
 
   @override
   Widget build(BuildContext context) {
-    print(tool == XppStrokeTool.PEN);
     return MouseRegion(
       onHover: (event) {
         widget.onDeviceChange(device: event.device, kind: event.kind);
@@ -57,6 +58,7 @@ class PointerListenerState extends State<PointerListener> {
         behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
+          if (!drawingEnabled) return;
           if (tool == XppStrokeTool.PEN || tool == XppStrokeTool.HIGHLIGHTER) {
             double width = (data.pressure == 0
                 ? widget.strokeWidth

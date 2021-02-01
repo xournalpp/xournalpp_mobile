@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:after_init/after_init.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

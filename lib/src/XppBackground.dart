@@ -82,7 +82,7 @@ class XppBackgroundPdf extends XppBackground {
   XmlElement toXmlElement() {
     XmlElement node = XmlElement(XmlName('background'), [
       XmlAttribute(XmlName('type'), 'pdf'),
-      XmlAttribute(XmlName('pageno'), "page"),
+      XmlAttribute(XmlName('pageno'), page.toString()),
       XmlAttribute(XmlName('filename'), filename),
     ]);
     return (node);
