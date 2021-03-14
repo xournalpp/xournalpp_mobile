@@ -25,8 +25,9 @@ class XppFile {
   XppFile({this.title, this.pages, this.previewImage});
 
   /// create an empty [XppFile]
-  static XppFile empty({String title, XppPageSize pageSize}) {
-    return XppFile(title: title, pages: [XppPage.empty()]);
+  static XppFile empty({String title, XppPageSize pageSize, Color background}) {
+    return XppFile(
+        title: title, pages: [XppPage.empty(background: background)]);
   }
 
   /// creates an [XppFile] from a PDF document opened in a [FilePickerCross]
@@ -249,6 +250,7 @@ class XppFile {
         layer.findElements('teximage').forEach((texElement) {
           content[int.parse(texElement.getAttribute('counter'))] = XppTexImage(
               text: texElement.getAttribute('text').trim(),
+              color: parseColor(texElement.getAttribute('color').trim()),
               topLeft: Offset(double.parse(texElement.getAttribute('left')),
                   double.parse(texElement.getAttribute('top'))),
               bottomRight: Offset(

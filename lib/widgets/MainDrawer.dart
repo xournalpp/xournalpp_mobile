@@ -63,7 +63,8 @@ class _MainDrawerState extends State<MainDrawer> {
                   onTap: () =>
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => CanvasPage(
-                                file: XppFile.empty(),
+                                file: XppFile.empty(
+                                    background: Theme.of(context).cardColor),
                               ))),
                 ),
                 Divider(),

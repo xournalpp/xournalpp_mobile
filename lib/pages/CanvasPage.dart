@@ -27,6 +27,7 @@ import 'package:xournalpp/widgets/ZoomableWidget.dart';
 class CanvasPage extends StatefulWidget {
   CanvasPage({Key key, this.file, this.filePath}) : super(key: key);
 
+  @required
   final XppFile file;
   final String filePath;
 
@@ -294,7 +295,8 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                           if (_file.pages.length >= currentPage)
                             currentPage = _file.pages.length - 1;
                           if (_file.pages.isEmpty) {
-                            _file.pages.add(XppPage.empty());
+                            _file.pages.add(XppPage.empty(
+                                background: Theme.of(context).cardColor));
                             currentPage = 0;
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -313,7 +315,8 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                   heroTag: 'AddXppPage',
                   onPressed: () => setState(() {
                     currentPage++;
-                    _file.pages.insert(currentPage, XppPage.empty());
+                    _file.pages.insert(currentPage,
+                        XppPage.empty(background: Theme.of(context).cardColor));
 
                     _pageStackKey.currentState
                         .setPageData(_file.pages[currentPage]);
@@ -353,7 +356,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
   }
 
   void _setMetadata() {
-    _file = widget.file ?? XppFile.empty();
+    _file = widget.file;
     //if (widget.filePath != null) filePath = widget.filePath;
   }
 
@@ -470,41 +473,41 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
         duration: Duration(days: 999),
       ),
     );
-    try {
-      if (_file.title == null) await _showTitleDialog();
-      String path = _file.title + '.xopp';
-      _file.previewImage = kIsWeb
-          ? kTransparentImage
-          : await pageListViewKey.currentState.getPng(0);
-      FilePickerCross file = _file.toFilePickerCross(filePath: path);
-      if (export)
-        file.exportToStorage();
-      else
-        file.saveToPath(path: path);
+    //try {
+    if (_file.title == null) await _showTitleDialog();
+    String path = _file.title + '.xopp';
+    _file.previewImage = kIsWeb
+        ? kTransparentImage
+        : await pageListViewKey.currentState.getPng(0);
+    FilePickerCross file = _file.toFilePickerCross(filePath: path);
+    if (export)
+      file.exportToStorage();
+    else
+      file.saveToPath(path: path);
 
-      /// starting async task to save recent files list
-      SharedPreferences.getInstance().then((prefs) {
-        String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
-        Set files = (jsonDecode(jsonData) as Iterable).toSet();
-        files.removeWhere((element) => element['path'] == path);
-        files.add({
-          'preview': base64Encode(_file.previewImage),
-          'name': _file.title,
-          'path': path
-        });
-        jsonData = jsonEncode(files.toList());
-        prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
+    /// starting async task to save recent files list
+    SharedPreferences.getInstance().then((prefs) {
+      String jsonData = prefs.getString(PreferencesKeys.kRecentFiles) ?? '[]';
+      Set files = (jsonDecode(jsonData) as Iterable).toSet();
+      files.removeWhere((element) => element['path'] == path);
+      files.add({
+        'preview': base64Encode(_file.previewImage),
+        'name': _file.title,
+        'path': path
       });
-      snackBarController.close();
-      setState(() {
-        savingFile = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(S.of(context).successfullySaved),
-        ),
-      );
-    } catch (e) {
+      jsonData = jsonEncode(files.toList());
+      prefs.setString(PreferencesKeys.kRecentFiles, jsonData);
+    });
+    snackBarController.close();
+    setState(() {
+      savingFile = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(S.of(context).successfullySaved),
+      ),
+    );
+    /*} catch (e) {
       snackBarController.close();
       setState(() {
         savingFile = false;
@@ -515,7 +518,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
               Text(S.of(context).unfortunatelyThereWasAnErrorSavingThisFile),
         ),
       );
-    }
+    }*/
   }
 
   void _onAnimationReset() {

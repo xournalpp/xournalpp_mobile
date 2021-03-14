@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
+import 'package:xournalpp/layer_contents/XppTexImage.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
@@ -59,11 +60,11 @@ class PointerListenerState extends State<PointerListener> {
         onPointerMove: (data) {
           widget.onDeviceChange(device: data.device, kind: data.kind);
           if (!drawingEnabled) return;
-          if (tool == XppStrokeTool.PEN || tool == XppStrokeTool.HIGHLIGHTER) {
+          if (isPen(data) || isHighlighter(data)) {
             double width = (data.pressure == 0
                 ? widget.strokeWidth
                 : data.pressure * widget.strokeWidth);
-            if (tool == XppStrokeTool.HIGHLIGHTER) width *= 5;
+            if (isHighlighter(data)) width *= 5;
             points.add(XppStrokePoint(
                 x: data.localPosition.dx,
                 y: data.localPosition.dy,
@@ -82,6 +83,15 @@ class PointerListenerState extends State<PointerListener> {
             tool = getToolFromPointer(data);
           });
           widget.onDeviceChange(device: data.device, kind: data.kind);
+          if (isLaTeX(data)) {
+            XppTexImage.edit(
+                    context: context,
+                    topLeft: data.localPosition,
+                    color: widget.color)
+                .then((value) {
+              widget.onNewContent(value);
+            });
+          }
         },
         onPointerUp: (data) {
           saveStroke(tool);
@@ -150,6 +160,16 @@ class PointerListenerState extends State<PointerListener> {
             widget.toolData[data.kind] == EditingTool.ERASER) ||
         (!widget.toolData.keys.contains(data.kind) &&
             data.kind == PointerDeviceKind.invertedStylus);
+  }
+
+  bool isText(PointerEvent data) {
+    return (widget.toolData.keys.contains(data.kind) &&
+        widget.toolData[data.kind] == EditingTool.TEXT);
+  }
+
+  bool isLaTeX(PointerEvent data) {
+    return (widget.toolData.keys.contains(data.kind) &&
+        widget.toolData[data.kind] == EditingTool.LATEX);
   }
 
   XppStrokeTool getToolFromPointer(PointerEvent data) {

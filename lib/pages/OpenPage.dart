@@ -214,8 +214,10 @@ class _OpenPageState extends State<OpenPage>
             : [Center(child: CircularProgressIndicator())]),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => CanvasPage())),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CanvasPage(
+                  file: XppFile.empty(background: Theme.of(context).cardColor),
+                ))),
         label: Text(S.of(context).newNotebook),
         icon: Icon(Icons.note_add),
       ),
@@ -226,6 +228,7 @@ class _OpenPageState extends State<OpenPage>
     if (data == null ||
         lastIntentData == data ||
         data is List &&
+            data.isNotEmpty &&
             lastIntentData is List &&
             data[0].path == lastIntentData[0].path) return;
     lastIntentData = data;
@@ -249,7 +252,7 @@ class _OpenPageState extends State<OpenPage>
         _sharedFiles = data;
       }
     }
-    if (data is List) {
+    if (data is List && data.isNotEmpty) {
       bool _aborted = false;
       showDialog(
           context: context,

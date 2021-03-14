@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:katex_flutter/katex_flutter.dart';
 import 'package:xml/xml.dart';
+import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/layer_contents/XppText.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 
@@ -13,10 +14,15 @@ class XppTexImage extends XppContent {
   @required
   final String text;
 
-  XppTexImage({this.text, this.topLeft, this.bottomRight});
+  Color color;
+
+  XppTexImage({this.text, this.topLeft, this.bottomRight, this.color});
 
   static Future<XppTexImage> edit(
-      {BuildContext context, String text = 'x^2', Offset topLeft}) async {
+      {BuildContext context,
+      String text = 'x^2',
+      Offset topLeft,
+      Color color}) async {
     var laTeXController = TextEditingController(text: text);
     bool result = await showDialog(
       context: context,
@@ -39,12 +45,17 @@ class XppTexImage extends XppContent {
       ),
     );
     if (result == false) throw (UnsupportedError('Aborted.'));
-    return (XppTexImage(text: laTeXController.text, topLeft: topLeft));
+    return (XppTexImage(
+        text: laTeXController.text, topLeft: topLeft, color: color));
   }
 
   @override
   Widget render() {
-    return new KaTeX(laTeXCode: Text('\$\\displaystyle{$text}\$'));
+    print(color);
+    return DefaultTextStyle(
+      style: TextStyle(color: color, fontSize: 18), // TODO: implement text size
+      child: new KaTeX(laTeXCode: Text('\$\\displaystyle{$text}\$')),
+    );
   }
 
   @override
@@ -53,10 +64,11 @@ class XppTexImage extends XppContent {
   @override
   XmlElement toXmlElement() => XmlElement(XmlName('teximage'), [
         XmlAttribute(XmlName('text'), text),
+        XmlAttribute(XmlName('color'), color.toHexTriplet()),
         XmlAttribute(XmlName('left'), topLeft.dx.toString()),
-        XmlAttribute(XmlName('right'), bottomRight.dx.toString()),
+        XmlAttribute(XmlName('right'), bottomRight?.dx?.toString() ?? '0'),
         XmlAttribute(XmlName('top'), topLeft.dy.toString()),
-        XmlAttribute(XmlName('bottom'), bottomRight.dy.toString()),
+        XmlAttribute(XmlName('bottom'), bottomRight?.dy?.toString() ?? '0'),
       ], [
         XmlText(XppText.encodeText(text))
       ]);

@@ -8,9 +8,10 @@ class XppPage {
   XppPage({this.pageSize, this.background, this.layers});
 
   /// create an empty page
-  static XppPage empty() => XppPage(
+  static XppPage empty({Color background}) => XppPage(
       pageSize: XppPageSize.a4,
-      background: XppBackgroundSolidLined(size: XppPageSize.a4),
+      background:
+          XppBackgroundSolidLined(size: XppPageSize.a4, color: background),
       layers: [XppLayer.empty()]);
 
   XppPageSize pageSize;
