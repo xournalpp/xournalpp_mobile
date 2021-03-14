@@ -49,7 +49,7 @@ sudo snap install xournalpp-mobile
 ## Known issues
 
 - **Immense memory consumption**: *If you open immense files, you get immense memory consumption. That's logic. Usually, Xournal++ Mobile takes twice the file size plus around 50MB for itself.*
-- But **why** does it take twice the memory?: *No idea.*
+- But **why** does it take twice the memory?: *No idea. ¯\\\_(ツ)_/¯*
 - **The snap does not start on Linux when using wayland**: *Please set the environment variable `DISABLE_WAYLAND=1` before you start Xournal++ Mobile.*
 
 ## Getting started
