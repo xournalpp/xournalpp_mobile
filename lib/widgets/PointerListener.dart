@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/layer_contents/XppTexImage.dart';
+import 'package:xournalpp/layer_contents/XppText.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
@@ -24,6 +25,8 @@ class PointerListener extends StatefulWidget {
   final Color color;
   @required
   final Function({Offset coordinates, double radius}) filterEraser;
+  @required
+  final Function() removeLastContent;
 
   const PointerListener(
       {Key key,
@@ -34,7 +37,8 @@ class PointerListener extends StatefulWidget {
       this.onDeviceChange,
       this.strokeWidth,
       this.color,
-      this.filterEraser})
+      this.filterEraser,
+      this.removeLastContent})
       : super(key: key);
 
   @override
@@ -48,6 +52,10 @@ class PointerListenerState extends State<PointerListener> {
 
   XppStrokeTool tool;
 
+  Map<int, DateTime> pointerTimestamps = Map();
+
+  bool poppedContentForCurrentPointer = false;
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -58,6 +66,7 @@ class PointerListenerState extends State<PointerListener> {
       child: Listener(
         behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
+          if (_detectTwoFingerGesture(data)) return;
           widget.onDeviceChange(device: data.device, kind: data.kind);
           if (!drawingEnabled) return;
           if (isPen(data) || isHighlighter(data)) {
@@ -79,6 +88,8 @@ class PointerListenerState extends State<PointerListener> {
                 radius: widget.strokeWidth);
         },
         onPointerDown: (data) {
+          if (_detectTwoFingerGesture(data, shouldPop: true)) return;
+
           setState(() {
             tool = getToolFromPointer(data);
           });
@@ -92,13 +103,21 @@ class PointerListenerState extends State<PointerListener> {
               widget.onNewContent(value);
             });
           }
+          if (isText(data)) {
+            XppText(
+                offset: data.localPosition,
+                color: widget.color,
+                size: widget.strokeWidth * 3);
+          }
         },
         onPointerUp: (data) {
-          saveStroke(tool);
+          if (!poppedContentForCurrentPointer) saveStroke(tool);
+          poppedContentForCurrentPointer = false;
           points.clear();
         },
         onPointerCancel: (data) {
           points.clear();
+          poppedContentForCurrentPointer = false;
         },
         onPointerSignal: (data) {
           setState(() {
@@ -178,5 +197,23 @@ class PointerListenerState extends State<PointerListener> {
       tool = XppStrokeTool.HIGHLIGHTER;
     else if (isEraser(data)) tool = XppStrokeTool.ERASER;
     return tool;
+  }
+
+  bool _detectTwoFingerGesture(PointerEvent data, {bool shouldPop = false}) {
+    // detecting two-finger gestures
+    final timestamp = DateTime.now();
+    bool foundCloseOffset = false;
+    bool shouldRemoveContent = false;
+    pointerTimestamps.remove(data.device);
+    pointerTimestamps.forEach((key, value) {
+      if (value.difference(timestamp).inMilliseconds.abs() < 100) {
+        foundCloseOffset = true;
+      }
+    });
+    if (shouldPop && foundCloseOffset && !poppedContentForCurrentPointer) {
+      poppedContentForCurrentPointer = true;
+    }
+    pointerTimestamps[data.device] = timestamp;
+    return foundCloseOffset;
   }
 }

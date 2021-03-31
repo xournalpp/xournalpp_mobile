@@ -56,12 +56,15 @@ class XppPagesListViewState extends State<XppPagesListView> {
                           ? Border.all(color: Colors.red)
                           : Border.all(color: Color.fromARGB(1, 0, 0, 0)),
                       borderRadius: BorderRadius.circular(4)),
-                  child: AspectRatio(
-                    aspectRatio: page.pageSize.ratio,
-                    child: FittedBox(
-                      child: XppPageStack(
-                        key: pageKeys[i],
-                        page: page,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: AspectRatio(
+                      aspectRatio: page.pageSize.ratio,
+                      child: FittedBox(
+                        child: XppPageStack(
+                          key: pageKeys[i],
+                          page: page,
+                        ),
                       ),
                     ),
                   ),

@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/XppPageContentWidget.dart';
+import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppText extends XppContent {
   @required
@@ -21,9 +24,11 @@ class XppText extends XppContent {
   Offset getOffset() => offset;
 
   @override
-  Widget render() {
-    return DefaultTextStyle.merge(
-        style: TextStyle(color: color), child: new SelectableText(text));
+  XppPageContentWidget render() {
+    return XppPageContentWidget(
+      child: RichTextField(),
+      tool: EditingTool.TEXT,
+    );
   }
 
   @override
@@ -43,4 +48,60 @@ class XppText extends XppContent {
     text.replaceAll(r'>', r'&gt;');
     return text;
   }
+}
+
+class RichTextField extends StatefulWidget {
+  final Function(String text) onChange;
+
+  final String text;
+
+  final double size;
+
+  final Color color;
+
+  const RichTextField(
+      {Key key, this.onChange, this.text, this.size, this.color})
+      : super(key: key);
+
+  @override
+  _RichTextFieldState createState() => _RichTextFieldState();
+}
+
+class _RichTextFieldState extends State<RichTextField> {
+  //ZefyrController _controller;
+  TextEditingController _controller;
+  FocusNode _focusNode;
+
+  bool active = false;
+
+  @override
+  void initState() {
+    _controller = TextEditingController(text: widget.text);
+    //_controller = ZefyrController(
+    //   NotusDocument.fromDelta(NotusMarkdownCodec().decode(widget.text)));
+    _focusNode = FocusNode();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return XppPageContentWidget(
+      child: TextField(
+        controller: _controller,
+        focusNode: _focusNode,
+      ),
+    );
+    /*return ZefyrEditor(
+      controller: _controller,
+      focusNode: _focusNode,
+      autofocus: true,
+      mode: active ? ZefyrMode.edit : ZefyrMode.select,
+    );*/
+  }
+
+  /*@override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }*/
 }

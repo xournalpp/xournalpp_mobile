@@ -4,6 +4,8 @@ import 'package:xml/xml.dart';
 import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/layer_contents/XppText.dart';
 import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/XppPageContentWidget.dart';
+import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppTexImage extends XppContent {
   Offset topLeft = Offset(0, 0);
@@ -50,11 +52,16 @@ class XppTexImage extends XppContent {
   }
 
   @override
-  Widget render() {
+  XppPageContentWidget render() {
     print(color);
-    return DefaultTextStyle(
-      style: TextStyle(color: color, fontSize: 18), // TODO: implement text size
-      child: new KaTeX(laTeXCode: Text('\$\\displaystyle{$text}\$')),
+    return XppPageContentWidget(
+      child: DefaultTextStyle(
+        style:
+            TextStyle(color: color, fontSize: 18), // TODO: implement text size
+        child: new KaTeX(laTeXCode: Text('\$\\displaystyle{$text}\$')),
+      ),
+      onSelected: () => print('Edit LaTeX!'),
+      tool: EditingTool.LATEX,
     );
   }
 

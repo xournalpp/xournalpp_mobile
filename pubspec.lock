@@ -63,7 +63,7 @@ packages:
       name: browser_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.8"
+    version: "0.1.9"
   build:
     dependency: transitive
     description:
@@ -112,7 +112,7 @@ packages:
       name: catex
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+7"
+    version: "0.0.1+8"
   characters:
     dependency: transitive
     description:
@@ -224,7 +224,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "5.2.1"
   file_chooser:
     dependency: transitive
     description:
@@ -386,7 +386,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   katex_flutter:
     dependency: "direct main"
     description:
@@ -449,7 +449,7 @@ packages:
       name: node_io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   package_config:
     dependency: transitive
     description:
@@ -491,7 +491,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.27"
+    version: "1.6.28"
   path_provider_linux:
     dependency: transitive
     description:
@@ -575,7 +575,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "3.0.13"
   pub_semver:
     dependency: transitive
     description:
@@ -610,7 +610,7 @@ packages:
       name: receive_sharing_intent
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.4"
+    version: "1.4.5"
   share:
     dependency: transitive
     description:
@@ -881,7 +881,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   xdg_directories:
     dependency: transitive
     description:

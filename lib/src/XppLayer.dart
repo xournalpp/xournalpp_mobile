@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
 
+import 'XppPageContentWidget.dart';
+
 class XppLayer {
   XppLayer({this.content});
 
@@ -15,7 +17,20 @@ class XppLayer {
 abstract class XppContent {
   Offset getOffset();
 
-  Widget render();
+  XppPageContentWidget render();
 
   XmlElement toXmlElement();
+
+  /// return [true] in case it should be fully deleted
+  XppContentEraseData eraseWhere({Offset coordinates, double radius}) =>
+      XppContentEraseData();
+}
+
+class XppContentEraseData {
+  final bool affected;
+  final bool delete;
+  final List<XppContent> newContent;
+
+  XppContentEraseData(
+      {this.affected = false, this.delete = false, this.newContent = const []});
 }

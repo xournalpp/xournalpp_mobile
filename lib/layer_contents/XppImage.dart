@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/XppPageContentWidget.dart';
+import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppImage extends XppContent {
   Offset topLeft = Offset(0, 0);
@@ -34,18 +36,21 @@ class XppImage extends XppContent {
   }
 
   @override
-  Widget render() {
-    return new Stack(
-      alignment: Alignment.center,
-      children: [
-        CircularProgressIndicator(),
-        FadeInImage(
-          image: MemoryImage(data),
-          placeholder: MemoryImage(kTransparentImage),
-          width: bottomRight.dx - topLeft.dx,
-          height: bottomRight.dy - topLeft.dy,
-        )
-      ],
+  XppPageContentWidget render() {
+    return XppPageContentWidget(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CircularProgressIndicator(),
+          FadeInImage(
+            image: MemoryImage(data),
+            placeholder: MemoryImage(kTransparentImage),
+            width: bottomRight.dx - topLeft.dx,
+            height: bottomRight.dy - topLeft.dy,
+          )
+        ],
+      ),
+      tool: EditingTool.IMAGE,
     );
   }
 

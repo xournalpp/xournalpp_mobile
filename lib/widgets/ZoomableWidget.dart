@@ -31,7 +31,7 @@ class ZoomableWidgetState extends State<ZoomableWidget> {
       onInteractionStart: widget.onInteractionStart,
       onInteractionUpdate: widget.onInteractionUpdate,
       panEnabled: enabled,
-      scaleEnabled: enabled,
+      scaleEnabled: true,
       transformationController: widget.controller,
       minScale: 0.1,
       maxScale: 5,

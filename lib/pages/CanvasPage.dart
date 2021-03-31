@@ -84,6 +84,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
               controller: _zoomController,
               onInteractionStart: _onInteractionStart,
               onInteractionUpdate: (details) {
+                //print(details);
                 setState(() => pageScale = _zoomController.value.entry(0, 0));
               },
               child: Center(
@@ -109,15 +110,19 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                             _setZoomableState();
                           });
                         },
+                        removeLastContent: () {
+                          _file.pages[currentPage].layers[0].content
+                              .removeLast();
+                        },
                         filterEraser: ({Offset coordinates, double radius}) {
                           // if we would execute the removal instantly, we would destroy the order of the strokes
                           List<Function> removalFunctions = [];
                           _file.pages[currentPage].layers[0].content
                               .forEach((stroke) {
-                            if (!(stroke is XppStroke) ||
-                                !(stroke as XppStroke).shouldErase(
-                                    coordinates: coordinates,
-                                    radius: radius)) return;
+                            final delta = stroke.eraseWhere(
+                                coordinates: coordinates, radius: radius);
+                            if (!delta.affected) return;
+
                             removalFunctions.add(() {
                               final int index = _file
                                   .pages[currentPage].layers[0].content
@@ -125,11 +130,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                               _file.pages[currentPage].layers[0].content
                                   .removeAt(index);
                               _file.pages[currentPage].layers[0].content
-                                  .insertAll(
-                                      index,
-                                      (stroke as XppStroke).eraseWhere(
-                                          coordinates: coordinates,
-                                          radius: radius));
+                                  .insertAll(index, delta.newContent);
                             });
                           });
                           if (removalFunctions.isNotEmpty) {
@@ -149,10 +150,13 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                           _pageStackKey.currentState
                               .setPageData(_file.pages[currentPage]);
                         },
-                        child: XppPageStack(
-                          /// to communicate from [PointerListener] to [XppPageStack]
-                          key: _pageStackKey,
-                          page: _file.pages[currentPage],
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: XppPageStack(
+                            /// to communicate from [PointerListener] to [XppPageStack]
+                            key: _pageStackKey,
+                            page: _file.pages[currentPage],
+                          ),
                         ),
                       ),
                     ),

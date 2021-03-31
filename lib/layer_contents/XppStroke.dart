@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
 import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/src/XppLayer.dart';
+import 'package:xournalpp/src/XppPageContentWidget.dart';
+import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppStroke extends XppContent {
   XppStroke({this.tool = XppStrokeTool.PEN, this.points, this.color});
@@ -42,23 +44,26 @@ class XppStroke extends XppContent {
   }
 
   @override
-  Widget render() {
+  XppPageContentWidget render() {
     if (points.isEmpty) {
-      return (Container());
+      return XppPageContentWidget(child: (Container()));
     }
     Color colorToUse = color;
     if (tool == XppStrokeTool.ERASER) color = Colors.white;
     if (tool == XppStrokeTool.HIGHLIGHTER) {
       color = color.withOpacity(.5);
     }
-    return new CustomPaint(
-      size: Size(
-          bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),
-      foregroundPainter: XppStrokePainter(
-          points: points,
-          color: colorToUse,
-          topLeft: getOffset(),
-          smoothPressure: tool == XppStrokeTool.PEN),
+    return XppPageContentWidget(
+      child: CustomPaint(
+        size: Size(
+            bottomRight.dx - getOffset().dx, bottomRight.dy - getOffset().dy),
+        foregroundPainter: XppStrokePainter(
+            points: points,
+            color: colorToUse,
+            topLeft: getOffset(),
+            smoothPressure: tool == XppStrokeTool.PEN),
+      ),
+      tool: EditingTool.STYLUS,
     );
   }
 
@@ -88,7 +93,7 @@ class XppStroke extends XppContent {
     return node;
   }
 
-  bool shouldErase({Offset coordinates, double radius}) {
+  bool _shouldErase({Offset coordinates, double radius}) {
     bool erase = false;
     points.forEach((element) {
       if (_shouldRemovePoint(element, coordinates, radius)) erase = true;
@@ -96,7 +101,10 @@ class XppStroke extends XppContent {
     return (erase);
   }
 
-  List<XppStroke> eraseWhere({Offset coordinates, double radius}) {
+  @override
+  XppContentEraseData eraseWhere({Offset coordinates, double radius}) {
+    if (!_shouldErase(coordinates: coordinates, radius: radius))
+      return XppContentEraseData();
     List<XppStroke> newStrokes = [];
     bool lastPointRemoved = true;
     for (int i = 0; i < points.length; i++) {
@@ -112,7 +120,8 @@ class XppStroke extends XppContent {
         lastPointRemoved = false;
       }
     }
-    return newStrokes;
+    return XppContentEraseData(
+        affected: true, delete: newStrokes.isEmpty, newContent: newStrokes);
   }
 
   bool _shouldRemovePoint(
