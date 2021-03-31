@@ -134,7 +134,7 @@ The dark color is Material Blue Grey 900.
 
 ## Misc
 
-*Like this project? [Buy me a Coffee](https://buymeacoff.ee/bbraid).*
+*Like this project? [Buy me a Coffee](https://buymeacoff.ee/braid).*
 
 This software is powered by the education software [TestApp](https://testapp.schule) — **Learning. Easily.**
 

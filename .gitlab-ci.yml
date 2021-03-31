@@ -82,7 +82,7 @@ build:linux:
     export PATH=$PATH:/flutter/bin
     flutter config --enable-linux-desktop
     flutter build linux
-    mv build/linux/release/bundle xournalpp-mobile-$VERSION
+    mv build/linux/x64/release/bundle xournalpp-mobile-$VERSION
   artifacts:
     paths:
       - xournalpp-mobile-*
