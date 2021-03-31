@@ -66,4 +66,16 @@ class XppImage extends XppContent {
       ], [
         XmlText(base64Encode(data))
       ]);
+
+  @override
+  bool inRegion({Offset topLeft, Offset bottomRight}) {
+    // TODO: implement inRegion
+    throw UnimplementedError();
+  }
+
+  @override
+  bool shouldSelectAt({Offset coordinates, EditingTool tool}) {
+    // TODO: implement shouldSelectAt
+    throw UnimplementedError();
+  }
 }

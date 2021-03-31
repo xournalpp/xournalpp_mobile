@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector4;
 import 'package:xournalpp/generated/l10n.dart';
-import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/src/XppFile.dart';
 import 'package:xournalpp/src/XppPage.dart';
 import 'package:xournalpp/src/globals.dart';

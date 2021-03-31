@@ -293,7 +293,7 @@ class XppFile {
           }
           if (points.isEmpty) return;
           content[int.parse(strokeElement.getAttribute('counter'))] =
-              XppStroke(tool: tool, color: color, points: points);
+              XppStroke.byTool(tool: tool, color: color, points: points);
         });
 
         layers.add(XppLayer(

@@ -156,8 +156,8 @@ class PointerListenerState extends State<PointerListener> {
 
   void saveStroke(XppStrokeTool tool) {
     if (points.isNotEmpty) {
-      XppStroke stroke =
-          XppStroke(tool: tool, color: widget.color, points: List.from(points));
+      XppStroke stroke = XppStroke.byTool(
+          tool: tool, points: List.from(points), color: widget.color);
       widget.onNewContent(stroke);
     }
   }
@@ -203,7 +203,6 @@ class PointerListenerState extends State<PointerListener> {
     // detecting two-finger gestures
     final timestamp = DateTime.now();
     bool foundCloseOffset = false;
-    bool shouldRemoveContent = false;
     pointerTimestamps.remove(data.device);
     pointerTimestamps.forEach((key, value) {
       if (value.difference(timestamp).inMilliseconds.abs() < 100) {

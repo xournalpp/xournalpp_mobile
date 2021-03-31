@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:xournalpp/layer_contents/XppStroke.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 typedef bool IsSelectableCallback(Offset offset);

@@ -48,6 +48,18 @@ class XppText extends XppContent {
     text.replaceAll(r'>', r'&gt;');
     return text;
   }
+
+  @override
+  bool inRegion({Offset topLeft, Offset bottomRight}) {
+    // TODO: implement inRegion
+    throw UnimplementedError();
+  }
+
+  @override
+  bool shouldSelectAt({Offset coordinates, EditingTool tool}) {
+    // TODO: implement shouldSelectAt
+    throw UnimplementedError();
+  }
 }
 
 class RichTextField extends StatefulWidget {

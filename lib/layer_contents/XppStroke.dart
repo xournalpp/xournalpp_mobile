@@ -5,12 +5,17 @@ import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPageContentWidget.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
-class XppStroke extends XppContent {
-  XppStroke({this.tool = XppStrokeTool.PEN, this.points, this.color});
+abstract class XppStroke extends XppContent {
+  XppStroke(
+      {this.tool = XppStrokeTool.PEN,
+      this.points,
+      this.color,
+      this.editingTool});
 
   XppStrokeTool tool;
   List<XppStrokePoint> points;
   Color color;
+  EditingTool editingTool;
 
   @override
   Offset getOffset() {
@@ -112,8 +117,7 @@ class XppStroke extends XppContent {
         lastPointRemoved = true;
       } else {
         if (lastPointRemoved) {
-          newStrokes
-              .add(XppStroke(tool: tool, color: color, points: [points[i]]));
+          newStrokes.add(newStroke(color: color, points: [points[i]]));
         } else {
           newStrokes.last.points.add(points[i]);
         }
@@ -124,10 +128,98 @@ class XppStroke extends XppContent {
         affected: true, delete: newStrokes.isEmpty, newContent: newStrokes);
   }
 
+  @override
+  bool inRegion({Offset topLeft, Offset bottomRight}) {
+    // TODO: implement shouldSelectAt
+    throw UnimplementedError();
+  }
+
+  @override
+  bool shouldSelectAt({Offset coordinates, EditingTool tool}) {
+    // TODO: implement shouldSelectAt
+    throw UnimplementedError();
+  }
+
+  XppStroke newStroke({Color color, List<XppStrokePoint> points});
+
   bool _shouldRemovePoint(
       XppStrokePoint element, Offset coordinates, double radius) {
     return ((element.x - coordinates.dx).abs() < (element.width + radius) / 2 &&
         (element.y - coordinates.dy).abs() < (element.width + radius) / 2);
+  }
+
+  static XppStroke byTool(
+      {XppStrokeTool tool, List<XppStrokePoint> points, Color color}) {
+    XppStroke stroke;
+    switch (tool) {
+      case XppStrokeTool.PEN:
+        stroke = XppStrokePen(color: color, points: points);
+        break;
+      case XppStrokeTool.HIGHLIGHTER:
+        stroke = XppStrokeHighlight(color: color, points: points);
+        break;
+      case XppStrokeTool.ERASER:
+        stroke = XppStrokeWhiteout(color: color, points: points);
+        break;
+    }
+    return stroke;
+  }
+}
+
+class XppStrokePen extends XppStroke {
+  XppStrokeTool tool;
+  List<XppStrokePoint> points;
+  Color color;
+
+  EditingTool editingTool;
+  XppStrokePen({this.points, this.color})
+      : super(
+            points: points,
+            color: color,
+            tool: XppStrokeTool.PEN,
+            editingTool: EditingTool.STYLUS);
+
+  @override
+  XppStroke newStroke({Color color, List<XppStrokePoint> points}) {
+    return XppStrokePen(points: points, color: color);
+  }
+}
+
+class XppStrokeWhiteout extends XppStroke {
+  XppStrokeTool tool;
+  List<XppStrokePoint> points;
+  Color color;
+
+  EditingTool editingTool;
+  XppStrokeWhiteout({this.points, this.color})
+      : super(
+            points: points,
+            color: color,
+            tool: XppStrokeTool.ERASER,
+            editingTool: EditingTool.WHITEOUT);
+
+  @override
+  XppStroke newStroke({Color color, List<XppStrokePoint> points}) {
+    return XppStrokeWhiteout(points: points, color: color);
+  }
+}
+
+class XppStrokeHighlight extends XppStroke {
+  XppStrokeTool tool;
+  List<XppStrokePoint> points;
+  Color color;
+
+  EditingTool editingTool;
+  XppStrokeHighlight({this.points, this.color})
+      : super(
+            points: points,
+            color: color,
+            tool: XppStrokeTool.HIGHLIGHTER,
+            editingTool: EditingTool.HIGHLIGHT);
+
+  @override
+  XppStroke newStroke({Color color, List<XppStrokePoint> points}) {
+    return XppStrokeHighlight(points: points, color: color);
   }
 }
 
