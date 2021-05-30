@@ -7,27 +7,27 @@ import 'XppPageContentWidget.dart';
 class XppLayer {
   XppLayer({this.content});
 
-  List<XppContent> content;
+  List<XppContent?>? content;
 
   static XppLayer empty() => XppLayer(content: []);
 
   XmlElement toXmlElement() => XmlElement(
-      XmlName('layer'), const [], content.map((e) => e.toXmlElement()));
+      XmlName('layer'), const [], content!.map((e) => e!.toXmlElement()));
 }
 
 abstract class XppContent {
-  Offset getOffset();
+  Offset? getOffset();
 
   XppPageContentWidget render();
 
   XmlElement toXmlElement();
 
-  bool shouldSelectAt({Offset coordinates, EditingTool tool});
+  bool shouldSelectAt({Offset? coordinates, EditingTool? tool});
 
-  bool inRegion({Offset topLeft, Offset bottomRight});
+  bool inRegion({Offset? topLeft, Offset? bottomRight});
 
   /// return [true] in case it should be fully deleted
-  XppContentEraseData eraseWhere({Offset coordinates, double radius}) =>
+  XppContentEraseData eraseWhere({Offset? coordinates, double? radius}) =>
       XppContentEraseData();
 }
 

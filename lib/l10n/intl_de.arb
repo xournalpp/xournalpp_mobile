@@ -23,7 +23,7 @@
   "noFileSelected": "Keine Datei gewählt",
   "youDidNotSelectAnyFile": "Du hast keine Datei ausgewählt..",
   "close": "Schließen",
-  "recentFiles": "Zuletzt verwendete Dateien",
+  "recentFiles": "Zuletzt verwendete Dokumente",
   "newNotebook": "Neues Notizbuch",
   "noRecentFiles": "Keine zuletzt verwendeten Dateien.",
   "openingFile": "Öffne Datei",
@@ -77,5 +77,6 @@
   "mb": "MB",
   "sharePage": "Seite teilen...",
   "successfullyShared": "Erfolgreich geteilt:",
-  "openNavigation": "Navigation öffnen"
+  "openNavigation": "Navigation öffnen",
+  "importPdf": "PDF importieren"
 }

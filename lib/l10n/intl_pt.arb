@@ -76,5 +76,6 @@
   "used": "utilizado",
   "mb": "MB",
   "sharePage": "Compartilhar página...",
-  "successfullyShared": "Compartilhado com sucesso"
+  "successfullyShared": "Compartilhado com sucesso",
+  "importPdf": "Importar PDF"
 }

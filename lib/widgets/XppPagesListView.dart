@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -9,15 +10,15 @@ import 'XppPageStack.dart';
 
 class XppPagesListView extends StatefulWidget {
   @required
-  final List<XppPage> pages;
+  final List<XppPage>? pages;
   @required
-  final Function(int pageNumber) onPageChange;
-  final Function(int pageNumber) onPageDelete;
-  final Function(int pageNumber, int newIndex) onPageMove;
+  final Function(int pageNumber)? onPageChange;
+  final Function(int pageNumber)? onPageDelete;
+  final Function(int pageNumber, int newIndex)? onPageMove;
   final int currentPage;
 
   const XppPagesListView(
-      {Key key,
+      {Key? key,
       this.pages,
       this.onPageChange,
       this.currentPage = 0,
@@ -37,14 +38,14 @@ class XppPagesListViewState extends State<XppPagesListView> {
     return ListView.builder(
       itemBuilder: (c, i) {
         if (!pageKeys.keys.contains(i)) pageKeys[i] = GlobalKey();
-        final page = widget.pages[i];
+        final page = widget.pages![i];
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: GestureDetector(
               onTap: () {
                 //setState(() => widget.currentPage = i);
-                widget.onPageChange(i);
+                widget.onPageChange!(i);
               },
               onSecondaryTap: () => showContext(i),
               onLongPress: () => showContext(i),
@@ -59,7 +60,7 @@ class XppPagesListViewState extends State<XppPagesListView> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: AspectRatio(
-                      aspectRatio: page.pageSize.ratio,
+                      aspectRatio: page.pageSize!.ratio,
                       child: FittedBox(
                         child: XppPageStack(
                           key: pageKeys[i],
@@ -74,7 +75,7 @@ class XppPagesListViewState extends State<XppPagesListView> {
           ),
         );
       },
-      itemCount: widget.pages.length,
+      itemCount: widget.pages!.length,
       scrollDirection: Axis.horizontal,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -83,7 +84,7 @@ class XppPagesListViewState extends State<XppPagesListView> {
   }
 
   Future<Uint8List> getPng(int i) {
-    return pageKeys[i].currentState.toPng();
+    return pageKeys[i]!.currentState!.toPng();
   }
 
   showContext(int i) => showModalBottomSheet(
@@ -95,7 +96,7 @@ class XppPagesListViewState extends State<XppPagesListView> {
                 title: Text(S.of(context).deletePage),
                 leading: Icon(Icons.delete_forever),
                 onTap: () {
-                  widget.onPageDelete(i);
+                  widget.onPageDelete!(i);
                   Navigator.of(context).pop();
                 },
               ),
@@ -104,7 +105,7 @@ class XppPagesListViewState extends State<XppPagesListView> {
                 leading: Icon(Icons.open_with),
                 onTap: () async {
                   int newIndex = i;
-                  if (await showDialog(
+                  if (await (showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
                             title: Text(S.of(context).movePage + ' $i'),
@@ -115,7 +116,7 @@ class XppPagesListViewState extends State<XppPagesListView> {
                               decoration: InputDecoration(
                                   labelText: S.of(context).newPageIndex,
                                   helperText: S.of(context).between1And +
-                                      ' ${widget.pages.length}.'),
+                                      ' ${widget.pages!.length}.'),
                             ),
                             actions: [
                               TextButton(
@@ -126,13 +127,13 @@ class XppPagesListViewState extends State<XppPagesListView> {
                               TextButton(
                                 child: Text(S.of(context).okay),
                                 onPressed: () {
-                                  if (newIndex <= widget.pages.length)
+                                  if (newIndex <= widget.pages!.length)
                                     Navigator.of(context).pop(true);
                                 },
                               ),
                             ],
-                          ))) {
-                    widget.onPageMove(i, newIndex);
+                          )) as FutureOr<bool>)) {
+                    widget.onPageMove!(i, newIndex);
                   }
                   Navigator.of(context).pop();
                 },

@@ -6,7 +6,7 @@ publish_to: none
 version: 1.1.11+27
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
   intl: ^0.17.0
   archive: ^3.1.2
   xml: ^5.1.1
-  url_launcher: ^5.5.0
+  url_launcher: ^6.0.4
   transparent_image: ^2.0.0
 #  catcher: ^0.4.0
   receive_sharing_intent: ^1.4.5
@@ -24,7 +24,7 @@ dependencies:
   flutter_dropzone: ^2.0.1
   shared_preferences: ^2.0.6
   flutter_absolute_path: 1.0.6
-  matrix_gesture_detector: ^0.1.0
+  matrix_gesture_detector: ^0.2.0-nullsafety.1
   vector_math: ^2.1.0
   dwds: ^11.0.2
   flutter_colorpicker: ^0.4.0

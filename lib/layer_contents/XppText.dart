@@ -8,20 +8,20 @@ import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppText extends XppContent {
   @required
-  final Color color;
+  final Color? color;
   @required
-  final double size;
+  final double? size;
   @required
-  final String text;
+  final String? text;
   @required
-  final Offset offset;
+  final Offset? offset;
   @required
-  final String fontFamily;
+  final String? fontFamily;
 
   XppText({this.size, this.offset, this.fontFamily, this.color, this.text});
 
   @override
-  Offset getOffset() => offset;
+  Offset? getOffset() => offset;
 
   @override
   XppPageContentWidget render() {
@@ -33,13 +33,13 @@ class XppText extends XppContent {
 
   @override
   XmlElement toXmlElement() => XmlElement(XmlName('text'), [
-        XmlAttribute(XmlName('font'), fontFamily),
+        XmlAttribute(XmlName('font'), fontFamily!),
         XmlAttribute(XmlName('size'), size.toString()),
-        XmlAttribute(XmlName('x'), offset.dx.toString()),
-        XmlAttribute(XmlName('y'), offset.dy.toString()),
-        XmlAttribute(XmlName('color'), color.toHexTriplet()),
+        XmlAttribute(XmlName('x'), offset!.dx.toString()),
+        XmlAttribute(XmlName('y'), offset!.dy.toString()),
+        XmlAttribute(XmlName('color'), color!.toHexTriplet()),
       ], [
-        XmlText(encodeText(text))
+        XmlText(encodeText(text!))
       ]);
 
   static String encodeText(String text) {
@@ -50,29 +50,29 @@ class XppText extends XppContent {
   }
 
   @override
-  bool inRegion({Offset topLeft, Offset bottomRight}) {
+  bool inRegion({Offset? topLeft, Offset? bottomRight}) {
     // TODO: implement inRegion
     throw UnimplementedError();
   }
 
   @override
-  bool shouldSelectAt({Offset coordinates, EditingTool tool}) {
+  bool shouldSelectAt({Offset? coordinates, EditingTool? tool}) {
     // TODO: implement shouldSelectAt
     throw UnimplementedError();
   }
 }
 
 class RichTextField extends StatefulWidget {
-  final Function(String text) onChange;
+  final Function(String text)? onChange;
 
-  final String text;
+  final String? text;
 
-  final double size;
+  final double? size;
 
-  final Color color;
+  final Color? color;
 
   const RichTextField(
-      {Key key, this.onChange, this.text, this.size, this.color})
+      {Key? key, this.onChange, this.text, this.size, this.color})
       : super(key: key);
 
   @override
@@ -81,8 +81,8 @@ class RichTextField extends StatefulWidget {
 
 class _RichTextFieldState extends State<RichTextField> {
   //ZefyrController _controller;
-  TextEditingController _controller;
-  FocusNode _focusNode;
+  TextEditingController? _controller;
+  FocusNode? _focusNode;
 
   bool active = false;
 

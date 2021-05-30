@@ -10,26 +10,26 @@ import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class PointerListener extends StatefulWidget {
   @required
-  final Function(XppContent) onNewContent;
+  final Function(XppContent?)? onNewContent;
   @required
-  final Function({int device, PointerDeviceKind kind}) onDeviceChange;
+  final Function({int? device, PointerDeviceKind? kind})? onDeviceChange;
   @required
-  final Widget child;
+  final Widget? child;
   @required
-  final Map<PointerDeviceKind, EditingTool> toolData;
+  final Map<PointerDeviceKind?, EditingTool> toolData;
   @required
-  final Matrix4 translationMatrix;
+  final Matrix4? translationMatrix;
   @required
-  final double strokeWidth;
+  final double? strokeWidth;
   @required
-  final Color color;
+  final Color? color;
   @required
-  final Function({Offset coordinates, double radius}) filterEraser;
+  final Function({Offset? coordinates, double? radius})? filterEraser;
   @required
-  final Function() removeLastContent;
+  final Function()? removeLastContent;
 
   const PointerListener(
-      {Key key,
+      {Key? key,
       this.onNewContent,
       this.child,
       this.toolData = const {},
@@ -46,11 +46,11 @@ class PointerListener extends StatefulWidget {
 }
 
 class PointerListenerState extends State<PointerListener> {
-  bool drawingEnabled;
+  late bool drawingEnabled;
 
   List<XppStrokePoint> points = [];
 
-  XppStrokeTool tool;
+  XppStrokeTool? tool;
 
   Map<int, DateTime> pointerTimestamps = Map();
 
@@ -60,20 +60,20 @@ class PointerListenerState extends State<PointerListener> {
   Widget build(BuildContext context) {
     return MouseRegion(
       onHover: (event) {
-        widget.onDeviceChange(device: event.device, kind: event.kind);
+        widget.onDeviceChange!(device: event.device, kind: event.kind);
       },
       opaque: false,
       child: Listener(
         behavior: HitTestBehavior.translucent,
         onPointerMove: (data) {
           if (_detectTwoFingerGesture(data)) return;
-          widget.onDeviceChange(device: data.device, kind: data.kind);
+          widget.onDeviceChange!(device: data.device, kind: data.kind);
           if (!drawingEnabled) return;
           if (isPen(data) || isHighlighter(data)) {
-            double width = (data.pressure == 0
+            double? width = (data.pressure == 0
                 ? widget.strokeWidth
-                : data.pressure * widget.strokeWidth);
-            if (isHighlighter(data)) width *= 5;
+                : data.pressure * widget.strokeWidth!);
+            if (isHighlighter(data)) width = width! * 5;
             points.add(XppStrokePoint(
                 x: data.localPosition.dx,
                 y: data.localPosition.dy,
@@ -82,7 +82,7 @@ class PointerListenerState extends State<PointerListener> {
           }
 
           if (isEraser(data))
-            widget.filterEraser(
+            widget.filterEraser!(
                 coordinates:
                     Offset(data.localPosition.dx, data.localPosition.dy),
                 radius: widget.strokeWidth);
@@ -93,21 +93,21 @@ class PointerListenerState extends State<PointerListener> {
           setState(() {
             tool = getToolFromPointer(data);
           });
-          widget.onDeviceChange(device: data.device, kind: data.kind);
+          widget.onDeviceChange!(device: data.device, kind: data.kind);
           if (isLaTeX(data)) {
             XppTexImage.edit(
                     context: context,
                     topLeft: data.localPosition,
                     color: widget.color)
                 .then((value) {
-              widget.onNewContent(value);
+              widget.onNewContent!(value);
             });
           }
           if (isText(data)) {
             XppText(
                 offset: data.localPosition,
                 color: widget.color,
-                size: widget.strokeWidth * 3);
+                size: widget.strokeWidth! * 3);
           }
         },
         onPointerUp: (data) {
@@ -123,11 +123,11 @@ class PointerListenerState extends State<PointerListener> {
           setState(() {
             tool = getToolFromPointer(data);
           });
-          widget.onDeviceChange(device: data.device, kind: data.kind);
+          widget.onDeviceChange!(device: data.device, kind: data.kind);
         },
         child: Stack(
           children: [
-            widget.child,
+            widget.child!,
             if (points.length > 0)
               CustomPaint(
                 /*size: Size(
@@ -154,11 +154,11 @@ class PointerListenerState extends State<PointerListener> {
     });
   }
 
-  void saveStroke(XppStrokeTool tool) {
+  void saveStroke(XppStrokeTool? tool) {
     if (points.isNotEmpty) {
-      XppStroke stroke = XppStroke.byTool(
+      XppStroke? stroke = XppStroke.byTool(
           tool: tool, points: List.from(points), color: widget.color);
-      widget.onNewContent(stroke);
+      widget.onNewContent!(stroke);
     }
   }
 

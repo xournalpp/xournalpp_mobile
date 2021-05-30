@@ -24,18 +24,18 @@ import 'package:xournalpp/widgets/XppPagesListView.dart';
 import 'package:xournalpp/widgets/ZoomableWidget.dart';
 
 class CanvasPage extends StatefulWidget {
-  CanvasPage({Key key, this.file, this.filePath}) : super(key: key);
+  CanvasPage({Key? key, this.file, this.filePath}) : super(key: key);
 
   @required
-  final XppFile file;
-  final String filePath;
+  final XppFile? file;
+  final String? filePath;
 
   @override
   _CanvasPageState createState() => _CanvasPageState();
 }
 
 class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
-  XppFile _file;
+  XppFile? _file;
 
   int currentPage = 0;
 
@@ -44,8 +44,8 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
 
   TransformationController _zoomController = TransformationController();
 
-  Map<PointerDeviceKind, EditingTool> _toolData = {};
-  PointerDeviceKind _currentDevice = PointerDeviceKind.touch;
+  Map<PointerDeviceKind?, EditingTool> _toolData = {};
+  PointerDeviceKind? _currentDevice = PointerDeviceKind.touch;
 
   /// used fro parent-child communication
   final GlobalKey<XppPageStackState> _pageStackKey = GlobalKey();
@@ -58,8 +58,8 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
 
   bool savingFile = false;
 
-  Animation<Matrix4> _animationReset;
-  AnimationController _controllerReset;
+  Animation<Matrix4>? _animationReset;
+  late AnimationController _controllerReset;
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                   elevation: 12,
                   color: Colors.white,
                   child: AspectRatio(
-                    aspectRatio: _file.pages[currentPage].pageSize.ratio,
+                    aspectRatio: _file!.pages![currentPage].pageSize!.ratio,
                     child: FittedBox(
                       child: PointerListener(
                         key: _pointerListenerKey,
@@ -99,36 +99,37 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                         toolData: _toolData,
                         strokeWidth: toolWidth,
                         color: toolColor,
-                        onDeviceChange: ({int device, PointerDeviceKind kind}) {
+                        onDeviceChange: (
+                            {int? device, PointerDeviceKind? kind}) {
                           //_currentDevice = device;
                           setDefaultDeviceIfNotSet(kind: kind);
                           _currentDevice = kind;
-                          _editingToolbarKey.currentState.setState(() {
-                            _editingToolbarKey.currentState.currentDevice =
+                          _editingToolbarKey.currentState!.setState(() {
+                            _editingToolbarKey.currentState!.currentDevice =
                                 kind;
                             _setZoomableState();
                           });
                         },
                         removeLastContent: () {
-                          _file.pages[currentPage].layers[0].content
+                          _file!.pages![currentPage].layers![0].content!
                               .removeLast();
                         },
-                        filterEraser: ({Offset coordinates, double radius}) {
+                        filterEraser: ({Offset? coordinates, double? radius}) {
                           // if we would execute the removal instantly, we would destroy the order of the strokes
                           List<Function> removalFunctions = [];
-                          _file.pages[currentPage].layers[0].content
+                          _file!.pages![currentPage].layers![0].content!
                               .forEach((stroke) {
-                            final delta = stroke.eraseWhere(
+                            final delta = stroke!.eraseWhere(
                                 coordinates: coordinates, radius: radius);
                             if (!delta.affected) return;
 
                             removalFunctions.add(() {
-                              final int index = _file
-                                  .pages[currentPage].layers[0].content
+                              final int index = _file!
+                                  .pages![currentPage].layers![0].content!
                                   .indexOf(stroke);
-                              _file.pages[currentPage].layers[0].content
+                              _file!.pages![currentPage].layers![0].content!
                                   .removeAt(index);
-                              _file.pages[currentPage].layers[0].content
+                              _file!.pages![currentPage].layers![0].content!
                                   .insertAll(index, delta.newContent);
                             });
                           });
@@ -141,20 +142,20 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                         },
                         onNewContent: (newContent) {
                           /// TODO: manage layers
-                          _file.pages[currentPage].layers[0].content =
-                              new List.from(
-                                  _file.pages[currentPage].layers[0].content)
+                          _file!.pages![currentPage].layers![0].content =
+                              new List.from(_file!
+                                  .pages![currentPage].layers![0].content!)
                                 ..add(newContent);
 
-                          _pageStackKey.currentState
-                              .setPageData(_file.pages[currentPage]);
+                          _pageStackKey.currentState!
+                              .setPageData(_file!.pages![currentPage]);
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: XppPageStack(
                             /// to communicate from [PointerListener] to [XppPageStack]
                             key: _pageStackKey,
-                            page: _file.pages[currentPage],
+                            page: _file!.pages![currentPage],
                           ),
                         ),
                       ),
@@ -272,7 +273,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                 },
                 onNewDeviceMap: (newDeviceMap) => setState(
                       () {
-                        _toolData = newDeviceMap;
+                        _toolData = newDeviceMap!;
                         _setZoomableState();
                       },
                     ))),
@@ -287,18 +288,18 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
               children: [
                 XppPagesListView(
                     key: pageListViewKey,
-                    pages: _file.pages,
+                    pages: _file!.pages,
                     onPageChange: (newPage) {
                       setState(() => currentPage = newPage);
-                      _pageStackKey.currentState
-                          .setPageData(_file.pages[currentPage]);
+                      _pageStackKey.currentState!
+                          .setPageData(_file!.pages![currentPage]);
                     },
                     onPageDelete: (deletedIndex) => setState(() {
-                          _file.pages.removeAt(deletedIndex);
-                          if (_file.pages.length >= currentPage)
-                            currentPage = _file.pages.length - 1;
-                          if (_file.pages.isEmpty) {
-                            _file.pages.add(XppPage.empty(
+                          _file!.pages!.removeAt(deletedIndex);
+                          if (_file!.pages!.length >= currentPage)
+                            currentPage = _file!.pages!.length - 1;
+                          if (_file!.pages!.isEmpty) {
+                            _file!.pages!.add(XppPage.empty(
                                 background: Theme.of(context).cardColor));
                             currentPage = 0;
 
@@ -309,20 +310,20 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
                           }
                         }),
                     onPageMove: (initialIndex, movedTo) => setState(() {
-                          final page = _file.pages[initialIndex];
-                          _file.pages.removeAt(initialIndex);
-                          _file.pages.insert(movedTo - 1, page);
+                          final page = _file!.pages![initialIndex];
+                          _file!.pages!.removeAt(initialIndex);
+                          _file!.pages!.insert(movedTo - 1, page);
                         }),
                     currentPage: currentPage),
                 FloatingActionButton(
                   heroTag: 'AddXppPage',
                   onPressed: () => setState(() {
                     currentPage++;
-                    _file.pages.insert(currentPage,
+                    _file!.pages!.insert(currentPage,
                         XppPage.empty(background: Theme.of(context).cardColor));
 
-                    _pageStackKey.currentState
-                        .setPageData(_file.pages[currentPage]);
+                    _pageStackKey.currentState!
+                        .setPageData(_file!.pages![currentPage]);
                   }),
                   child: Icon(Icons.add),
                   tooltip: S.of(context).addPage,
@@ -346,9 +347,9 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
               context: context,
               builder: (context) => ToolBoxBottomSheet(
                     onBackgroundChange: (newBackground) {
-                      newBackground.size = _file.pages[currentPage].pageSize;
-                      setState(() =>
-                          _file.pages[currentPage].background = newBackground);
+                      newBackground.size = _file!.pages![currentPage].pageSize;
+                      setState(() => _file!.pages![currentPage].background =
+                          newBackground);
                     },
                   ));
         },
@@ -368,7 +369,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
         context: context,
         builder: (context) {
           TextEditingController titleController =
-              TextEditingController(text: _file.title);
+              TextEditingController(text: _file!.title);
           return AlertDialog(
             title: Text(S.of(context).setDocumentTitle),
             content: Padding(
@@ -388,7 +389,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    _file.title = titleController.text;
+                    _file!.title = titleController.text;
                   });
                   Navigator.of(context).pop();
                 },
@@ -399,7 +400,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
         });
   }
 
-  void setDefaultDeviceIfNotSet({PointerDeviceKind kind}) {
+  void setDefaultDeviceIfNotSet({PointerDeviceKind? kind}) {
     if (!_toolData.keys.contains(kind)) {
       EditingTool tool;
       switch (kind) {
@@ -426,10 +427,10 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
   void _setZoomableState() {
     final zoomEnabled = _toolData[_currentDevice] == null ||
         _toolData[_currentDevice] == EditingTool.MOVE;
-    _zoomableKey.currentState
-        .setState(() => _zoomableKey.currentState.enabled = zoomEnabled);
-    _pointerListenerKey.currentState.setState(() {
-      _pointerListenerKey.currentState.drawingEnabled = !zoomEnabled;
+    _zoomableKey.currentState!
+        .setState(() => _zoomableKey.currentState!.enabled = zoomEnabled);
+    _pointerListenerKey.currentState!.setState(() {
+      _pointerListenerKey.currentState!.drawingEnabled = !zoomEnabled;
     });
   }
 
@@ -453,14 +454,14 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
 
   void shareScreenshot() async {
     Uint8List imageBytes =
-        await pageListViewKey.currentState.getPng(currentPage);
-    String fileName = await FilePickerCross(imageBytes,
+        await pageListViewKey.currentState!.getPng(currentPage);
+    String fileName = await (FilePickerCross(imageBytes,
             fileExtension: '.png',
             path: '/export/' +
                 (_file?.title ?? S.of(context).newFile) +
                 ' ${currentPage + 1}' +
                 '.png')
-        .exportToStorage();
+        .exportToStorage() as FutureOr<String>);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).successfullyShared + ' ' + fileName)));
   }
@@ -477,12 +478,12 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       ),
     );
     //try {
-    if (_file.title == null) await _showTitleDialog();
-    String path = _file.title + '.xopp';
-    _file.previewImage = kIsWeb
+    if (_file!.title == null) await _showTitleDialog();
+    String path = _file!.title! + '.xopp';
+    _file!.previewImage = kIsWeb
         ? kTransparentImage
-        : await pageListViewKey.currentState.getPng(0);
-    FilePickerCross file = _file.toFilePickerCross(filePath: path);
+        : await pageListViewKey.currentState!.getPng(0);
+    FilePickerCross file = _file!.toFilePickerCross(filePath: path);
     if (export)
       file.exportToStorage();
     else
@@ -494,8 +495,8 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       Set files = (jsonDecode(jsonData) as Iterable).toSet();
       files.removeWhere((element) => element['path'] == path);
       files.add({
-        'preview': base64Encode(_file.previewImage),
-        'name': _file.title,
+        'preview': base64Encode(_file!.previewImage!),
+        'name': _file!.title,
         'path': path
       });
       jsonData = jsonEncode(files.toList());
@@ -525,7 +526,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
   }
 
   void _onAnimationReset() {
-    _zoomController.value = _animationReset.value;
+    _zoomController.value = _animationReset!.value;
     if (!_controllerReset.isAnimating) {
       _animationReset?.removeListener(_onAnimationReset);
       _animationReset = null;
@@ -539,7 +540,7 @@ class _CanvasPageState extends State<CanvasPage> with TickerProviderStateMixin {
       begin: _zoomController.value,
       end: animateTo,
     ).animate(_controllerReset);
-    _animationReset.addListener(_onAnimationReset);
+    _animationReset!.addListener(_onAnimationReset);
     _controllerReset.forward();
   }
 

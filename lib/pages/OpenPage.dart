@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:after_init/after_init.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,14 +26,13 @@ class OpenPage extends StatefulWidget {
   _OpenPageState createState() => _OpenPageState();
 }
 
-class _OpenPageState extends State<OpenPage>
-    with AfterInitMixin, TickerProviderStateMixin {
+class _OpenPageState extends State<OpenPage> with TickerProviderStateMixin {
   bool _loadedRecent = false;
   Set recentFiles = Set();
 
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
-  List<SharedMediaFile> _sharedFiles;
+  late List<SharedMediaFile> _sharedFiles;
 
   @override
   void dispose() {
@@ -80,7 +78,7 @@ class _OpenPageState extends State<OpenPage>
     } catch (e) {}
 
     SharedPreferences.getInstance().then((prefs) {
-      String jsonData = prefs.getString(PreferencesKeys.kRecentFiles);
+      String? jsonData = prefs.getString(PreferencesKeys.kRecentFiles);
       if (jsonData != null) {
         recentFiles = (jsonDecode(jsonData) as List).reversed.toList().toSet();
       }
@@ -127,7 +125,7 @@ class _OpenPageState extends State<OpenPage>
       });
 
       // For sharing or opening urls/text coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialText().then((String value) {
+      ReceiveSharingIntent.getInitialText().then((String? value) {
         receivedShareNotification(value);
       }).catchError((e) {});
     } catch (e) {}
@@ -201,7 +199,7 @@ class _OpenPageState extends State<OpenPage>
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (c) => CanvasPage(file: _file)));
             },
-            title: Text('Import PDF'),
+            title: Text(S.of(context).importPdf),
           ),
           ListTile(
             title: Text(
@@ -244,12 +242,12 @@ class _OpenPageState extends State<OpenPage>
         /// ... which is awfully encoded as a content:// URI using the path as **queryComponent** instead of as **path** (why???)
         /// unfortunately, android needs to copy the file to our own app directory
         /// TODO: don't copy files we can directly read
-        String path = await FlutterAbsolutePath.getAbsolutePath(data as String);
+        String path = await FlutterAbsolutePath.getAbsolutePath(data);
         data = [
           SharedMediaFile(
               path, base64Encode(kTransparentImage), null, SharedMediaType.FILE)
         ];
-        _sharedFiles = data;
+        _sharedFiles = data as List<SharedMediaFile>;
       }
     }
     if (data is List && data.isNotEmpty) {
@@ -341,8 +339,8 @@ class _OpenPageState extends State<OpenPage>
           ),
           subtitle: Text(
             fileInfo['name'],
-            style: Theme.of(context).textTheme.headline3.copyWith(
-                color: Theme.of(context).textTheme.bodyText1.color,
+            style: Theme.of(context).textTheme.headline3!.copyWith(
+                color: Theme.of(context).textTheme.bodyText1!.color,
                 fontSize: kEmphasisFontSize * kFontSizeDivision),
           ),
           trailing: Tooltip(
@@ -407,6 +405,6 @@ class _OpenPageState extends State<OpenPage>
   }
 }
 
-Future<FilePickerCross> showMissingFileDialog(String path) {
+Future<FilePickerCross> showMissingFileDialog(String? path) {
   throw ('Missing file!');
 }

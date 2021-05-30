@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -9,9 +10,9 @@ import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPage.dart';
 
 class XppPageStack extends StatefulWidget {
-  final XppPage page;
+  final XppPage? page;
 
-  const XppPageStack({Key key, this.page}) : super(key: key);
+  const XppPageStack({Key? key, this.page}) : super(key: key);
 
   @override
   XppPageStackState createState() => XppPageStackState();
@@ -20,9 +21,9 @@ class XppPageStack extends StatefulWidget {
 class XppPageStackState extends State<XppPageStack>
     with AutomaticKeepAliveClientMixin {
   GlobalKey pngKey = GlobalKey();
-  XppPage page;
+  XppPage? page;
 
-  XppBackground _lastKnownBackground;
+  XppBackground? _lastKnownBackground;
   Widget background = Container();
 
   @override
@@ -36,20 +37,20 @@ class XppPageStackState extends State<XppPageStack>
     super.build(context);
     List<Widget> children = [];
 
-    if (page.background != null && _lastKnownBackground != page.background) {
-      _lastKnownBackground = page.background;
-      background = page.background.render();
+    if (page!.background != null && _lastKnownBackground != page!.background) {
+      _lastKnownBackground = page!.background;
+      background = page!.background!.render();
     }
     children.add(background);
 
-    children.addAll(page.layers.map((e) => XppLayerStack(
+    children.addAll(page!.layers!.map((e) => XppLayerStack(
           layer: e,
         )));
     return RepaintBoundary(
         key: pngKey,
         child: SizedBox(
-            width: page.pageSize.width,
-            height: page.pageSize.height,
+            width: page!.pageSize!.width,
+            height: page!.pageSize!.height,
             child: (Stack(children: children))));
   }
 
@@ -58,9 +59,11 @@ class XppPageStackState extends State<XppPageStack>
   }
 
   Future<Uint8List> toPng() async {
-    RenderRepaintBoundary boundary = pngKey.currentContext.findRenderObject();
+    RenderRepaintBoundary boundary =
+        pngKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     ui.Image image = await boundary.toImage();
-    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    ByteData byteData = await (image.toByteData(format: ui.ImageByteFormat.png)
+        as FutureOr<ByteData>);
     Uint8List pngBytes = byteData.buffer.asUint8List();
     return pngBytes;
   }
@@ -76,9 +79,9 @@ class XppPageStackState extends State<XppPageStack>
 }
 
 class XppLayerStack extends StatefulWidget {
-  final XppLayer layer;
+  final XppLayer? layer;
 
-  const XppLayerStack({Key key, this.layer}) : super(key: key);
+  const XppLayerStack({Key? key, this.layer}) : super(key: key);
   @override
   _XppLayerStackState createState() => _XppLayerStackState();
 }
@@ -87,8 +90,8 @@ class _XppLayerStackState extends State<XppLayerStack> {
   Map<XppContent, Widget> renderedContent = {};
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [];
-    widget.layer.content.forEach((element) {
+    List<Widget?> children = [];
+    widget.layer!.content!.forEach((element) {
       if (element == null) return;
       if (!renderedContent.keys.contains(element)) {
         renderedContent[element] = Positioned(
@@ -100,7 +103,7 @@ class _XppLayerStackState extends State<XppLayerStack> {
       children.add(renderedContent[element]);
     });
     return Stack(
-      children: children,
+      children: children as List<Widget>,
     );
   }
 }

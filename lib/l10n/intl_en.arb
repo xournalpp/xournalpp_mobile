@@ -77,5 +77,6 @@
   "mb": "MB",
   "sharePage": "Share page...",
   "successfullyShared": "Successfully shared",
-  "openNavigation": "Open navigation"
+  "openNavigation": "Open navigation",
+  "importPdf": "Import PDF"
 }

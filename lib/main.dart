@@ -29,7 +29,7 @@ const Color kPrimaryColor = Colors.deepPurple;
 const Color kPrimaryColorAccent = Colors.deepPurpleAccent;
 const Color kSecondaryColor = Colors.pink;
 const Color kSecondaryColorAccent = Colors.pinkAccent;
-final Color kDarkColor = Colors.blueGrey[900];
+final Color? kDarkColor = Colors.blueGrey[900];
 const Color kLightColor = Colors.white;
 
 const double kFontSizeDivision = 1.6;
@@ -82,12 +82,12 @@ final kColorScheme = ColorScheme(
     primaryVariant: kPrimaryColorAccent,
     secondary: kSecondaryColor,
     secondaryVariant: kSecondaryColorAccent,
-    surface: kDarkColor,
-    background: kDarkColor,
+    surface: kDarkColor!,
+    background: kDarkColor!,
     error: Colors.deepOrange,
     onPrimary: kLightColor,
-    onSecondary: kDarkColor,
-    onSurface: kDarkColor,
+    onSecondary: kDarkColor!,
+    onSurface: kDarkColor!,
     onBackground: kLightColor,
     onError: kLightColor,
     brightness: Brightness.dark);
@@ -107,11 +107,14 @@ class XournalppMobile extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: kIsWeb ? 'Xournal++ Web' : 'Xournal++ Mobile',
-      localizationsDelegates: [S.delegate],
-      supportedLocales: [Locale('en')],
+      localizationsDelegates: [
+        S.delegate,
+        DefaultMaterialLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(
           brightness: Brightness.light,
-          primarySwatch: kPrimaryColor,
+          primarySwatch: kPrimaryColor as MaterialColor?,
           accentColor: kSecondaryColor,
           fontFamily: 'Open Sans',
           textTheme: kTextTheme,
@@ -121,7 +124,7 @@ class XournalppMobile extends StatelessWidget {
           snackBarTheme: kSnackBarTheme),
       darkTheme: ThemeData(
           brightness: Brightness.dark,
-          primarySwatch: kPrimaryColor,
+          primarySwatch: kPrimaryColor as MaterialColor?,
           accentColor: kSecondaryColor,
           fontFamily: 'Open Sans',
           textTheme: kTextTheme,

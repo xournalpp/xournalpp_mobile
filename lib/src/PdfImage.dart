@@ -9,10 +9,10 @@ const double DPI = 96;
 Future<int> pdfPageCount(FilePickerCross pdf) =>
     Printing.raster(pdf.toUint8List()).length;
 
-Future<Uint8List> pdfImage(FilePickerCross pdf, int page) async =>
+Future<Uint8List> pdfImage(FilePickerCross pdf, int? page) async =>
     Printing.raster(pdf.toUint8List(), dpi: 96)
         .toList()
-        .then((value) => value[page].toPng());
+        .then((value) => value[page!].toPng());
 
 Future<XppPageSize> pdfPageSize(FilePickerCross pdf, int page) async {
   final raster = await Printing.raster(pdf.toUint8List(), dpi: DPI)

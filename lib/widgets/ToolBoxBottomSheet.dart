@@ -6,12 +6,12 @@ import 'package:xournalpp/src/XppPage.dart';
 
 class ToolBoxBottomSheet extends StatefulWidget {
   @required
-  final EditingTool tool;
-  final Function(EditingTool) onToolChange;
-  final Function(XppBackground) onBackgroundChange;
+  final EditingTool? tool;
+  final Function(EditingTool)? onToolChange;
+  final Function(XppBackground)? onBackgroundChange;
 
   const ToolBoxBottomSheet(
-      {Key key, this.tool, this.onToolChange, this.onBackgroundChange})
+      {Key? key, this.tool, this.onToolChange, this.onBackgroundChange})
       : super(key: key);
 
   @override
@@ -64,7 +64,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                               ],
                             ),
                             onTap: () =>
-                                widget.onBackgroundChange(XppBackground.none),
+                                widget.onBackgroundChange!(XppBackground.none),
                           ),
                         ),
                         AspectRatio(
@@ -85,7 +85,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                                 Text(S.of(context).color)
                               ],
                             ),
-                            onTap: () async => widget.onBackgroundChange(
+                            onTap: () async => widget.onBackgroundChange!(
                                 XppBackgroundSolidPlain(
                                     color: await pickBackgroundColor())),
                           ),
@@ -105,7 +105,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                                 Text(S.of(context).lined)
                               ],
                             ),
-                            onTap: () async => widget.onBackgroundChange(
+                            onTap: () async => widget.onBackgroundChange!(
                                 XppBackgroundSolidLined(
                                     color: await pickBackgroundColor())),
                           ),
@@ -125,7 +125,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                                 Text(S.of(context).ruled)
                               ],
                             ),
-                            onTap: () async => widget.onBackgroundChange(
+                            onTap: () async => widget.onBackgroundChange!(
                                 XppBackgroundSolidRuled(
                                     color: await pickBackgroundColor())),
                           ),
@@ -145,7 +145,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                                 Text(S.of(context).graph)
                               ],
                             ),
-                            onTap: () async => widget.onBackgroundChange(
+                            onTap: () async => widget.onBackgroundChange!(
                                 XppBackgroundSolidGraph(
                                     color: await pickBackgroundColor())),
                           ),
@@ -165,7 +165,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
                                 Text(S.of(context).dotted)
                               ],
                             ),
-                            onTap: () async => widget.onBackgroundChange(
+                            onTap: () async => widget.onBackgroundChange!(
                                 XppBackgroundSolidDot(
                                     color: await pickBackgroundColor())),
                           ),
@@ -205,7 +205,7 @@ class _ToolBoxBottomSheetState extends State<ToolBoxBottomSheet> {
             ));
   }
 
-  Future<Color> pickBackgroundColor() async => await showDialog(
+  Future<Color?> pickBackgroundColor() async => await showDialog(
       context: context,
       builder: (c) => AlertDialog(
             content: MaterialPicker(

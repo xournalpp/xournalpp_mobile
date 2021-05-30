@@ -13,7 +13,7 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-  PackageInfo info;
+  PackageInfo? info;
 
   @override
   void initState() {

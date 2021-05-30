@@ -9,7 +9,7 @@ class QuotaTile extends StatefulWidget {
 }
 
 class _QuotaTileState extends State<QuotaTile> {
-  FileQuotaCross quota;
+  FileQuotaCross? quota;
   @override
   void initState() {
     FilePickerCross.quota().then((value) => setState(() => quota = value));
@@ -24,10 +24,10 @@ class _QuotaTileState extends State<QuotaTile> {
       return (quota != null
           ? Text(
               S.of(context).quota +
-                  ': ${(quota.quota / 1e6).round()} ' +
+                  ': ${(quota!.quota / 1e6).round()} ' +
                   S.of(context).mb +
                   ' - ' +
-                  (quota.relative * 100).round().toString() +
+                  (quota!.relative * 100).round().toString() +
                   '% ' +
                   S.of(context).used,
               style: Theme.of(context).textTheme.subtitle2,

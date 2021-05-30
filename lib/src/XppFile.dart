@@ -25,23 +25,25 @@ class XppFile {
   XppFile({this.title, this.pages, this.previewImage});
 
   /// create an empty [XppFile]
-  static XppFile empty({String title, XppPageSize pageSize, Color background}) {
+  static XppFile empty(
+      {String? title, XppPageSize? pageSize, Color? background}) {
     return XppFile(
         title: title, pages: [XppPage.empty(background: background)]);
   }
 
   /// creates an [XppFile] from a PDF document opened in a [FilePickerCross]
-  static Future<XppFile> importPdf({FilePickerCross pdf}) async {
+  static Future<XppFile> importPdf({required FilePickerCross pdf}) async {
     final pageCount = await pdfPageCount(pdf);
-    pdf.saveToPath(path: pdf.path);
-    XppFile file = XppFile.empty(title: pdf.fileName)..pages.clear();
+    pdf.saveToPath(path: pdf.path!);
+    XppFile file = XppFile.empty(title: pdf.fileName)..pages!.clear();
     for (int i = 0; i < pageCount; i++) {
       final size = await pdfPageSize(pdf, i);
-      file.pages.add(XppPage.empty()
+      file.pages!.add(XppPage.empty()
         ..pageSize = size
         ..background = XppBackgroundPdf(
-            onUnavailable: (p) =>
-                throw ("$p is not available even though just imported"),
+            onUnavailable: ((String p) =>
+                    throw ("$p is not available even though just imported"))
+                as Future<FilePickerCross> Function(String?),
             page: i,
             filename: pdf.path));
     }
@@ -49,7 +51,7 @@ class XppFile {
   }
 
   /// showing a [open] dialog and pushes a [CanvasPage] to the provided [BuildContext]'s [Navigator]
-  static void openAndEdit({BuildContext context}) async {
+  static void openAndEdit({required BuildContext context}) async {
     //double percentage = 0;
     ScaffoldFeatureController snackBarController = ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(
@@ -106,8 +108,8 @@ class XppFile {
     if (percentageCallback == null) percentageCallback = (percentage) {};
 
     /// extracting the document title
-    String title = rawFile.path.substring(
-        rawFile.path.lastIndexOf('/') + 1, rawFile.path.lastIndexOf('.'));
+    String title = rawFile.path!.substring(
+        rawFile.path!.lastIndexOf('/') + 1, rawFile.path!.lastIndexOf('.'));
 
     /// decoding file bytes from GZip to a UTF-8 [Uint8List]
     List<int> bytes = GZipDecoder().decodeBytes(rawFile.toUint8List().toList());
@@ -135,9 +137,9 @@ class XppFile {
     pageElements.forEach((XmlElement pageElement) {
       pageIndex++;
       XppPageSize pageSize = XppPageSize(
-          width: double.parse(pageElement.getAttribute('width')),
-          height: double.parse(pageElement.getAttribute('height')));
-      XppBackground background;
+          width: double.parse(pageElement.getAttribute('width')!),
+          height: double.parse(pageElement.getAttribute('height')!));
+      XppBackground? background;
       if (pageElement.findElements('background').isNotEmpty) {
         XmlElement backgroundElement =
             pageElement.findElements('background').toList()[0];
@@ -150,7 +152,7 @@ class XppFile {
             background = XppBackgroundPdf(
                 onUnavailable: onUnavailable,
                 filename: backgroundElement.getAttribute('filename'),
-                page: int.parse(backgroundElement.getAttribute('pageno')));
+                page: int.parse(backgroundElement.getAttribute('pageno')!));
             break;
           case "solid":
             switch (backgroundElement.getAttribute('style')) {
@@ -187,7 +189,7 @@ class XppFile {
       int layerIndex = 0;
       Iterable<XmlElement> layerElements = pageElement.findElements('layer');
       layerElements.forEach((XmlElement layer) {
-        Map<int, XppContent> content = {};
+        Map<int, XppContent?> content = {};
 
         /// unfortunately, it's not possible to forEach threw all child **elements**, but only threw
         /// all **nodes** (including text nodes etc.). Let's workaround...
@@ -212,19 +214,19 @@ class XppFile {
 
         /// processing all images first
         layer.findElements('image').forEach((imageElement) {
-          content[int.parse(imageElement.getAttribute('counter'))] = XppImage(
+          content[int.parse(imageElement.getAttribute('counter')!)] = XppImage(
               data: base64Decode(imageElement.text.trim()),
-              topLeft: Offset(double.parse(imageElement.getAttribute('left')),
-                  double.parse(imageElement.getAttribute('top'))),
+              topLeft: Offset(double.parse(imageElement.getAttribute('left')!),
+                  double.parse(imageElement.getAttribute('top')!)),
               bottomRight: Offset(
-                  double.parse(imageElement.getAttribute('right')),
-                  double.parse(imageElement.getAttribute('bottom'))));
+                  double.parse(imageElement.getAttribute('right')!),
+                  double.parse(imageElement.getAttribute('bottom')!)));
         });
 
         /// processing all texts
         layer.findElements('text').forEach((textElement) {
           Color color = parseColor(textElement.getAttribute('color'));
-          content[int.parse(textElement.getAttribute('counter'))] = XppText(
+          content[int.parse(textElement.getAttribute('counter')!)] = XppText(
               color: color,
               // note: not trimming
               text: textElement.text.replaceAllMapped(
@@ -237,30 +239,30 @@ class XppFile {
                   case '&gt;':
                     return '>';
                 }
-                return subtext.group(0);
+                return subtext.group(0)!;
               }),
               size: XppPageSize.pt2mm(
-                  double.parse(textElement.getAttribute('size'))),
+                  double.parse(textElement.getAttribute('size')!)),
               fontFamily: textElement.getAttribute('font'),
-              offset: Offset(double.parse(textElement.getAttribute('x')),
-                  double.parse(textElement.getAttribute('y'))));
+              offset: Offset(double.parse(textElement.getAttribute('x')!),
+                  double.parse(textElement.getAttribute('y')!)));
         });
 
         /// processing all lateximages
         layer.findElements('teximage').forEach((texElement) {
-          content[int.parse(texElement.getAttribute('counter'))] = XppTexImage(
-              text: texElement.getAttribute('text').trim(),
-              color: parseColor(texElement.getAttribute('color').trim()),
-              topLeft: Offset(double.parse(texElement.getAttribute('left')),
-                  double.parse(texElement.getAttribute('top'))),
+          content[int.parse(texElement.getAttribute('counter')!)] = XppTexImage(
+              text: texElement.getAttribute('text')!.trim(),
+              color: parseColor(texElement.getAttribute('color')!.trim()),
+              topLeft: Offset(double.parse(texElement.getAttribute('left')!),
+                  double.parse(texElement.getAttribute('top')!)),
               bottomRight: Offset(
-                  double.parse(texElement.getAttribute('right')),
-                  double.parse(texElement.getAttribute('bottom'))));
+                  double.parse(texElement.getAttribute('right')!),
+                  double.parse(texElement.getAttribute('bottom')!)));
         });
 
         /// processing all strokes
         layer.findElements('stroke').forEach((strokeElement) {
-          XppStrokeTool tool;
+          XppStrokeTool? tool;
           switch (strokeElement.getAttribute('tool')) {
             case "pen":
               tool = XppStrokeTool.PEN;
@@ -276,13 +278,13 @@ class XppFile {
               break;
             default:
               print("Unsupported XppStrokeType: " +
-                  strokeElement.getAttribute('tool'));
+                  strokeElement.getAttribute('tool')!);
               break;
           }
           Color color = parseColor(strokeElement.getAttribute('color'));
           List<XppStrokePoint> points = [];
           List<String> rawWidth =
-              strokeElement.getAttribute('width').split(' ');
+              strokeElement.getAttribute('width')!.split(' ');
           List<String> rawPoints = strokeElement.text.trim().split(' ');
           for (int i = 0; i < rawPoints.length / 2; i++) {
             points.add(XppStrokePoint(
@@ -292,7 +294,7 @@ class XppFile {
                 y: double.parse(rawPoints[i * 2 + 1])));
           }
           if (points.isEmpty) return;
-          content[int.parse(strokeElement.getAttribute('counter'))] =
+          content[int.parse(strokeElement.getAttribute('counter')!)] =
               XppStroke.byTool(tool: tool, color: color, points: points);
         });
 
@@ -333,14 +335,14 @@ class XppFile {
   }
 
   /// thumbnail image data
-  Uint8List previewImage;
+  Uint8List? previewImage;
 
   /// [List] of [XppPages] inside the document
   @required
-  List<XppPage> pages;
+  List<XppPage>? pages;
 
   /// the main title of the document. usually the [String] between the last `/` and the last `.`.
-  String title;
+  String? title;
 
   /// encoding the document to a [XmlDocument]
   XmlDocument toXmlDocument() {
@@ -357,8 +359,8 @@ class XppFile {
                   'Xournal document - see http://math.mit.edu/~auroux/software/xournal/')
             ]),
             XmlElement(XmlName('preview'), const [],
-                [XmlText(base64Encode(previewImage))])
-          ]..addAll(pages.map((e) => e.toXmlElement())))
+                [XmlText(base64Encode(previewImage!))])
+          ]..addAll(pages!.map((e) => e.toXmlElement())))
     ]);
   }
 
@@ -368,19 +370,19 @@ class XppFile {
   }
 
   /// creating the XML-encoded, utf8-encoded and gzipped [Uint8List] to be used in a .xopp file
-  Uint8List toUint8List() {
-    return GZipEncoder().encode(utf8.encode(toXmlString()));
+  Uint8List? toUint8List() {
+    return GZipEncoder().encode(utf8.encode(toXmlString())) as Uint8List?;
   }
 
   /// creating a [FilePickerCross] from the [toUint8List]
-  FilePickerCross toFilePickerCross({String filePath}) {
-    Uint8List bytes = toUint8List();
+  FilePickerCross toFilePickerCross({String? filePath}) {
+    Uint8List bytes = toUint8List()!;
     return FilePickerCross(bytes,
         type: FileTypeCross.custom, fileExtension: 'xopp', path: filePath);
   }
 }
 
-Color parseColor(String colorString) {
+Color parseColor(String? colorString) {
   Color color = Colors.black;
   if (colorString != null) {
     switch (colorString) {

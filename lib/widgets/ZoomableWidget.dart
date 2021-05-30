@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class ZoomableWidget extends StatefulWidget {
   @required
-  final Widget child;
+  final Widget? child;
   @required
-  final TransformationController controller;
+  final TransformationController? controller;
   @required
-  final GestureScaleUpdateCallback onInteractionUpdate;
-  final GestureScaleStartCallback onInteractionStart;
+  final GestureScaleUpdateCallback? onInteractionUpdate;
+  final GestureScaleStartCallback? onInteractionStart;
 
   const ZoomableWidget(
-      {Key key,
+      {Key? key,
       this.child,
       this.controller,
       this.onInteractionUpdate,
@@ -35,7 +35,7 @@ class ZoomableWidgetState extends State<ZoomableWidget> {
       transformationController: widget.controller,
       minScale: 0.1,
       maxScale: 5,
-      child: widget.child,
+      child: widget.child!,
     );
   }
 }

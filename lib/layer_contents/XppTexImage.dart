@@ -8,25 +8,25 @@ import 'package:xournalpp/src/XppPageContentWidget.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppTexImage extends XppContent {
-  Offset topLeft = Offset(0, 0);
+  Offset? topLeft = Offset(0, 0);
 
   /// TODO: proper implementation of bottom and right
-  Offset bottomRight = Offset(0, 0);
+  Offset? bottomRight = Offset(0, 0);
 
   @required
-  final String text;
+  final String? text;
 
-  Color color;
+  Color? color;
 
   XppTexImage({this.text, this.topLeft, this.bottomRight, this.color});
 
   static Future<XppTexImage> edit(
-      {BuildContext context,
+      {required BuildContext context,
       String text = 'x^2',
-      Offset topLeft,
-      Color color}) async {
+      Offset? topLeft,
+      Color? color}) async {
     var laTeXController = TextEditingController(text: text);
-    bool result = await showDialog(
+    bool? result = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Enter LaTeX code'),
@@ -66,28 +66,28 @@ class XppTexImage extends XppContent {
   }
 
   @override
-  Offset getOffset() => topLeft;
+  Offset? getOffset() => topLeft;
 
   @override
   XmlElement toXmlElement() => XmlElement(XmlName('teximage'), [
-        XmlAttribute(XmlName('text'), text),
-        XmlAttribute(XmlName('color'), color.toHexTriplet()),
-        XmlAttribute(XmlName('left'), topLeft.dx.toString()),
+        XmlAttribute(XmlName('text'), text!),
+        XmlAttribute(XmlName('color'), color!.toHexTriplet()),
+        XmlAttribute(XmlName('left'), topLeft!.dx.toString()),
         XmlAttribute(XmlName('right'), bottomRight?.dx?.toString() ?? '0'),
-        XmlAttribute(XmlName('top'), topLeft.dy.toString()),
+        XmlAttribute(XmlName('top'), topLeft!.dy.toString()),
         XmlAttribute(XmlName('bottom'), bottomRight?.dy?.toString() ?? '0'),
       ], [
-        XmlText(XppText.encodeText(text))
+        XmlText(XppText.encodeText(text!))
       ]);
 
   @override
-  bool inRegion({Offset topLeft, Offset bottomRight}) {
+  bool inRegion({Offset? topLeft, Offset? bottomRight}) {
     // TODO: implement inRegion
     throw UnimplementedError();
   }
 
   @override
-  bool shouldSelectAt({Offset coordinates, EditingTool tool}) {
+  bool shouldSelectAt({Offset? coordinates, EditingTool? tool}) {
     // TODO: implement shouldSelectAt
     throw UnimplementedError();
   }

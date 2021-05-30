@@ -8,37 +8,37 @@ class XppPage {
   XppPage({this.pageSize, this.background, this.layers});
 
   /// create an empty page
-  static XppPage empty({Color background}) => XppPage(
+  static XppPage empty({Color? background}) => XppPage(
       pageSize: XppPageSize.a4,
       background:
           XppBackgroundSolidLined(size: XppPageSize.a4, color: background),
       layers: [XppLayer.empty()]);
 
-  XppPageSize pageSize;
-  XppBackground background;
+  XppPageSize? pageSize;
+  XppBackground? background;
   @required
-  List<XppLayer> layers;
+  List<XppLayer>? layers;
 
   XmlElement toXmlElement() => XmlElement(
       XmlName('page'),
       [
-        XmlAttribute(XmlName('width'), pageSize.width.toString()),
-        XmlAttribute(XmlName('height'), pageSize.height.toString())
+        XmlAttribute(XmlName('width'), pageSize!.width.toString()),
+        XmlAttribute(XmlName('height'), pageSize!.height.toString())
       ],
-      [background.toXmlElement()]..addAll(layers.map((e) => e.toXmlElement())));
+      [background!.toXmlElement()]..addAll(layers!.map((e) => e.toXmlElement())));
 }
 
 class XppPageSize {
   /// The page width in pt
-  final double width;
+  final double? width;
 
   /// The page height in pt
-  final double height;
+  final double? height;
 
   XppPageSize({this.width, this.height});
 
   /// create a [XppPageSize] from pt (Points)
-  static XppPageSize fromMillimeter({double width, double height}) {
+  static XppPageSize fromMillimeter({required double width, required double height}) {
     return XppPageSize(width: pt2mm(width), height: pt2mm(height));
   }
 
@@ -49,7 +49,7 @@ class XppPageSize {
       XppPageSize.fromMillimeter(width: 210, height: 297);
 
   /// Ratio of width / height
-  double get ratio => width / height;
+  double get ratio => width! / height!;
 
-  Size toSize() => Size(width, height);
+  Size toSize() => Size(width!, height!);
 }

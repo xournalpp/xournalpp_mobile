@@ -11,15 +11,15 @@ import 'package:xournalpp/src/XppPageContentWidget.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
 
 class XppImage extends XppContent {
-  Offset topLeft = Offset(0, 0);
-  Offset bottomRight = Offset(0, 0);
+  Offset? topLeft = Offset(0, 0);
+  Offset? bottomRight = Offset(0, 0);
 
   @required
-  final Uint8List data;
+  final Uint8List? data;
 
   XppImage({this.data, this.topLeft, this.bottomRight});
 
-  static Future<XppImage> open({Offset topLeft}) async {
+  static Future<XppImage> open({required Offset topLeft}) async {
     FilePickerCross image =
         await FilePickerCross.importFromStorage(type: FileTypeCross.image);
 
@@ -28,9 +28,9 @@ class XppImage extends XppContent {
     Completer completer = new Completer();
     memoryImage.resolve(ImageConfiguration()).addListener(ImageStreamListener(
         (ImageInfo info, bool _) => completer.complete(info.image)));
-    Image renderedImage = await completer.future;
+    Image renderedImage = await (completer.future as FutureOr<Image>);
     Offset bottomRight = Offset(
-        topLeft.dx + renderedImage.width, topLeft.dy + renderedImage.height);
+        topLeft.dx + renderedImage.width!, topLeft.dy + renderedImage.height!);
     return XppImage(
         data: image.toUint8List(), topLeft: topLeft, bottomRight: bottomRight);
   }
@@ -43,10 +43,10 @@ class XppImage extends XppContent {
         children: [
           CircularProgressIndicator(),
           FadeInImage(
-            image: MemoryImage(data),
+            image: MemoryImage(data!),
             placeholder: MemoryImage(kTransparentImage),
-            width: bottomRight.dx - topLeft.dx,
-            height: bottomRight.dy - topLeft.dy,
+            width: bottomRight!.dx - topLeft!.dx,
+            height: bottomRight!.dy - topLeft!.dy,
           )
         ],
       ),
@@ -55,26 +55,26 @@ class XppImage extends XppContent {
   }
 
   @override
-  Offset getOffset() => topLeft;
+  Offset? getOffset() => topLeft;
 
   @override
   XmlElement toXmlElement() => XmlElement(XmlName('image'), [
-        XmlAttribute(XmlName('left'), topLeft.dx.toString()),
-        XmlAttribute(XmlName('right'), bottomRight.dx.toString()),
-        XmlAttribute(XmlName('top'), topLeft.dy.toString()),
-        XmlAttribute(XmlName('bottom'), bottomRight.dy.toString()),
+        XmlAttribute(XmlName('left'), topLeft!.dx.toString()),
+        XmlAttribute(XmlName('right'), bottomRight!.dx.toString()),
+        XmlAttribute(XmlName('top'), topLeft!.dy.toString()),
+        XmlAttribute(XmlName('bottom'), bottomRight!.dy.toString()),
       ], [
-        XmlText(base64Encode(data))
+        XmlText(base64Encode(data!))
       ]);
 
   @override
-  bool inRegion({Offset topLeft, Offset bottomRight}) {
+  bool inRegion({Offset? topLeft, Offset? bottomRight}) {
     // TODO: implement inRegion
     throw UnimplementedError();
   }
 
   @override
-  bool shouldSelectAt({Offset coordinates, EditingTool tool}) {
+  bool shouldSelectAt({Offset? coordinates, EditingTool? tool}) {
     // TODO: implement shouldSelectAt
     throw UnimplementedError();
   }

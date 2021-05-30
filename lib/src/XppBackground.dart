@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,8 +10,8 @@ import 'package:xournalpp/src/PdfImage.dart';
 import 'XppPage.dart';
 
 abstract class XppBackground {
-  XppBackgroundType type;
-  XppPageSize size;
+  XppBackgroundType? type;
+  XppPageSize? size;
 
   static XppBackground get none => _NoXppBackground();
 
@@ -21,9 +23,9 @@ abstract class XppBackground {
 /// page background for a [XppPage] made from an image URI. I am sure it will be hard to implement for web.
 /// TODO: implement background for web
 class XppBackgroundImage extends XppBackground {
-  final String filename;
+  final String? filename;
   final XppBackgroundImageDomain domain;
-  final XppBackgroundType type;
+  final XppBackgroundType? type;
 
   XppBackgroundImage(
       {this.type,
@@ -37,7 +39,7 @@ class XppBackgroundImage extends XppBackground {
 
   @override
   XmlElement toXmlElement() {
-    String domainString;
+    late String domainString;
     switch (domain) {
       case XppBackgroundImageDomain.ABSOLUTE:
         domainString = 'absolute';
@@ -52,23 +54,23 @@ class XppBackgroundImage extends XppBackground {
     XmlElement node = XmlElement(XmlName('background'), [
       XmlAttribute(XmlName('type'), 'pixmap'),
       XmlAttribute(XmlName('domain'), domainString),
-      XmlAttribute(XmlName('filename'), filename),
+      XmlAttribute(XmlName('filename'), filename!),
     ]);
     return (node);
   }
 }
 
-typedef Future<FilePickerCross> FileNotAvailableCallback(String path);
+typedef Future<FilePickerCross> FileNotAvailableCallback(String? path);
 
 /// page background for a [XppPage] made from a PDF document
 class XppBackgroundPdf extends XppBackground {
-  final String filename;
+  final String? filename;
   final XppBackgroundImageDomain domain;
-  final int page;
+  final int? page;
   final FileNotAvailableCallback onUnavailable;
 
   XppBackgroundPdf(
-      {@required this.onUnavailable,
+      {required this.onUnavailable,
       this.page,
       this.filename,
       this.domain = XppBackgroundImageDomain.ABSOLUTE});
@@ -83,16 +85,16 @@ class XppBackgroundPdf extends XppBackground {
     XmlElement node = XmlElement(XmlName('background'), [
       XmlAttribute(XmlName('type'), 'pdf'),
       XmlAttribute(XmlName('pageno'), page.toString()),
-      XmlAttribute(XmlName('filename'), filename),
+      XmlAttribute(XmlName('filename'), filename!),
     ]);
     return (node);
   }
 }
 
 class PDfBackgroundWidget extends StatefulWidget {
-  final XppBackgroundPdf provider;
+  final XppBackgroundPdf? provider;
 
-  const PDfBackgroundWidget({Key key, this.provider}) : super(key: key);
+  const PDfBackgroundWidget({Key? key, this.provider}) : super(key: key);
   @override
   _PDfBackgroundWidgetState createState() => _PDfBackgroundWidgetState();
 }
@@ -103,15 +105,17 @@ class _PDfBackgroundWidgetState extends State<PDfBackgroundWidget>
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder(
-        future: FilePickerCross.fromInternalPath(path: widget.provider.filename)
-            .then((value) {
-          return pdfImage(value, widget.provider.page);
-        }).catchError((e) => widget.provider
-                .onUnavailable(widget.provider.filename)
-                .then((value) => pdfImage(value, widget.provider.page))),
-        builder: (context, snapshot) => (snapshot.hasData)
-            ? Image.memory(snapshot.data)
-            : Center(child: CircularProgressIndicator()));
+        future:
+            FilePickerCross.fromInternalPath(path: widget.provider!.filename!)
+                .then((value) {
+          return pdfImage(value, widget.provider!.page);
+        }).catchError((e) => widget.provider!
+                    .onUnavailable(widget.provider!.filename)
+                    .then((value) => pdfImage(value, widget.provider!.page))),
+        builder: (context, AsyncSnapshot<Uint8List> snapshot) =>
+            (snapshot.hasData)
+                ? Image.memory(snapshot.data!)
+                : Center(child: CircularProgressIndicator()));
   }
 
   @override
@@ -120,14 +124,14 @@ class _PDfBackgroundWidgetState extends State<PDfBackgroundWidget>
 
 /// page background for a [XppPage] made from a color and a style
 abstract class XppBackgroundSolid extends XppBackground {
-  Color color;
-  XppPageSize size;
-  XppBackgroundType type = XppBackgroundType.SOLID;
+  Color? color;
+  XppPageSize? size;
+  XppBackgroundType? type = XppBackgroundType.SOLID;
 
   XmlElement generateXmlElement(String style) {
     XmlElement node = XmlElement(XmlName('background'), [
       XmlAttribute(XmlName('type'), 'solid'),
-      XmlAttribute(XmlName('color'), color.toHexTriplet()),
+      XmlAttribute(XmlName('color'), color!.toHexTriplet()),
       XmlAttribute(XmlName('style'), style),
     ]);
     return (node);
@@ -135,8 +139,8 @@ abstract class XppBackgroundSolid extends XppBackground {
 }
 
 class XppBackgroundSolidLined extends XppBackgroundSolid {
-  Color color;
-  XppPageSize size;
+  Color? color;
+  XppPageSize? size;
 
   XppBackgroundSolidLined({this.color = Colors.white, this.size});
   @override
@@ -145,7 +149,7 @@ class XppBackgroundSolidLined extends XppBackgroundSolid {
       color: color,
       child: CustomPaint(
         painter: _LinePainter(color: color),
-        size: size.toSize(),
+        size: size!.toSize(),
       ),
     );
   }
@@ -155,8 +159,8 @@ class XppBackgroundSolidLined extends XppBackgroundSolid {
 }
 
 class XppBackgroundSolidRuled extends XppBackgroundSolid {
-  Color color;
-  XppPageSize size;
+  Color? color;
+  XppPageSize? size;
 
   XppBackgroundSolidRuled({this.color = Colors.white, this.size});
   @override
@@ -165,7 +169,7 @@ class XppBackgroundSolidRuled extends XppBackgroundSolid {
       color: color,
       child: CustomPaint(
         painter: _RuledPainter(color: color),
-        size: size.toSize(),
+        size: size!.toSize(),
       ),
     );
   }
@@ -175,8 +179,8 @@ class XppBackgroundSolidRuled extends XppBackgroundSolid {
 }
 
 class XppBackgroundSolidGraph extends XppBackgroundSolid {
-  Color color;
-  XppPageSize size;
+  Color? color;
+  XppPageSize? size;
 
   XppBackgroundSolidGraph({this.color = Colors.white, this.size});
   @override
@@ -185,7 +189,7 @@ class XppBackgroundSolidGraph extends XppBackgroundSolid {
       color: color,
       child: CustomPaint(
         painter: _GraphPainter(color: color),
-        size: size.toSize(),
+        size: size!.toSize(),
       ),
     );
   }
@@ -195,8 +199,8 @@ class XppBackgroundSolidGraph extends XppBackgroundSolid {
 }
 
 class XppBackgroundSolidDot extends XppBackgroundSolid {
-  Color color;
-  XppPageSize size;
+  Color? color;
+  XppPageSize? size;
 
   XppBackgroundSolidDot({this.color = Colors.white, this.size});
   @override
@@ -205,7 +209,7 @@ class XppBackgroundSolidDot extends XppBackgroundSolid {
       color: color,
       child: CustomPaint(
         painter: _DotPainter(color: color),
-        size: size.toSize(),
+        size: size!.toSize(),
       ),
     );
   }
@@ -215,15 +219,15 @@ class XppBackgroundSolidDot extends XppBackgroundSolid {
 }
 
 class XppBackgroundSolidPlain extends XppBackgroundSolid {
-  Color color;
-  XppPageSize size;
+  Color? color;
+  XppPageSize? size;
 
   XppBackgroundSolidPlain({this.color, this.size});
   @override
   Widget render() {
     return (Container(
-      width: size.width,
-      height: size.height,
+      width: size!.width,
+      height: size!.height,
       color: color,
     ));
   }
@@ -233,8 +237,8 @@ class XppBackgroundSolidPlain extends XppBackgroundSolid {
 }
 
 class _NoXppBackground extends XppBackground {
-  XppPageSize size = XppPageSize(width: 0, height: 0);
-  XppBackgroundType type = XppBackgroundType.NONE;
+  XppPageSize? size = XppPageSize(width: 0, height: 0);
+  XppBackgroundType? type = XppBackgroundType.NONE;
 
   @override
   Widget render() => Container();
@@ -251,13 +255,13 @@ class _NoXppBackground extends XppBackground {
 }
 
 class _LinePainter extends CustomPainter {
-  final Color color;
+  final Color? color;
 
   _LinePainter({this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey[500].withOpacity(.3)
+      ..color = Colors.grey[500]!.withOpacity(.3)
       ..strokeWidth = 1;
     // 1 because no line at the top
     for (int i = 1; i < size.height / 24; i++) {
@@ -271,13 +275,13 @@ class _LinePainter extends CustomPainter {
 }
 
 class _RuledPainter extends CustomPainter {
-  final Color color;
+  final Color? color;
 
   _RuledPainter({this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey[500].withOpacity(.3)
+      ..color = Colors.grey[500]!.withOpacity(.3)
       ..strokeWidth = 1;
     // 1 because no line at the top
     for (int i = 1; i < size.height / 24; i++) {
@@ -291,13 +295,13 @@ class _RuledPainter extends CustomPainter {
 }
 
 class _GraphPainter extends CustomPainter {
-  final Color color;
+  final Color? color;
 
   _GraphPainter({this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey[500].withOpacity(.3)
+      ..color = Colors.grey[500]!.withOpacity(.3)
       ..strokeWidth = 1;
     // 1 because no line at the top
     for (int i = 1; i < size.height / XppPageSize.pt2mm(5); i++) {
@@ -316,13 +320,13 @@ class _GraphPainter extends CustomPainter {
 }
 
 class _DotPainter extends CustomPainter {
-  final Color color;
+  final Color? color;
 
   _DotPainter({this.color});
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey[500].withOpacity(.3)
+      ..color = Colors.grey[500]!.withOpacity(.3)
       ..strokeWidth = 1;
     // 1 because no line at the top
     for (int i = 1; i < size.height / XppPageSize.pt2mm(5); i++) {

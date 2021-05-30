@@ -6,18 +6,18 @@ typedef bool ShouldCatchCallback(Offset offset, EditingTool tool);
 
 class XppPageContentWidget extends StatefulWidget {
   @required
-  final Widget child;
+  final Widget? child;
   @required
-  final EditingTool tool;
+  final EditingTool? tool;
   @required
-  final bool catchTool;
+  final bool? catchTool;
   @required
-  final Builder contextMenuBuilder;
+  final Builder? contextMenuBuilder;
   @required
-  final Function onSelected;
+  final Function? onSelected;
 
   const XppPageContentWidget({
-    Key key,
+    Key? key,
     this.child,
     this.tool,
     this.catchTool,
