@@ -62,6 +62,44 @@ const TextStyle kEmphasisFont = TextStyle(
     height: 1.22,
     letterSpacing: 1.8);
 
+final kTextTheme = TextTheme(
+  headline1: kHugeFont,
+  headline2: kHugeFont,
+  headline3: kLargeFont
+      .copyWith(color: kDarkColor)
+      .copyWith(fontSize: kLargeFontSize * kFontSizeDivision),
+  headline4: kLargeFont.copyWith(color: kDarkColor),
+  headline5: kLargeFont.copyWith(color: kDarkColor),
+  headline6: kLargeFont.copyWith(color: kDarkColor),
+  bodyText1: kBodyFont,
+  bodyText2: kEmphasisFont,
+  caption: kEmphasisFont,
+  button: kEmphasisFont,
+);
+
+final kColorScheme = ColorScheme(
+    primary: kPrimaryColor,
+    primaryVariant: kPrimaryColorAccent,
+    secondary: kSecondaryColor,
+    secondaryVariant: kSecondaryColorAccent,
+    surface: kDarkColor,
+    background: kDarkColor,
+    error: Colors.deepOrange,
+    onPrimary: kLightColor,
+    onSecondary: kDarkColor,
+    onSurface: kDarkColor,
+    onBackground: kLightColor,
+    onError: kLightColor,
+    brightness: Brightness.dark);
+
+final kDialogTheme =
+    DialogTheme(titleTextStyle: kLargeFont.copyWith(color: kLightColor));
+
+final kSnackBarTheme = SnackBarThemeData(
+    backgroundColor: kDarkColor,
+    actionTextColor: kSecondaryColorAccent,
+    contentTextStyle: kBodyFont);
+
 class XournalppMobile extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -76,75 +114,21 @@ class XournalppMobile extends StatelessWidget {
           primarySwatch: kPrimaryColor,
           accentColor: kSecondaryColor,
           fontFamily: 'Open Sans',
-          textTheme: TextTheme(
-            headline1: kHugeFont,
-            headline2: kHugeFont,
-            headline3: kLargeFont
-                .copyWith(color: kDarkColor)
-                .copyWith(fontSize: kLargeFontSize * kFontSizeDivision),
-            headline4: kLargeFont.copyWith(color: kDarkColor),
-            headline5: kLargeFont.copyWith(color: kDarkColor),
-            headline6: kLargeFont.copyWith(color: kDarkColor),
-            bodyText1: kBodyFont,
-            bodyText2: kEmphasisFont,
-            caption: kEmphasisFont,
-            button: kEmphasisFont,
-          ),
-          colorScheme: ColorScheme(
-              primary: kPrimaryColor,
-              primaryVariant: kPrimaryColorAccent,
-              secondary: kSecondaryColor,
-              secondaryVariant: kSecondaryColorAccent,
-              surface: kLightColor,
-              background: kDarkColor,
-              error: Colors.deepOrange,
-              onPrimary: kLightColor,
-              onSecondary: kDarkColor,
-              onSurface: kDarkColor,
-              onBackground: kLightColor,
-              onError: kLightColor,
-              brightness: Brightness.light),
+          textTheme: kTextTheme,
+          colorScheme: kColorScheme,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          dialogTheme: DialogTheme(
-              titleTextStyle: kLargeFont.copyWith(color: kDarkColor))),
+          dialogTheme: kDialogTheme,
+          snackBarTheme: kSnackBarTheme),
       darkTheme: ThemeData(
           brightness: Brightness.dark,
           primarySwatch: kPrimaryColor,
           accentColor: kSecondaryColor,
           fontFamily: 'Open Sans',
-          textTheme: TextTheme(
-            headline1: kHugeFont,
-            headline2: kHugeFont,
-            headline3: kLargeFont.copyWith(color: kLightColor),
-            headline4: kLargeFont.copyWith(color: kLightColor),
-            headline5: kLargeFont.copyWith(color: kLightColor),
-            headline6: kLargeFont.copyWith(color: kLightColor),
-            bodyText1: kBodyFont,
-            bodyText2: kEmphasisFont,
-            caption: kEmphasisFont,
-            button: kEmphasisFont,
-          ),
-          colorScheme: ColorScheme(
-              primary: kPrimaryColor,
-              primaryVariant: kPrimaryColorAccent,
-              secondary: kSecondaryColor,
-              secondaryVariant: kSecondaryColorAccent,
-              surface: kDarkColor,
-              background: kDarkColor,
-              error: Colors.deepOrange,
-              onPrimary: kLightColor,
-              onSecondary: kDarkColor,
-              onSurface: kDarkColor,
-              onBackground: kLightColor,
-              onError: kLightColor,
-              brightness: Brightness.dark),
+          textTheme: kTextTheme,
+          colorScheme: kColorScheme,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          dialogTheme: DialogTheme(
-              titleTextStyle: kLargeFont.copyWith(color: kLightColor)),
-          snackBarTheme: SnackBarThemeData(
-              backgroundColor: kDarkColor,
-              actionTextColor: kSecondaryColorAccent,
-              contentTextStyle: kBodyFont)),
+          dialogTheme: kDialogTheme,
+          snackBarTheme: kSnackBarTheme),
       home: OpenPage(),
     );
   }
