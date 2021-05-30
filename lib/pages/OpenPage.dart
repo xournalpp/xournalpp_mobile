@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -26,7 +26,8 @@ class OpenPage extends StatefulWidget {
   _OpenPageState createState() => _OpenPageState();
 }
 
-class _OpenPageState extends State<OpenPage> with TickerProviderStateMixin {
+class _OpenPageState extends State<OpenPage>
+    with TickerProviderStateMixin, AfterLayoutMixin {
   bool _loadedRecent = false;
   Set recentFiles = Set();
 
@@ -49,8 +50,8 @@ class _OpenPageState extends State<OpenPage> with TickerProviderStateMixin {
     // trying to load fitting locale
 
     try {
-      if (['en', 'de', 'pt'].contains(window?.locale?.languageCode ?? 'en'))
-        S.load(Locale(window.locale.languageCode ?? 'en'));
+      if (['en', 'de', 'pt'].contains(window.locale.languageCode))
+        S.load(Locale(window.locale.languageCode));
 
       /// TODO: implement custom change of language
       // checking for locale override
@@ -95,7 +96,7 @@ class _OpenPageState extends State<OpenPage> with TickerProviderStateMixin {
   }
 
   @override
-  void didInitState() {
+  void afterFirstLayout(BuildContext context) {
     try {
       // For sharing images coming from outside the app while the app is in the memory
       ReceiveSharingIntent.getMediaStream().listen(
@@ -242,10 +243,10 @@ class _OpenPageState extends State<OpenPage> with TickerProviderStateMixin {
         /// ... which is awfully encoded as a content:// URI using the path as **queryComponent** instead of as **path** (why???)
         /// unfortunately, android needs to copy the file to our own app directory
         /// TODO: don't copy files we can directly read
-        String path = await FlutterAbsolutePath.getAbsolutePath(data);
+        print(data);
         data = [
           SharedMediaFile(
-              path, base64Encode(kTransparentImage), null, SharedMediaType.FILE)
+              data, base64Encode(kTransparentImage), null, SharedMediaType.FILE)
         ];
         _sharedFiles = data as List<SharedMediaFile>;
       }

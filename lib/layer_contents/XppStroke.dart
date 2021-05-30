@@ -12,7 +12,7 @@ abstract class XppStroke extends XppContent {
       this.color,
       this.editingTool});
 
-  XppStrokeTool? tool;
+  XppStrokeTool tool;
   List<XppStrokePoint>? points;
   Color? color;
   EditingTool? editingTool;
@@ -144,12 +144,15 @@ abstract class XppStroke extends XppContent {
 
   bool _shouldRemovePoint(
       XppStrokePoint element, Offset coordinates, double radius) {
-    return ((element.x! - coordinates.dx).abs() < (element.width! + radius) / 2 &&
+    return ((element.x! - coordinates.dx).abs() <
+            (element.width! + radius) / 2 &&
         (element.y! - coordinates.dy).abs() < (element.width! + radius) / 2);
   }
 
-  static XppStroke? byTool(
-      {XppStrokeTool? tool, List<XppStrokePoint>? points, Color? color}) {
+  static XppStroke byTool(
+      {required XppStrokeTool tool,
+      List<XppStrokePoint>? points,
+      Color? color}) {
     XppStroke? stroke;
     switch (tool) {
       case XppStrokeTool.PEN:
@@ -167,7 +170,7 @@ abstract class XppStroke extends XppContent {
 }
 
 class XppStrokePen extends XppStroke {
-  XppStrokeTool? tool;
+  XppStrokeTool tool = XppStrokeTool.PEN;
   List<XppStrokePoint>? points;
   Color? color;
 
@@ -186,7 +189,7 @@ class XppStrokePen extends XppStroke {
 }
 
 class XppStrokeWhiteout extends XppStroke {
-  XppStrokeTool? tool;
+  XppStrokeTool tool = XppStrokeTool.ERASER;
   List<XppStrokePoint>? points;
   Color? color;
 
@@ -205,7 +208,7 @@ class XppStrokeWhiteout extends XppStroke {
 }
 
 class XppStrokeHighlight extends XppStroke {
-  XppStrokeTool? tool;
+  XppStrokeTool tool = XppStrokeTool.HIGHLIGHTER;
   List<XppStrokePoint>? points;
   Color? color;
 
@@ -246,7 +249,7 @@ class XppStrokePainter extends CustomPainter {
     if (points!.length == 1) {
       var paint = Paint()
         ..color = color!
-        ..strokeWidth = points![0]?.width ?? 5
+        ..strokeWidth = points![0].width ?? 5
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round;
 
@@ -260,7 +263,7 @@ class XppStrokePainter extends CustomPainter {
       for (int i = 1; i < points!.length; i++) {
         var paint = Paint()
           ..color = color!
-          ..strokeWidth = points![i]?.width ?? 5
+          ..strokeWidth = points![i].width ?? 5
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round;
 
@@ -275,8 +278,8 @@ class XppStrokePainter extends CustomPainter {
       double width = 0;
 
       var path = Path();
-      path.moveTo(
-          points![0].offset.dx - topLeft!.dx, points![0].offset.dy - topLeft!.dy);
+      path.moveTo(points![0].offset.dx - topLeft!.dx,
+          points![0].offset.dy - topLeft!.dy);
       for (int i = 1; i < points!.length; i++) {
         Offset offset = points![i].offset;
         path.lineTo(offset.dx - topLeft!.dx, offset.dy - topLeft!.dy);

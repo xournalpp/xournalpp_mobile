@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:xournalpp/generated/l10n.dart';
 import 'package:xournalpp/src/XppBackground.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPage.dart';
@@ -95,7 +94,7 @@ class _XppLayerStackState extends State<XppLayerStack> {
       if (element == null) return;
       if (!renderedContent.keys.contains(element)) {
         renderedContent[element] = Positioned(
-          child: element.render() ?? Text(S.of(context).error),
+          child: element.render(),
           top: element.getOffset()?.dy ?? 0,
           left: element.getOffset()?.dx ?? 0,
         );

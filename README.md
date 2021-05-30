@@ -76,7 +76,7 @@ Connect any Android or iOS device.
 ```shell
 git clone https://gitlab.com/TheOneWithTheBraid/xournalpp_mobile.git
 cd xournalpp_mobile
-flutter run
+flutter run --no-sound-null-safety
 ```
 
 ### Test for the web
@@ -87,7 +87,7 @@ If you want to test for the web, please run:
 flutter channel beta
 flutter upgrade
 flutter config --enable-web
-flutter run -d web --release # unfortunately, the debug flavour will result an empty screen
+flutter run -d web --release --no-sound-null-safety # unfortunately, the debug flavour will result an empty screen
 ```
 
 ### Desktop support
@@ -102,7 +102,7 @@ If you want to test for Linux, Windows or macOS, please run:
 flutter channel master
 flutter upgrade
 flutter config --enable-linux-desktop # or --enable-macos-desktop or --enable-windows-desktop
-flutter run -d linux # or macos or windows
+flutter run -d linux --no-sound-null-safety # or macos or windows
 ```
 
 ## Colors and Typography

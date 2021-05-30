@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:katex_flutter/katex_flutter.dart';
 import 'package:xml/xml.dart';
-import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/layer_contents/XppText.dart';
+import 'package:xournalpp/src/HexColor.dart';
 import 'package:xournalpp/src/XppLayer.dart';
 import 'package:xournalpp/src/XppPageContentWidget.dart';
 import 'package:xournalpp/widgets/ToolBoxBottomSheet.dart';
@@ -73,9 +73,9 @@ class XppTexImage extends XppContent {
         XmlAttribute(XmlName('text'), text!),
         XmlAttribute(XmlName('color'), color!.toHexTriplet()),
         XmlAttribute(XmlName('left'), topLeft!.dx.toString()),
-        XmlAttribute(XmlName('right'), bottomRight?.dx?.toString() ?? '0'),
+        XmlAttribute(XmlName('right'), bottomRight?.dx.toString() ?? '0'),
         XmlAttribute(XmlName('top'), topLeft!.dy.toString()),
-        XmlAttribute(XmlName('bottom'), bottomRight?.dy?.toString() ?? '0'),
+        XmlAttribute(XmlName('bottom'), bottomRight?.dy.toString() ?? '0'),
       ], [
         XmlText(XppText.encodeText(text!))
       ]);

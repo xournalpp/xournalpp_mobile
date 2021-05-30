@@ -71,11 +71,11 @@ class _DropFileState extends State<DropFile> {
                                       title:
                                           Text(S.of(context).errorOpeningFile),
                                       content: SelectableText(S
-                                              .of(context)!
+                                              .of(context)
                                               .imVerySorryButICouldntReadTheFile +
                                           '$filename' +
                                           S
-                                              .of(context)!
+                                              .of(context)
                                               .areYouSureIHaveThePermissionAndAreYou +
                                           '\n${e.toString()}'),
                                       actions: [
@@ -84,7 +84,7 @@ class _DropFileState extends State<DropFile> {
                                                 ClipboardData(
                                                     text: e.toString())),
                                             child: Text(S
-                                                .of(context)!
+                                                .of(context)
                                                 .copyErrorMessage)),
                                         TextButton(
                                           onPressed: () =>

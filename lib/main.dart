@@ -78,19 +78,20 @@ final kTextTheme = TextTheme(
 );
 
 final kColorScheme = ColorScheme(
-    primary: kPrimaryColor,
-    primaryVariant: kPrimaryColorAccent,
-    secondary: kSecondaryColor,
-    secondaryVariant: kSecondaryColorAccent,
-    surface: kDarkColor!,
-    background: kDarkColor!,
-    error: Colors.deepOrange,
-    onPrimary: kLightColor,
-    onSecondary: kDarkColor!,
-    onSurface: kDarkColor!,
-    onBackground: kLightColor,
-    onError: kLightColor,
-    brightness: Brightness.dark);
+  primary: kPrimaryColor,
+  primaryVariant: kPrimaryColorAccent,
+  secondary: kSecondaryColor,
+  secondaryVariant: kSecondaryColorAccent,
+  surface: kDarkColor!,
+  background: kDarkColor!,
+  error: Colors.deepOrange,
+  onPrimary: kLightColor,
+  onSecondary: kDarkColor!,
+  onSurface: kDarkColor!,
+  onBackground: kLightColor,
+  onError: kLightColor,
+  brightness: Brightness.dark,
+);
 
 final kDialogTheme =
     DialogTheme(titleTextStyle: kLargeFont.copyWith(color: kLightColor));
@@ -113,17 +114,15 @@ class XournalppMobile extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(
-          brightness: Brightness.light,
           primarySwatch: kPrimaryColor as MaterialColor?,
           accentColor: kSecondaryColor,
           fontFamily: 'Open Sans',
           textTheme: kTextTheme,
-          colorScheme: kColorScheme,
+          colorScheme: kColorScheme.copyWith(brightness: Brightness.light),
           visualDensity: VisualDensity.adaptivePlatformDensity,
           dialogTheme: kDialogTheme,
           snackBarTheme: kSnackBarTheme),
       darkTheme: ThemeData(
-          brightness: Brightness.dark,
           primarySwatch: kPrimaryColor as MaterialColor?,
           accentColor: kSecondaryColor,
           fontFamily: 'Open Sans',

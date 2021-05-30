@@ -50,7 +50,7 @@ class PointerListenerState extends State<PointerListener> {
 
   List<XppStrokePoint> points = [];
 
-  XppStrokeTool? tool;
+  late XppStrokeTool tool;
 
   Map<int, DateTime> pointerTimestamps = Map();
 
@@ -154,9 +154,9 @@ class PointerListenerState extends State<PointerListener> {
     });
   }
 
-  void saveStroke(XppStrokeTool? tool) {
+  void saveStroke(XppStrokeTool tool) {
     if (points.isNotEmpty) {
-      XppStroke? stroke = XppStroke.byTool(
+      XppStroke stroke = XppStroke.byTool(
           tool: tool, points: List.from(points), color: widget.color);
       widget.onNewContent!(stroke);
     }

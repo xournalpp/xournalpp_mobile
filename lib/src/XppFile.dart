@@ -99,7 +99,7 @@ class XppFile {
   /// decoding and parsing a [FilePickerCross] to [XppFile]
   static Future<XppFile> fromFilePickerCross(
       FilePickerCross rawFile,
-      Function(double) percentageCallback,
+      Function(double)? percentageCallback,
       FileNotAvailableCallback onUnavailable) async {
     /// for potential progress indicator and a better UX we provide feedback about
     /// the state of parsing. Huge documents may require a minute or two.
@@ -262,7 +262,7 @@ class XppFile {
 
         /// processing all strokes
         layer.findElements('stroke').forEach((strokeElement) {
-          XppStrokeTool? tool;
+          late XppStrokeTool tool;
           switch (strokeElement.getAttribute('tool')) {
             case "pen":
               tool = XppStrokeTool.PEN;
@@ -272,7 +272,6 @@ class XppFile {
 
               /// TODO: implement whiteout eraser
               return;
-              break;
             case "highlighter":
               tool = XppStrokeTool.HIGHLIGHTER;
               break;
@@ -307,7 +306,7 @@ class XppFile {
             1;
         //print(percentCompleted);
         try {
-          percentageCallback(percentCompleted);
+          percentageCallback!(percentCompleted);
         } catch (e) {}
       });
       pages.add(

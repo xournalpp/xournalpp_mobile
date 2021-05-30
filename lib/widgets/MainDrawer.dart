@@ -83,8 +83,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           applicationName:
                               S.of(context).aboutXournalMobileEdition,
                           applicationVersion:
-                              'Version ${info?.version} build ${info?.buildNumber}' ??
-                                  'unknown',
+                              'Version ${info?.version} build ${info?.buildNumber}',
                           applicationIcon:
                               Image.asset('assets/xournalpp.png', scale: 8),
                           applicationLegalese: 'Powered by TestApp.schule',
